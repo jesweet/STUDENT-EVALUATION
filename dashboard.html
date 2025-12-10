@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMetrics | Welcome</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>EduMetrics</h1>
+            <p>AI-Driven Student Competency Evaluation</p>
+        </div>
+    </header>
+
+    <main class="welcome-section">
+        <div class="container">
+            <h2 class="welcome-title">Welcome to EduMetrics</h2>
+            <p class="welcome-subtitle">
+                An AI-powered platform to assess student competency and
+                readiness for the next academic level
+            </p>
+
+            <div class="role-cards">
+                <div class="card student-card">
+                    <div class="card-icon">🎓</div> <h3>I'm a Student</h3>
+                    <p>
+                        Take an assessment to evaluate your academic readiness.
+                    </p>
+                    <button class="btn btn-primary" onclick="startAssessment()">
+                        Start Assessment
+                    </button>
+                </div>
+
+                <div class="card teacher-card">
+                    <div class="card-icon">👩‍🏫</div> <h3>I'm a Teacher</h3>
+                    <p>
+                        View student performance and assessment results.
+                    </p>
+                    <button class="btn btn-secondary" onclick="viewDashboard()">
+                        View Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

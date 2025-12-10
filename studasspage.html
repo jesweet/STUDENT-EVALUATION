@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMetrics | Student Assessment</title>
+    <link rel="stylesheet" href="studasspage.css">
+</head>
+<body>
+    
+    <header>
+        <div class="container">
+            <h1>EduMetrics</h1>
+            <p>AI-Driven Student Competency Evaluation</p>
+        </div>
+    </header>
+
+    <main class="assessment-page">
+        <div class="container">
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+                <p class="progress-text">Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">50</span></p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="timer-text">Time Elapsed: <span id="timer">00:00</span></p>
+            </div>
+
+            <!-- Question Container -->
+            <div id="questionContainer">
+                <!-- Questions will be loaded here by JavaScript -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="navigation-buttons">
+                <button class="btn btn-prev" id="prevBtn" disabled>← Previous</button>
+                <button class="btn btn-next" id="nextBtn">Next →</button>
+                <button class="btn btn-submit hidden" id="submitBtn">Submit Assessment</button>
+            </div>
+
+            <!-- Question Overview -->
+            <div class="question-overview">
+                <h3>Question Overview</h3>
+                <div class="overview-grid" id="overviewGrid">
+                    <!-- Question numbers will be loaded here -->
+                </div>
+                <div class="overview-legend">
+                    <span class="legend-item"><span class="legend-box answered"></span> Answered</span>
+                    <span class="legend-item"><span class="legend-box current"></span> Current</span>
+                    <span class="legend-item"><span class="legend-box unanswered"></span> Unanswered</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Load Questions Data FIRST, then Main Script -->
+    <script src="questions.js"></script>
+    <script src="studasspage.js"></script>
+
+</body>
+</html>

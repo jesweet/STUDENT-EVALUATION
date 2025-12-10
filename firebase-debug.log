@@ -1,0 +1,184 @@
+[debug] [2025-12-04T04:11:46.756Z] ----------------------------------------------------------------------
+[debug] [2025-12-04T04:11:46.760Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\jessi\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-12-04T04:11:46.761Z] CLI Version:   14.27.0
+[debug] [2025-12-04T04:11:46.761Z] Platform:      win32
+[debug] [2025-12-04T04:11:46.761Z] Node Version:  v22.19.0
+[debug] [2025-12-04T04:11:46.762Z] Time:          Thu Dec 04 2025 12:11:46 GMT+0800 (Philippine Standard Time)
+[debug] [2025-12-04T04:11:46.762Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-04T04:11:46.767Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\STUDENT EVALUATION
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+
+[debug] [2025-12-04T04:11:47.341Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-12-04T04:11:47.341Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2025-12-04T04:15:38.912Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-04T04:15:38.912Z] > authorizing via signed-in user (jessiehannsulad@gmail.com)
+[debug] [2025-12-04T04:15:38.914Z] Checked if tokens are valid: false, expires at: 1758244526856
+[debug] [2025-12-04T04:15:38.915Z] Checked if tokens are valid: false, expires at: 1758244526856
+[debug] [2025-12-04T04:15:38.915Z] > refreshing access token with scopes: []
+[debug] [2025-12-04T04:15:38.918Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-12-04T04:15:38.918Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-04T04:15:39.176Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-12-04T04:15:39.177Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-04T04:15:39.197Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-12-04T04:15:39.898Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-12-04T04:15:39.899Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] 
+=== Dataconnect Setup
+[info] i  dataconnect: ensuring required API firebasedataconnect.googleapis.com is enabled... 
+[debug] [2025-12-04T04:15:52.813Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:15:52.813Z] Checked if tokens are valid: true, expires at: 1764825338178
+[info] i  dataconnect: ensuring required API sqladmin.googleapis.com is enabled... 
+[debug] [2025-12-04T04:15:52.814Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:15:52.814Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:15:52.814Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-12-04T04:15:52.814Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/student-evaluation-bd192
+[debug] [2025-12-04T04:15:52.815Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com [none]
+[debug] [2025-12-04T04:15:52.815Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com x-goog-quota-user=projects/student-evaluation-bd192
+[debug] [2025-12-04T04:15:54.160Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-12-04T04:15:54.160Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com [omitted]
+[warn] !  dataconnect: missing required API firebasedataconnect.googleapis.com. Enabling now... 
+[debug] [2025-12-04T04:15:54.163Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:15:54.163Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:15:54.163Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com:enable [none]
+[debug] [2025-12-04T04:15:54.163Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com:enable x-goog-quota-user=projects/student-evaluation-bd192
+[debug] [2025-12-04T04:15:54.222Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com 200
+[debug] [2025-12-04T04:15:54.223Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com [omitted]
+[warn] !  dataconnect: missing required API sqladmin.googleapis.com. Enabling now... 
+[debug] [2025-12-04T04:15:54.223Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:15:54.224Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:15:54.224Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com:enable [none]
+[debug] [2025-12-04T04:15:54.224Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com:enable x-goog-quota-user=projects/student-evaluation-bd192
+[debug] [2025-12-04T04:15:55.432Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com:enable 200
+[debug] [2025-12-04T04:15:55.432Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firebasedataconnect.googleapis.com:enable [omitted]
+[debug] [2025-12-04T04:15:55.505Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com:enable 200
+[debug] [2025-12-04T04:15:55.507Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/sqladmin.googleapis.com:enable [omitted]
+[debug] [2025-12-04T04:16:05.543Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:16:05.544Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:16:05.544Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/-/services [none]
+[debug] [2025-12-04T04:16:07.170Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/-/services 200
+[debug] [2025-12-04T04:16:07.170Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/-/services {}
+[info] i  : ensuring required API cloudaicompanion.googleapis.com is enabled... 
+[debug] [2025-12-04T04:16:26.756Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:16:26.756Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:16:26.756Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/cloudaicompanion.googleapis.com [none]
+[debug] [2025-12-04T04:16:26.756Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/cloudaicompanion.googleapis.com x-goog-quota-user=projects/student-evaluation-bd192
+[debug] [2025-12-04T04:16:28.077Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/cloudaicompanion.googleapis.com 200
+[debug] [2025-12-04T04:16:28.078Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/cloudaicompanion.googleapis.com [omitted]
+[info] +  : required API cloudaicompanion.googleapis.com is enabled 
+[debug] [2025-12-04T04:25:22.475Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:22.475Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:22.476Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/student-evaluation-bd192/billingInfo [none]
+[debug] [2025-12-04T04:25:23.800Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/student-evaluation-bd192/billingInfo 200
+[debug] [2025-12-04T04:25:23.801Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/student-evaluation-bd192/billingInfo {"name":"projects/student-evaluation-bd192/billingInfo","projectId":"student-evaluation-bd192","billingAccountName":"","billingEnabled":false}
+[debug] [2025-12-04T04:25:23.802Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:23.803Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:23.804Z] >>> [apiv2][query] GET https://monitoring.googleapis.com/v3/projects/student-evaluation-bd192/timeSeries/ filter=metric.type%3D%22serviceruntime.googleapis.com%2Fquota%2Fallocation%2Fusage%22+AND+metric.label.quota_metric+%3D+%22sqladmin.googleapis.com%2Ffdc_lifetime_free_trial_per_project%22&interval.endTime=2025-12-04T04%3A25%3A23.801Z&interval.startTime=2025-11-27T04%3A25%3A23.801Z
+[debug] [2025-12-04T04:25:24.834Z] <<< [apiv2][status] GET https://monitoring.googleapis.com/v3/projects/student-evaluation-bd192/timeSeries/ 200
+[debug] [2025-12-04T04:25:24.834Z] <<< [apiv2][body] GET https://monitoring.googleapis.com/v3/projects/student-evaluation-bd192/timeSeries/ {"unit":"1"}
+[warn] !  dataconnect: Cannot detect an existing app in the current directory. 
+[info] i  dataconnect: > flutter create flutter_app 
+[error] !!  dataconnect: Failed to create a flutter app template 
+[debug] [2025-12-04T04:25:40.332Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:40.332Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:40.333Z] >>> [apiv2][query] POST https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services service_id=studentevaluation
+[debug] [2025-12-04T04:25:40.333Z] >>> [apiv2][body] POST https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services {"name":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation"}
+[debug] [2025-12-04T04:25:43.516Z] <<< [apiv2][status] POST https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services 200
+[debug] [2025-12-04T04:25:43.517Z] <<< [apiv2][body] POST https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services {"name":"projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb","metadata":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.OperationMetadata","createTime":"2025-12-04T04:35:34.958114652Z","target":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation","verb":"create","requestedCancellation":false,"apiVersion":"v1"},"done":false}
+[debug] [2025-12-04T04:25:43.522Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:43.522Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:43.523Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb [none]
+[debug] [2025-12-04T04:25:43.799Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb 200
+[debug] [2025-12-04T04:25:43.800Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb {"name":"projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb","metadata":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.OperationMetadata","createTime":"2025-12-04T04:35:34.958114652Z","target":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation","verb":"create","requestedCancellation":false,"apiVersion":"v1"},"done":false}
+[debug] [2025-12-04T04:25:44.317Z] [LRO Poller] Retrying task index 0
+[debug] [2025-12-04T04:25:44.318Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:44.319Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:44.319Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb [none]
+[debug] [2025-12-04T04:25:44.570Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb 200
+[debug] [2025-12-04T04:25:44.570Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb {"name":"projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb","metadata":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.OperationMetadata","createTime":"2025-12-04T04:35:34.958114652Z","target":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation","verb":"create","requestedCancellation":false,"apiVersion":"v1"},"done":false}
+[debug] [2025-12-04T04:25:45.582Z] [LRO Poller] Retrying task index 0
+[debug] [2025-12-04T04:25:45.583Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:45.583Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:45.584Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb [none]
+[debug] [2025-12-04T04:25:45.854Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb 200
+[debug] [2025-12-04T04:25:45.854Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb {"name":"projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822933172-64518dc05efcc-3d7729de-be3f98eb","metadata":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.OperationMetadata","createTime":"2025-12-04T04:35:34.958114652Z","endTime":"2025-12-04T04:35:36.237752863Z","target":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation","verb":"create","requestedCancellation":false,"apiVersion":"v1"},"done":true,"response":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.Service","name":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation","createTime":"2025-12-04T04:35:34.954406573Z","updateTime":"2025-12-04T04:35:34.954406573Z","uid":"eee546fd-f97c-4f65-b71a-973cbdc6725e","reconciling":false,"etag":"mpLBre50fDx703MXM2Qi5Wdm7IuKEqiH-vUXL9WToIM"}}
+[debug] [2025-12-04T04:25:45.859Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:45.859Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:45.859Z] >>> [apiv2][query] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask [none]
+[debug] [2025-12-04T04:25:45.859Z] >>> [apiv2][body] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask {"input":{"messages":[{"content":"the system focuses on providing a streamlined student evaluation platform specifically designed for grade 6 learners. it includes a student evaluation page where students answer short reading comprehension and grammar questionand mathematics and also about being kind. an integrated ai feeback system process student responses, check the answer of the students and returns a brief comments and a scores. a basic teacher dashboard is provided to display all students score, ai generated feedback, overall performance summaries, Additionally, the system automatically deteremines each students regardless each students readiness level, indidcating whether they are ready or need improvement, the ai component utilizes the OpenAI API to evluate responses, generarate feedback, and produce automatic scoring that teacher can review. all AI results are then displayed directly on the web interface for both teacher and student view","author":"USER"}]},"experienceContext":{"experience":"/appeco/firebase/fdc-schema-generator"}}
+[debug] [2025-12-04T04:25:54.199Z] <<< [apiv2][status] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask 200
+[debug] [2025-12-04T04:25:54.199Z] <<< [apiv2][body] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask {"output":{"messages":[{"content":"```graphql\ntype User @table {\n  displayName: String!\n  userType: String!\n  createdAt: Timestamp!\n  email: String\n  photoUrl: String\n}\n\ntype Evaluation @table {\n  student: User!\n  createdAt: Timestamp!\n  overallScore: Int!\n  readinessLevel: String!\n  teacherReviewStatus: String\n}\n\ntype Question @table {\n  text: String!\n  questionType: String!\n  expectedAnswer: String!\n  difficultyLevel: String!\n  imageURL: String\n  topic: String\n}\n\ntype StudentResponse @table {\n  evaluation: Evaluation!\n  question: Question!\n  studentAnswer: String!\n  aiScore: Int!\n  aiFeedback: String!\n  teacherOverrideScore: Int\n  teacherOverrideFeedback: String\n}\n\ntype Classroom @table {\n  name: String!\n  teacher: User!\n  createdAt: Timestamp!\n  description: String\n}\n\ntype ClassEnrollment @table(key: [\"student\", \"classroom\"]) {\n  student: User!\n  classroom: Classroom!\n  enrolledAt: Timestamp!\n}\n```\n"}]},"displayContext":{"additionalContext":{"@type":"type.googleapis.com/google.cloud.cloudaicompanion.v1main.FirebaseChatDisplayContext","firebaseFdcDisplayContext":{"schemaSyntaxError":""}}}}
+[debug] [2025-12-04T04:25:54.207Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:54.208Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:54.209Z] >>> [apiv2][query] PATCH https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main allowMissing=true&validateOnly=false
+[debug] [2025-12-04T04:25:54.209Z] >>> [apiv2][body] PATCH https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main {"name":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main","datasources":[{"postgresql":{}}],"source":{"files":[{"path":"schema.gql","content":"type User @table {\n  displayName: String!\n  userType: String!\n  createdAt: Timestamp!\n  email: String\n  photoUrl: String\n}\n\ntype Evaluation @table {\n  student: User!\n  createdAt: Timestamp!\n  overallScore: Int!\n  readinessLevel: String!\n  teacherReviewStatus: String\n}\n\ntype Question @table {\n  text: String!\n  questionType: String!\n  expectedAnswer: String!\n  difficultyLevel: String!\n  imageURL: String\n  topic: String\n}\n\ntype StudentResponse @table {\n  evaluation: Evaluation!\n  question: Question!\n  studentAnswer: String!\n  aiScore: Int!\n  aiFeedback: String!\n  teacherOverrideScore: Int\n  teacherOverrideFeedback: String\n}\n\ntype Classroom @table {\n  name: String!\n  teacher: User!\n  createdAt: Timestamp!\n  description: String\n}\n\ntype ClassEnrollment @table(key: [\"student\", \"classroom\"]) {\n  student: User!\n  classroom: Classroom!\n  enrolledAt: Timestamp!\n}"}]}}
+[debug] [2025-12-04T04:25:55.621Z] <<< [apiv2][status] PATCH https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main 200
+[debug] [2025-12-04T04:25:55.621Z] <<< [apiv2][body] PATCH https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main {"name":"projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10","metadata":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.OperationMetadata","createTime":"2025-12-04T04:35:47.067888692Z","target":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main","verb":"update","requestedCancellation":false,"apiVersion":"v1"},"done":false}
+[debug] [2025-12-04T04:25:55.622Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:55.622Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:55.623Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10 [none]
+[debug] [2025-12-04T04:25:55.875Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10 200
+[debug] [2025-12-04T04:25:55.876Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10 {"name":"projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10","metadata":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.OperationMetadata","createTime":"2025-12-04T04:35:47.067888692Z","target":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main","verb":"update","requestedCancellation":false,"apiVersion":"v1"},"done":false}
+[debug] [2025-12-04T04:25:56.392Z] [LRO Poller] Retrying task index 0
+[debug] [2025-12-04T04:25:56.393Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:56.393Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:56.393Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10 [none]
+[debug] [2025-12-04T04:25:56.699Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10 200
+[debug] [2025-12-04T04:25:56.700Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10 {"name":"projects/student-evaluation-bd192/locations/us-east4/operations/operation-1764822947005-64518dcd90497-7b457992-670fff10","metadata":{"@type":"type.googleapis.com/google.firebase.dataconnect.v1.OperationMetadata","createTime":"2025-12-04T04:35:47.067888692Z","endTime":"2025-12-04T04:35:47.303922368Z","target":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation/schemas/main","verb":"update","requestedCancellation":false,"apiVersion":"v1"},"done":true}
+[debug] [2025-12-04T04:25:56.705Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:56.706Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:56.706Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:56.706Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:25:56.707Z] >>> [apiv2][query] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask [none]
+[debug] [2025-12-04T04:25:56.707Z] >>> [apiv2][body] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask {"input":{"messages":[{"content":"Create 4 operations for an app using the instance schema with proper authentication.","author":"USER"}]},"experienceContext":{"experience":"/appeco/firebase/fdc-query-generator"},"clientContext":{"additionalContext":{"@type":"type.googleapis.com/google.cloud.cloudaicompanion.v1main.FirebaseChatRequestContext","fdcInfo":{"fdcServiceName":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation","requiresQuery":true}}}}
+[debug] [2025-12-04T04:25:56.708Z] >>> [apiv2][query] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask [none]
+[debug] [2025-12-04T04:25:56.708Z] >>> [apiv2][body] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask {"input":{"messages":[{"content":"Create a mutation to populate the database with some seed data.","author":"USER"}]},"experienceContext":{"experience":"/appeco/firebase/fdc-query-generator"},"clientContext":{"additionalContext":{"@type":"type.googleapis.com/google.cloud.cloudaicompanion.v1main.FirebaseChatRequestContext","fdcInfo":{"fdcServiceName":"projects/student-evaluation-bd192/locations/us-east4/services/studentevaluation","requiresQuery":true}}}}
+[debug] [2025-12-04T04:26:23.240Z] <<< [apiv2][status] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask 200
+[debug] [2025-12-04T04:26:23.240Z] <<< [apiv2][body] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask {"output":{"messages":[{"content":"```graphql\nmutation CreateDemoData @transaction @auth(level: PUBLIC, insecureReason: \"This operation is for seeding demo data and is safe to expose to the public.\") {\n  user_insertMany(data: [\n    {\n      id: \"550e8400-e29b-41d4-a716-446655440000\",\n      displayName: \"demouser1\",\n      userType: \"student\",\n      createdAt: \"2024-01-01T00:00:00Z\"\n    },\n    {\n      id: \"550e8400-e29b-41d4-a716-446655440001\",\n      displayName: \"demouser2\",\n      userType: \"teacher\",\n      createdAt: \"2024-01-01T00:00:00Z\"\n    }\n  ])\n  classroom_insertMany(data: [\n    {\n      id: \"650e8400-e29b-41d4-a716-446655440002\",\n      name: \"Math 101\",\n      description: \"Introduction to Mathematics\",\n      teacherId: \"550e8400-e29b-41d4-a716-446655440001\",\n      createdAt: \"2024-01-05T00:00:00Z\"\n    }\n  ])\n  classEnrollment_insertMany(data: [\n    {\n      studentId: \"550e8400-e29b-41d4-a716-446655440000\",\n      classroomId: \"650e8400-e29b-41d4-a716-446655440002\",\n      enrolledAt: \"2024-01-06T00:00:00Z\"\n    }\n  ])\n  evaluation_insertMany(data: [\n    {\n      id: \"750e8400-e29b-41d4-a716-446655440003\",\n      studentId: \"550e8400-e29b-41d4-a716-446655440000\",\n      createdAt: \"2024-01-07T00:00:00Z\",\n      overallScore: 85,\n      readinessLevel: \"Proficient\"\n    }\n  ])\n  question_insertMany(data: [\n    {\n      id: \"850e8400-e29b-41d4-a716-446655440004\",\n      difficultyLevel: \"Medium\",\n      expectedAnswer: \"42\",\n      questionType: \"Calculation\",\n      text: \"What is the answer to life, the universe, and everything?\",\n      topic: \"General Knowledge\"\n    }\n  ])\n  studentResponse_insertMany(data: [\n    {\n      id: \"950e8400-e29b-41d4-a716-446655440005\",\n      evaluationId: \"750e8400-e29b-41d4-a716-446655440003\",\n      questionId: \"850e8400-e29b-41d4-a716-446655440004\",\n      aiFeedback: \"Good job!\",\n      aiScore: 90,\n      studentAnswer: \"42\"\n    }\n  ])\n}\n```\n","author":"model"}]},"outputDataContext":{"additionalContext":{"@type":"type.googleapis.com/google.cloud.cloudaicompanion.v1main.ChatOutputDataContext","relatedContent":{}}},"attributionContext":{"citationMetadata":{}}}
+[debug] [2025-12-04T04:26:43.688Z] <<< [apiv2][status] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask 200
+[debug] [2025-12-04T04:26:43.688Z] <<< [apiv2][body] POST https://cloudaicompanion.googleapis.com/v1beta/projects/student-evaluation-bd192/locations/global/instances/default:completeTask {"output":{"messages":[{"content":"```graphql\nmutation CreateNewUser($displayName: String!, $email: String, $photoUrl: String, $userType: String!) @auth(level: USER) {\n  user_insert(data: {displayName: $displayName, email: $email, photoUrl: $photoUrl, userType: $userType, createdAt_expr: \"request.time\"})\n}\n\nquery GetEvaluationsForStudent($studentId: UUID!) @auth(level: USER) {\n  evaluations(where: {studentId: {eq: $studentId}}) {\n    id\n    overallScore\n    readinessLevel\n    teacherReviewStatus\n    createdAt\n  }\n}\n\nmutation UpdateTeacherReviewStatus($evaluationId: UUID!, $teacherReviewStatus: String) @auth(level: USER) {\n  evaluation_update(key: {id: $evaluationId}, data: {teacherReviewStatus: $teacherReviewStatus})\n}\n\nquery ListClassroomsForTeacher($teacherId: UUID!) @auth(level: USER) {\n  classrooms(where: {teacherId: {eq: $teacherId}}) {\n    id\n    name\n    description\n    createdAt\n  }\n}\n```","author":"model"}]},"outputDataContext":{"additionalContext":{"@type":"type.googleapis.com/google.cloud.cloudaicompanion.v1main.ChatOutputDataContext","relatedContent":{}}},"attributionContext":{"citationMetadata":{}}}
+[info] +  Wrote dataconnect\dataconnect.yaml 
+[info] +  Wrote dataconnect\seed_data.gql 
+[info] +  Wrote dataconnect\schema\schema.gql 
+[info] +  Wrote dataconnect\example\connector.yaml 
+[info] +  Wrote dataconnect\example\queries.gql 
+[info] i  dataconnect: No apps to setup Data Connect Generated SDKs 
+[info] 
+=== Firestore Setup
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2025-12-04T04:26:43.760Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:26:43.761Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:26:43.761Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firestore.googleapis.com [none]
+[debug] [2025-12-04T04:26:43.761Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firestore.googleapis.com x-goog-quota-user=projects/student-evaluation-bd192
+[debug] [2025-12-04T04:26:45.439Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firestore.googleapis.com 200
+[debug] [2025-12-04T04:26:45.439Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/student-evaluation-bd192/services/firestore.googleapis.com [omitted]
+[info] +  firestore: required API firestore.googleapis.com is enabled 
+[debug] [2025-12-04T04:26:45.457Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:26:45.457Z] Checked if tokens are valid: true, expires at: 1764825338178
+[debug] [2025-12-04T04:26:45.458Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/student-evaluation-bd192/databases [none]
+[debug] [2025-12-04T04:26:47.095Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/student-evaluation-bd192/databases 200
+[debug] [2025-12-04T04:26:47.096Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/student-evaluation-bd192/databases {"databases":[{"name":"projects/student-evaluation-bd192/databases/(default)","uid":"3765f3ff-1205-46b0-97bc-9d21558e7700","createTime":"2025-12-04T04:16:30.617041Z","updateTime":"2025-12-04T04:16:30.617041Z","locationId":"asia-east2","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2025-12-04T04:16:30.617041Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"n","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"realtimeUpdatesMode":"REALTIME_UPDATES_MODE_ENABLED","etag":"IJ6ok/+No5EDMPmRlemNo5ED"}]}
+[info] 
+[info] Firestore Security Rules allow you to define how and when to allow
+[info] requests. You can keep these rules in your project directory
+[info] and publish them with firebase deploy.
+[info] 

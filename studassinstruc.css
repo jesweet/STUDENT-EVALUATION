@@ -1,0 +1,157 @@
+
+:root {
+    --clr-dark-blue: #1f2937;
+    --clr-medium-blue: #374151;
+    --clr-white: #ffffff;
+    --clr-text-light: #d1d5db;
+    --clr-primary: #1e40af;
+    --clr-secondary: #8b5cf6;
+    --clr-tertiary: #10b981;
+    --clr-light-gray: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* === [BASE STYLES] === */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--clr-dark-blue);
+    line-height: 1.6;
+    color: var(--clr-white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px; 
+    margin: 0 auto;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-evaluation, .btn-start-now {
+    background-color: var(--clr-medium-blue); 
+    color: var(--clr-white);
+    width: 100%;
+}
+.btn-evaluation:hover, .btn-start-now:hover {
+    background-color: #2c3748;
+}
+
+/* === [HEADER STYLING] === */
+header {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--clr-white);
+    background-color: var(--clr-dark-blue);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: var(--clr-white);
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 0.9rem;
+    color: var(--clr-text-light);
+}
+
+/* === [INSTRUCTIONS PAGE LAYOUT & CARD] === */
+
+.instructions-page {
+    padding: 40px 20px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.instructions-card {
+    background-color: var(--clr-white); 
+    color: var(--clr-dark-blue); 
+    padding: 50px 40px;
+    border-radius: 15px; 
+    width: 100%;
+    max-width: 550px; /* Consistent card width */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Instructions Card Icon and Title */
+.instructions-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--clr-dark-blue);
+    color: var(--clr-white); 
+}
+
+.instructions-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Instruction List Items */
+.instruction-list {
+    margin-bottom: 40px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    background-color: var(--clr-light-gray);
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+}
+
+.instruction-number {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--clr-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+/* Specific colors for each number */
+.num-1 { background-color: var(--clr-primary); } 
+.num-2 { background-color: var(--clr-secondary); } 
+.num-3 { background-color: var(--clr-tertiary); } 
+
+.instruction-item p {
+    color: var(--clr-dark-blue); 
+    margin: 0;
+    flex-grow: 1;
+}
+
+.btn-start-now {
+    margin-top: 10px;
+}

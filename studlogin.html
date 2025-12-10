@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMetrics | Student Login</title>
+    <link rel="stylesheet" href="studlogin.css"> 
+</head>
+<body>
+    
+    <header>
+        <div class="container">
+            <h1>EduMetrics</h1>
+            <p>AI-Driven Student Competency Evaluation</p>
+        </div>
+    </header>
+
+    <main class="login-page">
+        <div class="login-card">
+            <h2>Student Login</h2>
+            <p>Let's start your evaluation!</p>
+
+            <form action="studassdb.html" method="GET">
+
+                <div class="form-group">
+                    <label for="student-name">Student Name</label>
+                    <input type="text" id="student-name" name="name" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade-level">Grade Level</label>
+                    <input type="text" id="grade-level" name="grade" value="Grade 6" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthday">Birthday</label>
+                    <input 
+                        type="date" 
+                        id="birthday" 
+                        name="birthday" 
+                        required
+                    >
+                </div>
+
+                <!-- 🚀 UPDATED FIELD: Section changed from select to text input 🚀 -->
+                <div class="form-group">
+                    <label for="section">Section</label>
+                    <input 
+                        type="text" 
+                        id="section" 
+                        name="section" 
+                        placeholder="e.g., Rizal or Section A" 
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-evaluation">
+                    Start Evaluation <span style="font-size: 1.2rem;">&rarr;</span>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Client-side validation and navigation script
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            
+            const studentName = document.getElementById('student-name').value.trim();
+            const birthday = document.getElementById('birthday').value.trim();
+            const section = document.getElementById('section').value.trim(); // Now reading from text input
+
+            // Check if all required fields are filled
+            if (studentName && birthday && section) {
+                // Navigates to the assessment page
+                window.location.href = "studassdb.html";
+            } else {
+                alert("Please fill in your name, birthday, and section to start the evaluation.");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+mutation CreateNewUser($displayName: String!, $email: String, $photoUrl: String, $userType: String!) @auth(level: USER) {
+  user_insert(data: {displayName: $displayName, email: $email, photoUrl: $photoUrl, userType: $userType, createdAt_expr: "request.time"})
+}
+
+query GetEvaluationsForStudent($studentId: UUID!) @auth(level: USER) {
+  evaluations(where: {studentId: {eq: $studentId}}) {
+    id
+    overallScore
+    readinessLevel
+    teacherReviewStatus
+    createdAt
+  }
+}
+
+mutation UpdateTeacherReviewStatus($evaluationId: UUID!, $teacherReviewStatus: String) @auth(level: USER) {
+  evaluation_update(key: {id: $evaluationId}, data: {teacherReviewStatus: $teacherReviewStatus})
+}
+
+query ListClassroomsForTeacher($teacherId: UUID!) @auth(level: USER) {
+  classrooms(where: {teacherId: {eq: $teacherId}}) {
+    id
+    name
+    description
+    createdAt
+  }
+}

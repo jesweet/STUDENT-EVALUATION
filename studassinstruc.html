@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMetrics | Assessment Instructions</title>
+    <link rel="stylesheet" href="studassinstruc.css"> 
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>EduMetrics</h1>
+            <p>AI-Driven Student Competency Evaluation</p>
+        </div>
+    </header>
+
+    <main class="instructions-page">
+        <div class="instructions-card">
+            <div class="instructions-icon">
+                📖
+            </div>
+            <h2 class="instructions-title">Instructions</h2>
+
+            <div class="instruction-list">
+                <div class="instruction-item">
+                    <span class="instruction-number num-1">1</span>
+                    <p>Read the passage carefully.</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-number num-2">2</span>
+                    <p>Answer honestly.</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-number num-3">3</span>
+                    <p>Click Next to continue to the next question</p>
+                </div>
+            </div>
+
+            <button class="btn btn-evaluation btn-start-now" onclick="startAssessment()">
+                Start Now!
+            </button>
+        </div>
+    </main>
+
+    <script>
+        function startAssessment() {
+            // This button should lead to the first actual assessment question page.
+            // Based on your file names, that's 'studasspage.html'
+            window.location.href = "studasspage.html";
+        }
+    </script>
+</body>
+</html>

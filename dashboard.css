@@ -1,0 +1,164 @@
+:root {
+    /* Color Palette */
+    --clr-dark-blue: #1f2937; 
+    --clr-medium-blue: #ffffff; 
+    --clr-white: #ffffff;
+    --clr-text-light: #ffffff; 
+    --clr-primary: #323d4c; 
+    --clr-primary-hover: #323d4c;
+
+    /* Type */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Global Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--clr-dark-blue);
+    color: var(--clr-white);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header Styling */
+header {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--clr-medium-blue);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: var(--clr-white);
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 0.9rem;
+    color: var(--clr-textlight);
+}
+
+/* Welcome Section */
+.welcome-section {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.welcome-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.welcome-subtitle {
+    font-size: 1.1rem;
+    color: var(--clr-text-light);
+    margin-bottom: 60px;
+}
+
+/* Role Cards Layout (using Flexbox) */
+.role-cards {
+    display: flex;
+    justify-content: center;
+    gap: 40px; 
+    flex-wrap: wrap; 
+}
+
+/* Individual Card Styling */
+.card {
+    background-color: var(--clr-medium-blue);
+    padding: 40px 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px; 
+    text-align: center;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px); 
+}
+
+.card-icon {
+    font-size: 4rem; 
+    margin-bottom: 20px;
+    /* Simulate the circular icon background */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--clr-dark-blue); 
+}
+
+.card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #1f2937;
+}
+
+.card p {
+    color: var(--clr-primary);
+    margin-bottom: 30px;
+    min-height: 40px;
+}
+
+/* Button Styling */
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; 
+    max-width: 250px;
+}
+
+.btn-primary {
+    background-color: var(--clr-primary);
+    color: var(--clr-white);
+}
+
+.btn-primary:hover {
+    background-color: var(--clr-primary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--clr-primary);
+    color: var(--clr-white);
+    
+}
+
+.btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+/* Media Query for Responsiveness */
+@media (max-width: 800px) {
+    .role-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        max-width: 90%; 
+    }
+
+    .welcome-title {
+        font-size: 2.5rem;
+    }
+}

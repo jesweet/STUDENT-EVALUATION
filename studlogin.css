@@ -1,0 +1,174 @@
+/* === [SECTION 1: CORE VARIABLES & RESET] === */
+:root {
+    /* Color Palette */
+    --clr-dark-blue: #1f2937; 
+    --clr-medium-blue: #374151; 
+    --clr-white: #ffffff;
+    --clr-text-light: #d1d5db;
+    --clr-primary: #1e40af; 
+    --clr-primary-hover: #1e3a8a;
+
+    /* Typography */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* === [SECTION 2: GLOBAL & LAYOUT] === */
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--clr-dark-blue);
+    line-height: 1.6;
+    color: var(--clr-white);
+    min-height: 100vh;
+    display: flex; 
+    flex-direction: column;
+}
+
+/* Used for centering content and general padding */
+.container {
+    width: 90%;
+    max-width: 1200px; 
+    margin: 0 auto;
+}
+
+/* Base Button Styling (Reused across all pages) */
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+/* === [SECTION 3: HEADER STYLING] === */
+
+header {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--clr-white);
+    background-color: var(--clr-dark-blue);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: var(--clr-white);
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 0.9rem;
+    color: var(--clr-text-light);
+}
+
+/* === [SECTION 4: LOGIN CARD SPECIFIC] === */
+
+.login-page {
+    /* Centers the card vertically within the remaining space */
+    padding: 40px 20px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1; 
+}
+
+.login-card {
+    background-color: var(--clr-white); 
+    color: var(--clr-dark-blue); 
+    padding: 50px 40px;
+    border-radius: 10px;
+    width: 50%;
+    max-width: 400px; 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.login-card h2 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.login-card p {
+    color: #6b7280;
+    margin-bottom: 30px;
+    font-size: 1rem;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--clr-dark-blue);
+}
+
+/* Input Styles - UPDATED to handle text, number, and date inputs */
+.login-card input[type="text"],
+.login-card input[type="number"],
+.login-card input[type="date"] { 
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: var(--clr-dark-blue);
+    background-color: var(--clr-white);
+    transition: all 0.3s ease;
+}
+
+/* Special styling for date input */
+.login-card input[type="date"] {
+    font-family: var(--font-family);
+    cursor: pointer;
+}
+
+/* Style the calendar icon in date input */
+.login-card input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.3);
+    transition: filter 0.3s ease;
+}
+
+.login-card input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(0.5);
+}
+
+/* Focus styles for editable inputs (Student Name, Birthday, Section) */
+.login-card input:not([readonly]):focus {
+    outline: none;
+    border-color: var(--clr-primary);
+    box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+}
+
+/* Styling for the FIXED/READONLY Grade Level Input */
+.login-card input[readonly] {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    color: #6b7280;
+}
+
+/* Evaluation Button Styles */
+.btn-evaluation {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    background-color: var(--clr-medium-blue); 
+    color: var(--clr-white);
+}
+
+.btn-evaluation:hover {
+    background-color: #2c3748;
+}

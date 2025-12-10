@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMetrics | Student Dashboard</title>
+    <link rel="stylesheet" href="studassdb.css"> 
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>EduMetrics</h1>
+            <p>AI-Driven Student Competency Evaluation</p>
+        </div>
+    </header>
+
+    <main class="dashboard-page">
+        <div class="dashboard-card">
+            
+            <div class="welcome-header">
+                <div class="welcome-icon">⭐</div>
+                <div class="welcome-title-group">
+                    <h2 class="welcome-title" id="welcomeStudentName">Welcome!</h2>
+                    <p class="welcome-subtitle">Grade 6</p>
+                </div>
+            </div>
+
+            <div class="status-box">
+                <div class="status-info">
+                    <div class="status-title">Evaluation Status</div>
+                    <div class="status-text">Not yet taken</div>
+                </div>
+                <button class="btn-ready" onclick="startEvaluation()">Ready to Start!</button>
+            </div>
+
+            <button class="btn btn-evaluation btn-main-action" onclick="startEvaluation()">
+                Start Evaluation <span style="font-size: 1.2rem;">&rarr;</span>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // Function to get a query parameter value (the name) from the URL
+        function getQueryParameter(param) {
+            const urlParams = new URLSearchParams(window.location.search)
+            return urlParams.get(param); 
+        }
+
+        // Run on page load to personalize the greeting
+        window.onload = function() {
+            const studentName = getQueryParameter('name');
+            const welcomeElement = document.getElementById('welcomeStudentName');
+            
+            if (studentName && welcomeElement) {
+                // Update the greeting
+                welcomeElement.textContent = `Welcome, ${studentName}!`;
+            } else if (welcomeElement) {
+                // Default message if name parameter is missing
+                welcomeElement.textContent = "Welcome, Student!";
+            }
+        };
+        
+        // Function for the Start Evaluation button
+        function startEvaluation() {
+            // Navigates to the actual assessment page (studasspage.html)
+            window.location.href = "studassinstruc.html";
+        }
+    </script>
+</body>
+</html>

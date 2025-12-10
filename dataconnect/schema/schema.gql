@@ -1,0 +1,47 @@
+type User @table {
+  displayName: String!
+  userType: String!
+  createdAt: Timestamp!
+  email: String
+  photoUrl: String
+}
+
+type Evaluation @table {
+  student: User!
+  createdAt: Timestamp!
+  overallScore: Int!
+  readinessLevel: String!
+  teacherReviewStatus: String
+}
+
+type Question @table {
+  text: String!
+  questionType: String!
+  expectedAnswer: String!
+  difficultyLevel: String!
+  imageURL: String
+  topic: String
+}
+
+type StudentResponse @table {
+  evaluation: Evaluation!
+  question: Question!
+  studentAnswer: String!
+  aiScore: Int!
+  aiFeedback: String!
+  teacherOverrideScore: Int
+  teacherOverrideFeedback: String
+}
+
+type Classroom @table {
+  name: String!
+  teacher: User!
+  createdAt: Timestamp!
+  description: String
+}
+
+type ClassEnrollment @table(key: ["student", "classroom"]) {
+  student: User!
+  classroom: Classroom!
+  enrolledAt: Timestamp!
+}

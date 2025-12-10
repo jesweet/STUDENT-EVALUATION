@@ -1,0 +1,61 @@
+mutation CreateDemoData @transaction @auth(level: PUBLIC, insecureReason: "This operation is for seeding demo data and is safe to expose to the public.") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      displayName: "demouser1",
+      userType: "student",
+      createdAt: "2024-01-01T00:00:00Z"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      displayName: "demouser2",
+      userType: "teacher",
+      createdAt: "2024-01-01T00:00:00Z"
+    }
+  ])
+  classroom_insertMany(data: [
+    {
+      id: "650e8400-e29b-41d4-a716-446655440002",
+      name: "Math 101",
+      description: "Introduction to Mathematics",
+      teacherId: "550e8400-e29b-41d4-a716-446655440001",
+      createdAt: "2024-01-05T00:00:00Z"
+    }
+  ])
+  classEnrollment_insertMany(data: [
+    {
+      studentId: "550e8400-e29b-41d4-a716-446655440000",
+      classroomId: "650e8400-e29b-41d4-a716-446655440002",
+      enrolledAt: "2024-01-06T00:00:00Z"
+    }
+  ])
+  evaluation_insertMany(data: [
+    {
+      id: "750e8400-e29b-41d4-a716-446655440003",
+      studentId: "550e8400-e29b-41d4-a716-446655440000",
+      createdAt: "2024-01-07T00:00:00Z",
+      overallScore: 85,
+      readinessLevel: "Proficient"
+    }
+  ])
+  question_insertMany(data: [
+    {
+      id: "850e8400-e29b-41d4-a716-446655440004",
+      difficultyLevel: "Medium",
+      expectedAnswer: "42",
+      questionType: "Calculation",
+      text: "What is the answer to life, the universe, and everything?",
+      topic: "General Knowledge"
+    }
+  ])
+  studentResponse_insertMany(data: [
+    {
+      id: "950e8400-e29b-41d4-a716-446655440005",
+      evaluationId: "750e8400-e29b-41d4-a716-446655440003",
+      questionId: "850e8400-e29b-41d4-a716-446655440004",
+      aiFeedback: "Good job!",
+      aiScore: 90,
+      studentAnswer: "42"
+    }
+  ])
+}
