@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduMetrics | Student Dashboard</title>
     <link rel="stylesheet" href="studassdb.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <style>
         .header-actions {
             position: absolute;
@@ -416,17 +420,24 @@
                 </div>
             </div>
 
-            <!-- History Section -->
-            <div class="history-section">
-                <h3>Assessment History</h3>
-                <div id="historyContainer">
-                    <!-- History items will be populated by JavaScript -->
-                </div>
-            </div>
         </div>
     </main>
 
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLUXbAALnqjtLyQNCktQO8eS1TKvE6-Dc",
+            authDomain: "edumetrics-62601.firebaseapp.com",
+            projectId: "edumetrics-62601",
+            storageBucket: "edumetrics-62601.firebasestorage.app",
+            messagingSenderId: "1008049617356",
+            appId: "1:1008049617356:web:ce2aa07a1ebc3533444569"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         // Function to get a query parameter value from the URL
         function getQueryParameter(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -453,65 +464,22 @@
                     localStorage.removeItem('assessmentResult');
                     localStorage.removeItem('aiFeedback');
                     
-                    // Add to history before clearing
-                    saveToHistory();
-                    
                     // Redirect to start over
                     window.location.href = "studassinstruc.html";
                 }
             );
         }
 
-        // Function to save current results to history
-        function saveToHistory() {
-            const currentResult = localStorage.getItem('assessmentResult');
-            if (currentResult) {
-                const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
-                const result = JSON.parse(currentResult);
-                
-                // Add timestamp and ID
-                const historyItem = {
-                    ...result,
-                    historyId: Date.now(),
-                    completedAt: new Date().toISOString()
-                };
-                
-                history.push(historyItem);
-                localStorage.setItem('assessmentHistory', JSON.stringify(history));
-            }
-        }
 
-        // Function to view specific history item
-        function viewHistoryResults(historyId) {
-            const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
-            const item = history.find(h => h.historyId === historyId);
-            
-            if (item) {
-                // Temporarily store this history item as the current result
-                localStorage.setItem('assessmentResult', JSON.stringify(item));
-                localStorage.setItem('viewingHistory', 'true');
-                window.location.href = "assessment-results.html";
-            }
-        }
-
-        // Function to delete history item
-        function deleteHistoryItem(historyId) {
-            showCustomConfirm(
-                'Delete History Item',
-                'Are you sure you want to delete this assessment from your history? This action cannot be undone.',
-                () => {
-                    const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
-                    const newHistory = history.filter(h => h.historyId !== historyId);
-                    localStorage.setItem('assessmentHistory', JSON.stringify(newHistory));
-                    loadDashboard();
-                }
-            );
-        }
 
         // LOGOUT FUNCTION
         function logout() {
-            showCustomConfirm('Logout Confirmation', 'Are you sure you want to log out? Your progress will be lost.', () => {
-                localStorage.clear();
+            showCustomConfirm('Logout Confirmation', 'Are you sure you want to log out?', () => {
+                // Clear sensitive data but keep assessment history
+                localStorage.removeItem('assessmentResult');
+                localStorage.removeItem('aiFeedback');
+                localStorage.removeItem('viewingHistory');
+                // Keep student info for next login
                 window.location.href = 'index.html';
             });
         }
@@ -578,14 +546,11 @@
                 
                 // Create action buttons for completed assessment
                 actionButtons.innerHTML = `
-                    <button class="btn-primary" onclick="viewResults()">
+                    <button class="btn-primary" onclick="viewResults()" style="min-width: 220px;">
                         📊 View Detailed Results
                     </button>
-                    <button class="btn-secondary" onclick="retakeAssessment()">
-                        🔄 Retake Assessment
-                    </button>
-                    <button class="btn-outline" onclick="window.location.href='studassdb.html'">
-                        📈 View Progress History
+                    <button class="btn-secondary" onclick="retakeAssessment()" style="min-width: 220px; font-size: 1.2rem;">
+                        🔄 RETAKE ASSESSMENT
                     </button>
                 `;
             } else {
@@ -600,60 +565,14 @@
                 
                 // Create action buttons for new assessment
                 actionButtons.innerHTML = `
-                    <button class="btn-primary" onclick="startEvaluation()">
-                        🚀 Start New Assessment
-                    </button>
-                    <button class="btn-outline" onclick="window.location.href='studassdb.html'">
-                        📈 View Progress History
+                    <button class="btn-primary" onclick="startEvaluation()" style="min-width: 250px; font-size: 1.2rem;">
+                        🧪 TAKE TEST NOW
                     </button>
                 `;
             }
             
-            // Load history
-            loadHistory();
         }
 
-        // Load assessment history
-        function loadHistory() {
-            const historyContainer = document.getElementById('historyContainer');
-            const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
-            
-            if (history.length === 0) {
-                historyContainer.innerHTML = `
-                    <div class="empty-state">
-                        <div class="emoji">📚</div>
-                        <h3>No Assessment History</h3>
-                        <p>Complete your first assessment to see your progress over time.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Sort history by completion date (newest first)
-            history.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-            
-            historyContainer.innerHTML = history.map(item => `
-                <div class="history-item">
-                    <div class="history-details">
-                        <h4>Assessment Completed - ${formatDate(item.completedAt)}</h4>
-                        <p>
-                            Overall: ${item.totalScore}/${item.totalQuestions} (${item.percentage}%) |
-                            Reading: ${item.comprehensionScore}/${item.comprehensionTotal} (${item.comprehensionPercentage}%) |
-                            Grammar: ${item.grammarScore}/${item.grammarTotal} (${item.grammarPercentage}%) |
-                            Status: ${item.readinessLevel}
-                        </p>
-                    </div>
-                    <div class="history-actions">
-                        <button class="btn-outline" onclick="viewHistoryResults(${item.historyId})">
-                            📊 View Results
-                        </button>
-                        <button class="btn-danger" onclick="deleteHistoryItem(${item.historyId})">
-                            🗑️ Delete
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
 
         // Generate performance insights based on assessment results
         function generatePerformanceInsights(result) {
@@ -822,6 +741,7 @@
         window.onload = function() {
             loadDashboard();
         };
+
     </script>
 
     <!-- Modal Container -->
