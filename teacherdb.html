@@ -216,85 +216,107 @@
 
     <!-- Student Details Modal -->
     <div id="studentModal" class="modal">
-      <div class="modal-content" style="max-width: 900px">
+      <div class="modal-content modern-modal" style="max-width: 1200px">
         <span class="close" onclick="closeModal()">&times;</span>
 
         <h2 id="modalStudentName">Student Details</h2>
 
-        <!-- Student Information -->
-        <div class="modal-section">
-          <h4>👤 Student Information</h4>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="info-label">Name:</span>
-              <span class="info-value" id="modalName">-</span>
+        <!-- 2-Column Grid Layout -->
+        <div class="modal-body-grid">
+          <!-- Left Column -->
+          <div class="left-column">
+            <!-- Student Profile Card -->
+            <div class="modal-section profile-card">
+              <h4>👤 Student Profile</h4>
+              <div class="profile-info">
+                <div class="info-item">
+                  <span class="info-label">Name:</span>
+                  <span class="info-value" id="modalName">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Section:</span>
+                  <span class="info-value" id="modalSection">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Birthday:</span>
+                  <span class="info-value" id="modalBirthday">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Date Taken:</span>
+                  <span class="info-value" id="modalDate">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Status:</span>
+                  <span class="status-badge" id="modalStatus">-</span>
+                </div>
+              </div>
             </div>
-            <div class="info-item">
-              <span class="info-label">Section:</span>
-              <span class="info-value" id="modalSection">-</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Birthday:</span>
-              <span class="info-value" id="modalBirthday">-</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Date Taken:</span>
-              <span class="info-value" id="modalDate">-</span>
+
+            <!-- Performance Card with Progress Bars -->
+            <div class="modal-section performance-card">
+              <h4>📊 Performance</h4>
+              <div class="performance-metrics">
+                <div class="metric-item">
+                  <span class="metric-label">Overall Score</span>
+                  <div class="progress-track">
+                    <div class="progress-fill" id="overallProgress"></div>
+                  </div>
+                  <span class="metric-value" id="modalScore">-</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Reading Comprehension</span>
+                  <div class="progress-track">
+                    <div class="progress-fill" id="readingProgress"></div>
+                  </div>
+                  <span class="metric-value" id="modalReading">-</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Grammar</span>
+                  <div class="progress-track">
+                    <div class="progress-fill" id="grammarProgress"></div>
+                  </div>
+                  <span class="metric-value" id="modalGrammar">-</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Score Breakdown -->
-        <div class="modal-section">
-          <h4>📊 Score Breakdown</h4>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="info-label">Overall Score:</span>
-              <span class="info-value" id="modalScore">-</span>
+          <!-- Right Column -->
+          <div class="right-column">
+            <!-- AI Analysis Card -->
+            <div class="modal-section ai-card">
+              <h4>🤖 AI Analysis</h4>
+              
+              <!-- General Feedback -->
+              <div class="ai-content-box">
+                <h5>📝 General Feedback</h5>
+                <p id="aiGeneralFeedback">Loading AI feedback...</p>
+              </div>
+
+              <!-- Strengths & Weaknesses Side by Side -->
+              <div class="ai-content-box dual-section">
+                <div class="strengths-section">
+                  <h5>✨ Strengths</h5>
+                  <div id="aiStrengths">-</div>
+                </div>
+                <div class="weaknesses-section">
+                  <h5>📈 Weaknesses</h5>
+                  <div id="aiImprovement">-</div>
+                </div>
+              </div>
+
+              <!-- Recommendations -->
+              <div class="ai-content-box">
+                <h5>💡 Recommendations</h5>
+                <div id="aiRecommendations">-</div>
+              </div>
+
+              <!-- Collapsible Incorrect Answers -->
+              <details class="ai-content-box incorrect-answers">
+                <summary>❌ Incorrect Answers Review</summary>
+                <div id="incorrectAnswersList">-</div>
+              </details>
             </div>
-            <div class="info-item">
-              <span class="info-label">Reading Comprehension:</span>
-              <span class="info-value" id="modalReading">-</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Grammar:</span>
-              <span class="info-value" id="modalGrammar">-</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Status:</span>
-              <span class="status-badge" id="modalStatus">-</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- AI Feedback Section -->
-        <div class="modal-section" id="aiFeedbackSection">
-          <h4>🤖 AI-Generated Feedback</h4>
-
-          <div class="ai-section">
-            <h5>📝 General Feedback</h5>
-            <p id="aiGeneralFeedback">Loading AI feedback...</p>
-          </div>
-
-          <div class="ai-section">
-            <h5>✨ Strengths</h5>
-            <div id="aiStrengths">-</div>
-          </div>
-
-          <div class="ai-section">
-            <h5>📈 Areas for Improvement</h5>
-            <div id="aiImprovement">-</div>
-          </div>
-
-          <div class="ai-section">
-            <h5>💡 Recommendations</h5>
-            <div id="aiRecommendations">-</div>
-          </div>
-
-          <!-- Incorrect Answers Section -->
-          <div class="answer-review" id="incorrectAnswersSection">
-            <h5>❌ Incorrect Answers (with Correct Answers)</h5>
-            <div id="incorrectAnswersList">-</div>
           </div>
         </div>
       </div>
@@ -550,6 +572,23 @@
             "AI feedback not yet generated for this student.";
         }
 
+        // Update Progress Bars with Animation
+        setTimeout(() => {
+          const overallProgress = document.getElementById("overallProgress");
+          const readingProgress = document.getElementById("readingProgress");
+          const grammarProgress = document.getElementById("grammarProgress");
+          
+          if (overallProgress) {
+            overallProgress.style.width = (parseFloat(student.percentage) || 0) + "%";
+          }
+          if (readingProgress) {
+            readingProgress.style.width = (parseFloat(student.comprehensionPercentage) || 0) + "%";
+          }
+          if (grammarProgress) {
+            grammarProgress.style.width = (parseFloat(student.grammarPercentage) || 0) + "%";
+          }
+        }, 300); // Small delay for smooth animation
+
         // Show incorrect answers with correct answers
         displayIncorrectAnswers(student);
 
@@ -577,6 +616,7 @@
         }
 
         let html = "";
+        let questionNumber = 1; // Start numbering from 1
         incorrectAnswers.forEach((answer) => {
           const studentAnswerLetter =
             answer.studentAnswer !== null
@@ -588,7 +628,7 @@
 
           html += `
                     <div class="answer-item">
-                        <strong>Question ${answer.questionId}</strong> (${
+                        <strong>Question ${questionNumber}</strong> (${
             answer.category
           } - ${answer.difficulty})<br>
                         <span class="wrong-answer">Student's answer: ${studentAnswerLetter}</span><br>
@@ -602,6 +642,7 @@
                         }
                     </div>
                 `;
+          questionNumber++; // Increment for next question
         });
 
         container.innerHTML = html;

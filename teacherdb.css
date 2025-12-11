@@ -657,6 +657,334 @@ body {
     line-height: 1.6;
     margin: 0;
 }
+/* === [SECTION 11B: MODERN MODAL LAYOUT] === */
+
+/* Modern Modal Layout */
+.modern-modal {
+    max-width: 1200px !important;
+    padding: 30px;
+    max-height: 85vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for modern modal */
+.modern-modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modern-modal::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modern-modal::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.modern-modal::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.modal-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Profile Card Styling */
+.profile-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.profile-card h4 {
+    color: var(--clr-dark-blue);
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Performance Card Styling */
+.performance-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.performance-card h4 {
+    color: var(--clr-dark-blue);
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.performance-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metric-label {
+    font-weight: 600;
+    color: var(--clr-dark-blue);
+    font-size: 0.95rem;
+}
+
+/* Progress Bar Styling */
+.progress-track {
+    width: 100%;
+    height: 12px;
+    background-color: #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--clr-primary), #3b82f6);
+    border-radius: 6px;
+    transition: width 0.8s ease-in-out;
+    width: 0%;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.metric-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--clr-dark-blue);
+    text-align: right;
+}
+
+/* AI Card Styling */
+.ai-card {
+    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+    border-radius: 12px;
+    padding: 25px;
+    border: 2px solid #a855f7;
+    box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.1);
+    position: relative;
+}
+
+.ai-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #a855f7, #c084fc);
+    border-radius: 12px 12px 0 0;
+}
+
+.ai-card h4 {
+    color: #7c3aed;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* AI Content Box Styling */
+.ai-content-box {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid #a855f7;
+    backdrop-filter: blur(10px);
+}
+
+.ai-content-box h5 {
+    color: #7c3aed;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.ai-content-box p,
+.ai-content-box div {
+    color: #374151;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.ai-content-box ul {
+    color: #374151;
+    line-height: 1.6;
+    margin-left: 20px;
+}
+
+.ai-content-box li {
+    color: #374151;
+    margin-bottom: 5px;
+}
+
+/* Dual Section for Strengths & Weaknesses */
+.dual-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.strengths-section,
+.weaknesses-section {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    padding: 15px;
+    border-left: 3px solid #10b981;
+}
+
+.weaknesses-section {
+    border-left-color: #f59e0b;
+}
+
+.strengths-section h5 {
+    color: #059669;
+}
+
+.weaknesses-section h5 {
+    color: #d97706;
+}
+
+/* Collapsible Incorrect Answers */
+.incorrect-answers {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.incorrect-answers summary {
+    color: #7c3aed;
+    font-weight: 600;
+    font-size: 1rem;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    background: rgba(168, 85, 247, 0.1);
+    border-radius: 6px;
+    margin: -20px -20px 15px -20px;
+    transition: background-color 0.3s ease;
+}
+
+.incorrect-answers summary:hover {
+    background: rgba(168, 85, 247, 0.15);
+}
+
+.incorrect-answers summary::-webkit-details-marker {
+    display: none;
+}
+
+.incorrect-answers summary::after {
+    content: '▼';
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.incorrect-answers[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.incorrect-answers .answer-item {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border-left: 3px solid #ef4444;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.incorrect-answers .answer-item.correct {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-left-color: #10b981;
+}
+
+/* Responsive Design for Modern Modal */
+@media (max-width: 1024px) {
+    .modal-body-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .dual-section {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .modern-modal {
+        max-width: 90% !important;
+        padding: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .modern-modal {
+        padding: 20px;
+        margin: 5% auto;
+        width: 95%;
+    }
+    
+    .profile-card,
+    .performance-card,
+    .ai-card {
+        padding: 20px;
+    }
+    
+    .ai-content-box {
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+}
 
 /* === [SECTION 12: RESPONSIVE DESIGN] === */
 
@@ -1023,6 +1351,154 @@ h1, h2, h3, h4, h5, h6,
 .custom-modal-overlay .modal-box,
 .custom-modal-overlay .modal-title,
 .custom-modal-overlay .modal-message {
+/* Fix ALL remaining modal text contrast issues */
+#studentModal,
+#studentModal *,
+.modal-content,
+.modal-content *,
+.ai-section,
+.ai-section *,
+.answer-review,
+.answer-review *,
+.answer-item,
+.answer-item *,
+.info-label,
+.info-value {
+    color: #1f2937 !important; /* Force dark text everywhere in modal */
+/* FINAL COMPREHENSIVE MODAL CONTRAST FIX */
+#studentModal,
+#studentModal .modal-content,
+#studentModal .modal-section,
+#studentModal h2,
+#studentModal h3,
+#studentModal h4,
+#studentModal h5,
+#studentModal p,
+#studentModal span,
+#studentModal div,
+#studentModal li,
+#studentModal .info-item,
+#studentModal .info-label,
+/* SPECIFIC FIX FOR AI FEEDBACK ELEMENTS */
+#aiGeneralFeedback,
+#aiStrengths,
+#aiImprovement,
+#aiRecommendations,
+#aiGeneralFeedback *,
+#aiStrengths *,
+#aiImprovement *,
+#aiRecommendations *,
+#incorrectAnswersList,
+#incorrectAnswersList *,
+.ai-section h5,
+.ai-section div {
+    color: #1f2937 !important;
+    background-color: transparent !important;
+}
+
+/* Target the actual content that gets inserted via innerHTML */
+#studentModal [id^="ai"],
+#studentModal [id*="Feedback"],
+/* ULTIMATE AI FEEDBACK CONTRAST FIX */
+#studentModal #aiGeneralFeedback,
+#studentModal #aiStrengths,
+#studentModal #aiImprovement,
+#studentModal #aiRecommendations,
+#studentModal #incorrectAnswersList {
+    color: #1f2937 !important;
+    background-color: transparent !important;
+    font-family: var(--font-family) !important;
+    font-size: inherit !important;
+    font-weight: normal !important;
+}
+
+/* Force any dynamically inserted content to be dark */
+#studentModal #aiGeneralFeedback:empty::before,
+#studentModal #aiStrengths:empty::before,
+#studentModal #aiImprovement:empty::before,
+#studentModal #aiRecommendations:empty::before,
+#studentModal #incorrectAnswersList:empty::before {
+    color: #1f2937 !important;
+}
+
+/* Target any UL/LI elements that might be inserted */
+#studentModal ul,
+#studentModal li,
+#studentModal ol {
+    color: #1f2937 !important;
+}
+
+/* Ensure all content in AI sections is properly styled */
+#studentModal .ai-section p,
+#studentModal .ai-section div,
+#studentModal .ai-section span {
+    color: #1f2937 !important;
+}
+#studentModal [id*="Strength"],
+#studentModal [id*="Improvement"],
+#studentModal [id*="Recommendation"],
+#studentModal [id*="incorrect"] {
+    color: #1f2937 !important;
+}
+
+/* Force all text in AI sections to be dark */
+.ai-section,
+.ai-section * {
+    color: #1f2937 !important;
+}
+
+/* Override any background that might be causing white text */
+.ai-section {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+    color: #1f2937 !important;
+}
+#studentModal .info-value,
+#studentModal .status-badge,
+#studentModal .ai-section,
+#studentModal .ai-section h5,
+#studentModal .ai-section p,
+#studentModal .ai-section ul,
+#studentModal .ai-section li,
+#studentModal .answer-review,
+#studentModal .answer-item,
+#studentModal .answer-item strong {
+    color: #1f2937 !important;
+    background-color: transparent !important;
+}
+}
+
+/* Specific fixes for modal sections */
+.modal-section h4,
+.modal-section p,
+.modal-section span,
+.modal-section div {
+    color: #1f2937 !important;
+}
+
+/* Fix info grid elements */
+.info-item,
+.info-item span,
+.info-item div {
+    color: #1f2937 !important;
+}
+
+/* Fix status badge in modal */
+#modalStatus,
+.status-badge {
+    color: #1f2937 !important;
+}
+
+/* Ensure all text in modal is dark */
+#studentModal h2,
+#studentModal h3,
+#studentModal h4,
+#studentModal h5,
+#studentModal p,
+#studentModal span,
+#studentModal div,
+#studentModal li {
+    color: #1f2937 !important;
+}
     color: #1f2937 !important; /* Force dark text in custom confirm modals */
 }
 }
