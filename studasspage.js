@@ -18,8 +18,10 @@ window.onload = function() {
         
         if (!urlStudentName) {
             // No localStorage and no URL parameter - redirect to login
-            alert("Session expired. Please log in again.");
-            window.location.href = 'studlogin.html';
+            showCustomAlert('Session Expired', 'Session expired. Please log in again.');
+            setTimeout(() => {
+                window.location.href = 'studlogin.html';
+            }, 2000);
             return; // Stop execution if no valid session
         } else {
             // User has URL parameter but no localStorage - save it and continue
@@ -171,18 +173,20 @@ function previousQuestion() {
 
 function submitAssessment() {
     // Add submit confirmation
-    if (!confirm("Are you sure you want to submit your assessment? You cannot change your answers after this.")) {
-        return;
-    }
-    
-    const unanswered = answers.filter(a => a === null).length;
-    
-    if (unanswered > 0) {
-        const confirmSubmit = confirm(
-            `You have ${unanswered} unanswered question(s).\n\nAre you sure you want to submit?`
-        );
-        if (!confirmSubmit) return;
-    }
+    showCustomConfirm('Confirm Submission', 'Are you sure you want to submit your assessment? You cannot change your answers after this.', () => {
+        const unanswered = answers.filter(a => a === null).length;
+        
+        if (unanswered > 0) {
+            showCustomConfirm('Unanswered Questions', `You have ${unanswered} unanswered question(s). Are you sure you want to submit?`, () => {
+                proceedWithSubmission();
+            });
+        } else {
+            proceedWithSubmission();
+        }
+    });
+}
+
+function proceedWithSubmission() {
     
     clearInterval(timerInterval);
     const totalTime = Math.floor((Date.now() - startTime) / 1000);
@@ -271,7 +275,7 @@ function submitAssessment() {
 async function submitToBackend(data) {
     try {
         // Show loading message
-        alert('Submitting your assessment and generating AI feedback...\n\nThis may take 10-15 seconds. Please wait.');
+        showCustomAlert('Processing Assessment', 'Submitting your assessment and generating AI feedback...\n\nThis may take 10-15 seconds. Please wait.');
 
         // Step 1: Construct AI prompt from student's answers
         const aiPrompt = constructAIPrompt(data);
@@ -287,7 +291,7 @@ async function submitToBackend(data) {
 
     } catch (error) {
         console.error('Error in client-side processing:', error);
-        alert('⚠️ Could not complete processing.\n\nYour results are saved locally.\n\nError: ' + error.message);
+        showCustomAlert('Processing Error', '⚠️ Could not complete processing.\n\nYour results are saved locally.\n\nError: ' + error.message);
 
         // Show results without AI feedback
         showBasicResults(data);
@@ -472,9 +476,10 @@ ${data.readinessLevel === "Ready"
     : "💪 Keep practicing! Review the questions above with your teacher."}
     `;
     
-    alert(message);
-    window.location.href = 'assessment-results.html';
-    window.location.href = 'studassdb.html';
+    showCustomAlert('Assessment Completed', message);
+    setTimeout(() => {
+        window.location.href = 'assessment-results.html';
+    }, 3000);
 }
 
 

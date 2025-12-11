@@ -52,16 +52,20 @@
         </div>
     </main>
 
+    <!-- Modal Container -->
+    <div id="modalContainer" class="modal-hidden"></div>
+
+    <script src="modal.js"></script>
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); 
+            event.preventDefault();
             
             // In a real app, validation and server authentication would happen here.
             
             console.log("Teacher attempting to sign in...");
             
             // Redirect to the teacher dashboard after simulated successful login
-            window.location.href = "teacherdb.html"; 
+            window.location.href = "teacherdb.html";
         });
     </script>
 </body>

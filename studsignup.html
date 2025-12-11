@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduMetrics | Student Login</title>
+    <title>EduMetrics | Student Sign Up</title>
     <link rel="stylesheet" href="studlogin.css">
     <style>
         /* Additional styles for form footer link */
@@ -40,14 +40,19 @@
 
     <main class="login-page">
         <div class="login-card">
-            <h2>Student Login</h2>
-            <p>Welcome back! Let's start your evaluation!</p>
+            <h2>Student Sign Up</h2>
+            <p>Create your account to start your evaluation!</p>
 
             <form action="studassdb.html" method="GET">
 
                 <div class="form-group">
                     <label for="student-name">Student Name</label>
                     <input type="text" id="student-name" name="name" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade-level">Grade Level</label>
+                    <input type="text" id="grade-level" name="grade" value="Grade 6" readonly>
                 </div>
                 
                 <div class="form-group">
@@ -60,13 +65,26 @@
                     >
                 </div>
 
+                <div class="form-group">
+                    <label for="section">Section</label>
+                    <select id="section" name="section" required style="width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; color: #1f2937; background-color: #ffffff;">
+                        <option value="" disabled selected>Select your section</option>
+                        <option value="Rizal">Rizal</option>
+                        <option value="Bonifacio">Bonifacio</option>
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                        <option value="C">Section C</option>
+                        <option value="D">Section D</option>
+                    </select>
+                </div>
+
                 <button type="submit" class="btn btn-evaluation">
-                    Login <span style="font-size: 1.2rem;">&rarr;</span>
+                    Register <span style="font-size: 1.2rem;">&rarr;</span>
                 </button>
             </form>
 
             <div class="form-footer">
-                <p>New student? <a href="studsignup.html" class="link">Sign Up here</a></p>
+                <p>Already registered? <a href="studlogin.html" class="link">Login here</a></p>
             </div>
         </div>
     </main>

@@ -89,23 +89,30 @@
 
         // LOGOUT FUNCTION
         function logout() {
-            if (!confirm("Are you sure you want to log out? Your progress will be lost.")) return;
-            localStorage.clear();
-            window.location.href = 'index.html';
+            showCustomConfirm('Logout Confirmation', 'Are you sure you want to log out? Your progress will be lost.', () => {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            });
         }
 
         // Retake Prevention
         window.onload = function() {
-            // Get student name from URL query parameters
+            // Get all student data from URL query parameters
             const studentName = getQueryParameter('name');
+            const section = getQueryParameter('section');
+            const birthday = getQueryParameter('birthday');
+            const grade = getQueryParameter('grade');
             const welcomeElement = document.getElementById('welcomeStudentName');
             
-            // Force save studentName to localStorage if found in URL
-            if (studentName) {
-                localStorage.setItem('studentName', studentName);
-                if (welcomeElement) {
-                    welcomeElement.textContent = `Welcome, ${studentName}!`;
-                }
+            // Explicitly save all student data to localStorage if they exist in URL
+            if (studentName) localStorage.setItem('studentName', studentName);
+            if (section) localStorage.setItem('studentSection', section);
+            if (birthday) localStorage.setItem('studentBirthday', birthday);
+            if (grade) localStorage.setItem('studentGrade', grade);
+            
+            // Display student name in welcome message
+            if (studentName && welcomeElement) {
+                welcomeElement.textContent = `Welcome, ${studentName}!`;
             } else {
                 // If not in URL, try to get from localStorage for greeting
                 const savedName = localStorage.getItem('studentName');
@@ -138,5 +145,10 @@
             }
         };
     </script>
+
+    <!-- Modal Container -->
+    <div id="modalContainer" class="modal-hidden"></div>
+
+    <script src="modal.js"></script>
 </body>
 </html>

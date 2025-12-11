@@ -58,6 +58,10 @@
         </div>
     </main>
 
+    <!-- Modal Container -->
+    <div id="modalContainer" class="modal-hidden"></div>
+
+    <script src="modal.js"></script>
     <script>
         document.getElementById('signupForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Stop default form submission
@@ -75,10 +79,12 @@
                 errorElement.style.display = 'none';
                 
                 // 1. Show success message
-                alert("Sign Up successful! Please log in with your new credentials.");
+                showCustomAlert('Sign Up Successful', 'Sign Up successful! Please log in with your new credentials.');
 
                 // 2. Redirect DIRECTLY to the login page
-                window.location.href = "teacherlogin.html"; 
+                setTimeout(() => {
+                    window.location.href = "teacherlogin.html";
+                }, 2000);
             }
         });
     </script>

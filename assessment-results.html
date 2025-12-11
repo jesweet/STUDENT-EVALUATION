@@ -292,9 +292,10 @@
     <script>
         // LOGOUT FUNCTION
         function logout() {
-            if (!confirm("Are you sure you want to log out?")) return;
-            localStorage.clear();
-            window.location.href = 'index.html';
+            showCustomConfirm('Logout Confirmation', 'Are you sure you want to log out?', () => {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            });
         }
 
         // LOAD AND DISPLAY RESULTS
@@ -308,8 +309,10 @@
             const aiFeedback = localStorage.getItem('aiFeedback');
 
             if (!assessmentData) {
-                alert('No assessment results found. Redirecting to dashboard.');
-                window.location.href = 'studassdb.html';
+                showCustomAlert('No Results Found', 'No assessment results found. Redirecting to dashboard.');
+                setTimeout(() => {
+                    window.location.href = 'studassdb.html';
+                }, 2000);
                 return;
             }
 
@@ -382,5 +385,10 @@
             `;
         }
     </script>
+
+    <!-- Modal Container -->
+    <div id="modalContainer" class="modal-hidden"></div>
+
+    <script src="modal.js"></script>
 </body>
 </html>
