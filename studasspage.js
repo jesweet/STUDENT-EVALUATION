@@ -276,7 +276,13 @@ function proceedWithSubmission() {
 async function submitToBackend(data) {
     try {
         // Show loading message
-        showCustomAlert('Processing Assessment', 'Submitting your assessment and generating AI feedback...\n\nThis may take 10-15 seconds. Please wait.');
+        showCustomAlert('Processing Assessment',
+            'Submitting your assessment and generating AI feedback...\n\n' +
+            'This may take 10-15 seconds. Please wait.\n\n' +
+            '✓ Calculating scores\n' +
+            '✓ Analyzing performance patterns\n' +
+            '🤖 Generating personalized feedback'
+        );
 
         // Step 1: Call Firebase Cloud Function for AI feedback
         const aiFeedback = await callGroqAPI(null, data);
@@ -339,7 +345,7 @@ async function callGroqAPI(prompt, data) {
         // Construct AI prompt from student data
         const analysisPrompt = constructAIPrompt(data);
         
-        const apiKey = "YOUR_GROQ_API_KEY";
+        const apiKey = "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";
         
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
@@ -377,13 +383,21 @@ async function callGroqAPI(prompt, data) {
                 const feedbackData = JSON.parse(aiContent);
                 return feedbackData;
             } catch (parseError) {
-                // If JSON parsing fails, create structured feedback from text
-                return {
-                    generalFeedback: aiContent.substring(0, 200) + '...',
-                    strengths: 'Analysis shows performance across different skill areas.',
-                    areasForImprovement: 'Review questions answered incorrectly for targeted improvement.',
-                    recommendations: 'Continue practice and seek additional support in weak areas.'
-                };
+                console.error('JSON parsing failed:', parseError);
+                // Try to extract JSON from markdown code blocks
+                const jsonMatch = aiContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
+                if (jsonMatch) {
+                    try {
+                        const feedbackData = JSON.parse(jsonMatch[1]);
+                        console.log('Extracted JSON from markdown');
+                        return feedbackData;
+                    } catch (e) {
+                        console.error('Failed to parse extracted JSON');
+                    }
+                }
+                
+                // Enhanced fallback with more dynamic content
+                return createDynamicFallback(data, aiContent);
             }
         } else {
             throw new Error('Invalid response structure from Groq API');
@@ -391,14 +405,82 @@ async function callGroqAPI(prompt, data) {
 
     } catch (error) {
         console.error('Groq API error:', error);
-        // Return fallback AI feedback if API fails
-        return {
-            generalFeedback: `Based on your score of ${data.percentage}%, you have ${data.readinessLevel === 'Ready' ? 'demonstrated strong understanding' : 'areas that need improvement'}.`,
-            strengths: `You scored well in ${data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'}.`,
-            areasForImprovement: `Focus on improving your ${data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} skills.`,
-            recommendations: `Practice regularly and review the questions you got wrong. Consider additional study time on challenging topics.`
-        };
+        // Return enhanced fallback AI feedback
+        return createDynamicFallback(data, error.message);
     }
+}
+
+// Add API status monitoring
+window.apiStatus = {
+    lastCall: null,
+    successRate: 0,
+    totalCalls: 0,
+    successfulCalls: 0
+};
+
+// Wrap callGroqAPI to track API status
+const originalCallGroqAPI = callGroqAPI;
+callGroqAPI = async function(prompt, data) {
+    window.apiStatus.totalCalls++;
+    window.apiStatus.lastCall = new Date().toISOString();
+    
+    try {
+        const result = await originalCallGroqAPI(prompt, data);
+        window.apiStatus.successfulCalls++;
+        window.apiStatus.successRate = (window.apiStatus.successfulCalls / window.apiStatus.totalCalls * 100).toFixed(1);
+        console.log('✅ AI API call successful. Success rate:', window.apiStatus.successRate + '%');
+        return result;
+    } catch (error) {
+        window.apiStatus.successRate = (window.apiStatus.successfulCalls / window.apiStatus.totalCalls * 100).toFixed(1);
+        console.log('❌ AI API call failed. Success rate:', window.apiStatus.successRate + '%');
+        throw error;
+    }
+};
+
+// Enhanced fallback function with dynamic content generation
+function createDynamicFallback(data, aiContent) {
+    // Analyze performance patterns for more personalized fallback
+    const wrongAnswersByCategory = {};
+    const wrongAnswersByDifficulty = {};
+    
+    data.detailedAnswers.forEach(answer => {
+        if (!answer.isCorrect) {
+            // Category analysis
+            if (!wrongAnswersByCategory[answer.category]) {
+                wrongAnswersByCategory[answer.category] = 0;
+            }
+            wrongAnswersByCategory[answer.category]++;
+            
+            // Difficulty analysis
+            if (!wrongAnswersByDifficulty[answer.difficulty]) {
+                wrongAnswersByDifficulty[answer.difficulty] = 0;
+            }
+            wrongAnswersByDifficulty[answer.difficulty]++;
+        }
+    });
+    
+    // Generate category-specific insights
+    const categoryInsights = Object.entries(wrongAnswersByCategory)
+        .map(([category, count]) => `${category}: ${count} incorrect answer${count > 1 ? 's' : ''}`)
+        .join(', ');
+    
+    // Generate difficulty-specific insights
+    const difficultyInsights = Object.entries(wrongAnswersByDifficulty)
+        .map(([difficulty, count]) => `${difficulty}: ${count} incorrect`)
+        .join(', ');
+    
+    const strongerArea = data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar';
+    const weakerArea = data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar';
+    
+    return {
+        generalFeedback: `Based on your assessment results, you scored ${data.percentage}% overall, which indicates ${data.readinessLevel === 'Ready' ? 'strong readiness for advanced topics' : 'opportunities for growth in foundational concepts'}. Your performance shows particular ${data.comprehensionPercentage > data.grammarPercentage ? 'strength in reading comprehension' : 'proficiency in grammar skills'}.`,
+        
+        strengths: `You demonstrated particular strength in ${strongerArea} with ${data[strongerArea.toLowerCase().replace(' ', '') + 'Percentage']}% accuracy. You showed consistency across ${data.comprehensionPercentage === data.grammarPercentage ? 'both skill areas' : 'your stronger subject area'}. Your time management was effective, completing the assessment in ${Math.floor(data.timeSpent / 60)} minutes.`,
+        
+        areasForImprovement: `Focus on improving your ${weakerArea} skills (${data[weakerArea.toLowerCase().replace(' ', '') + 'Percentage']}% accuracy). ${categoryInsights ? `Specific attention needed in: ${categoryInsights}.` : ''} ${difficultyInsights ? `Difficulty breakdown: ${difficultyInsights}.` : ''} ${data.percentage < 50 ? 'Consider reviewing fundamental concepts before moving to more advanced material.' : 'Continue building on your solid foundation while addressing identified weak areas.'}`,
+        
+        recommendations: `${data.percentage >= 80 ? 'Excellent work! ' : ''}Practice regularly in your ${weakerArea.toLowerCase()} skills. ${data.timeSpent > 1800 ? 'Work on time management while maintaining accuracy. ' : ''}Review the specific questions you answered incorrectly, focusing on the concepts behind each answer. ${categoryInsights ? `Pay special attention to: ${categoryInsights}. ` : ''}Consider seeking additional practice materials or tutoring support in challenging areas. Set small, achievable goals for improvement and track your progress over time.`
+    };
 }
 
 // Save assessment data to Firestore

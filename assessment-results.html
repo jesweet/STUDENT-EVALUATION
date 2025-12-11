@@ -350,15 +350,40 @@
         }
 
         function displayFallbackFeedback(data) {
-            const generalFeedback = `Based on your score of ${data.percentage}%, you have ${data.readinessLevel === 'Ready' ? 'demonstrated strong understanding' : 'areas that need improvement'}.`;
-            const strengths = `You scored well in ${data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'}.`;
-            const weaknesses = `Focus on improving your ${data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} skills.`;
-            const recommendations = `Practice regularly and review the questions you got wrong. Consider additional study time on challenging topics.`;
+            console.log('Using enhanced fallback feedback system');
+            
+            // Show that this is fallback feedback
+            const fallbackNotice = '<p style="font-style: italic; color: #666; font-size: 0.9em; margin-bottom: 15px;">Note: Using standard feedback due to AI processing unavailability</p>';
+            
+            // Create more dynamic fallback content
+            const wrongAnswers = data.detailedAnswers.filter(answer => !answer.isCorrect);
+            const categoryPerformance = {};
+            
+            data.detailedAnswers.forEach(answer => {
+                if (!categoryPerformance[answer.category]) {
+                    categoryPerformance[answer.category] = { correct: 0, total: 0 };
+                }
+                categoryPerformance[answer.category].total++;
+                if (answer.isCorrect) {
+                    categoryPerformance[answer.category].correct++;
+                }
+            });
+            
+            const strongestCategory = Object.entries(categoryPerformance)
+                .reduce((a, b) => (a[1].correct / a[1].total) > (b[1].correct / b[1].total) ? a : b)[0];
+            
+            const generalFeedback = `Based on your score of ${data.percentage}%, you have ${data.readinessLevel === 'Ready' ? 'demonstrated strong understanding and readiness for advanced topics' : 'areas that need focused improvement to build a solid foundation'}. Your performance shows particular strength in ${strongestCategory}.`;
+            
+            const strengths = `You scored well in ${data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} (${Math.max(data.comprehensionPercentage, data.grammarPercentage)}%). ${wrongAnswers.length < 3 ? 'You demonstrated good consistency across most questions.' : 'You showed determination in completing the full assessment.'}`;
+            
+            const weaknesses = `Focus on improving your ${data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} skills. ${wrongAnswers.length > 0 ? `Review the ${wrongAnswers.length} questions you answered incorrectly for targeted practice.` : 'Maintain your excellent performance while challenging yourself with more difficult concepts.'}`;
+            
+            const recommendations = `Practice regularly and review the questions you got wrong. Consider additional study time on challenging topics. Focus on understanding the underlying concepts rather than memorizing answers. ${data.timeSpent > 1800 ? 'Work on time management skills while maintaining accuracy.' : 'Continue developing your efficient test-taking strategies.'}`;
 
-            document.getElementById('generalFeedback').textContent = generalFeedback;
-            document.getElementById('strengths').textContent = strengths;
-            document.getElementById('weaknesses').textContent = weaknesses;
-            document.getElementById('recommendations').textContent = recommendations;
+            document.getElementById('generalFeedback').innerHTML = fallbackNotice + generalFeedback;
+            document.getElementById('strengths').innerHTML = fallbackNotice + strengths;
+            document.getElementById('weaknesses').innerHTML = fallbackNotice + weaknesses;
+            document.getElementById('recommendations').innerHTML = fallbackNotice + recommendations;
         }
 
         function formatFeedbackText(text) {
