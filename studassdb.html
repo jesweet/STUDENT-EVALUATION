@@ -87,6 +87,17 @@
             window.location.href = "assessment-results.html";
         }
 
+        // Function for retaking the assessment
+        function retakeAssessment() {
+            showCustomConfirm('Retake Assessment', 'Are you sure you want to retake the assessment? Your previous local results will be cleared.', () => {
+                // Clear previous assessment data
+                localStorage.removeItem('assessmentResult');
+                localStorage.removeItem('aiFeedback');
+                // Redirect to start over
+                window.location.href = "studassinstruc.html";
+            });
+        }
+
         // LOGOUT FUNCTION
         function logout() {
             showCustomConfirm('Logout Confirmation', 'Are you sure you want to log out? Your progress will be lost.', () => {
@@ -136,12 +147,28 @@
                 // Hide Ready Button
                 document.querySelector('.btn-ready').style.display = 'none';
 
+                // Create button container
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'button-container';
+
                 // Add "View Results" Button
                 const resultsBtn = document.createElement('button');
                 resultsBtn.className = 'btn btn-evaluation';
                 resultsBtn.textContent = 'View Past Results';
                 resultsBtn.onclick = function() { window.location.href = 'assessment-results.html'; };
-                document.querySelector('.dashboard-card').appendChild(resultsBtn);
+
+                // Add "Retake Assessment" Button
+                const retakeBtn = document.createElement('button');
+                retakeBtn.className = 'btn btn-retake';
+                retakeBtn.textContent = 'Retake Assessment';
+                retakeBtn.onclick = retakeAssessment;
+
+                // Add buttons to container
+                buttonContainer.appendChild(resultsBtn);
+                buttonContainer.appendChild(retakeBtn);
+
+                // Add container to dashboard card
+                document.querySelector('.dashboard-card').appendChild(buttonContainer);
             }
         };
     </script>

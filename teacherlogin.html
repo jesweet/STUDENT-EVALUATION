@@ -55,17 +55,71 @@
     <!-- Modal Container -->
     <div id="modalContainer" class="modal-hidden"></div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <script src="modal.js"></script>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
-            // In a real app, validation and server authentication would happen here.
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
             
-            console.log("Teacher attempting to sign in...");
-            
-            // Redirect to the teacher dashboard after simulated successful login
-            window.location.href = "teacherdb.html";
+            try {
+                // Show loading message
+                showCustomAlert('Signing In', 'Verifying your credentials... Please wait.');
+
+                // Query Firestore for teacher with matching email and password
+                const querySnapshot = await db.collection('teachers')
+                    .where('email', '==', email)
+                    .where('password', '==', password)
+                    .where('isActive', '==', true)
+                    .get();
+
+                if (querySnapshot.empty) {
+                    showCustomAlert('Login Failed', 'Invalid email or password. Please check your credentials and try again.');
+                    return;
+                }
+
+                // Get the first matching document
+                const teacherDoc = querySnapshot.docs[0];
+                const teacherData = teacherDoc.data();
+
+                // Save teacher details to localStorage
+                localStorage.setItem('teacherEmail', teacherData.email);
+                localStorage.setItem('teacherId', teacherDoc.id);
+                localStorage.setItem('teacherLoginTime', new Date().toISOString());
+
+                console.log("Teacher logged in successfully:", teacherData.email);
+
+                // Show success message
+                showCustomAlert('Login Successful', 'Welcome! Redirecting to your dashboard...');
+
+                // Redirect to teacher dashboard
+                setTimeout(() => {
+                    window.location.href = "teacherdb.html";
+                }, 1500);
+
+            } catch (error) {
+                console.error('Login error:', error);
+                showCustomAlert('Error', 'Login failed. Please try again.');
+            }
         });
     </script>
 </body>

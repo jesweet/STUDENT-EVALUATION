@@ -333,22 +333,64 @@ function constructAIPrompt(data) {
     return analysis;
 }
 
-// Call Firebase Cloud Function for AI feedback
+// Call Groq API directly for AI feedback
 async function callGroqAPI(prompt, data) {
     try {
-        // Call the generateAIFeedback Cloud Function
-        const generateAIFeedback = firebase.functions().httpsCallable('generateAIFeedback');
+        // Construct AI prompt from student data
+        const analysisPrompt = constructAIPrompt(data);
         
-        const result = await generateAIFeedback(data);
+        const apiKey = "YOUR_GROQ_API_KEY";
         
-        if (result.data && result.data.success) {
-            return result.data.data;
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'llama3-8b-8192',
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'You are an AI educational assistant that analyzes student assessment results and provides constructive feedback. Provide specific, actionable feedback in a structured format.'
+                    },
+                    {
+                        role: 'user',
+                        content: `${analysisPrompt}\n\nPlease provide feedback in this exact JSON format:\n{\n  "generalFeedback": "Overall assessment summary",\n  "strengths": "What the student did well",\n  "areasForImprovement": "Specific areas needing work",\n  "recommendations": "Actionable next steps"\n}`
+                    }
+                ],
+                max_tokens: 1000,
+                temperature: 0.7
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.choices && result.choices[0] && result.choices[0].message) {
+            const aiContent = result.choices[0].message.content;
+            try {
+                // Try to parse the JSON response
+                const feedbackData = JSON.parse(aiContent);
+                return feedbackData;
+            } catch (parseError) {
+                // If JSON parsing fails, create structured feedback from text
+                return {
+                    generalFeedback: aiContent.substring(0, 200) + '...',
+                    strengths: 'Analysis shows performance across different skill areas.',
+                    areasForImprovement: 'Review questions answered incorrectly for targeted improvement.',
+                    recommendations: 'Continue practice and seek additional support in weak areas.'
+                };
+            }
         } else {
-            throw new Error('Invalid response from AI service');
+            throw new Error('Invalid response structure from Groq API');
         }
 
     } catch (error) {
-        console.error('Firebase Functions error:', error);
+        console.error('Groq API error:', error);
         // Return fallback AI feedback if API fails
         return {
             generalFeedback: `Based on your score of ${data.percentage}%, you have ${data.readinessLevel === 'Ready' ? 'demonstrated strong understanding' : 'areas that need improvement'}.`,

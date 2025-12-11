@@ -51,6 +51,30 @@ body {
     background-color: #2c3748;
 }
 
+/* Button container for View Results and Retake Assessment */
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.button-container .btn {
+    flex: 1;
+    min-width: 140px;
+    max-width: 200px;
+}
+
+/* Retake Assessment button styling */
+.btn-retake {
+    background-color: #f97316; /* Orange warning color */
+    color: var(--clr-white);
+}
+
+.btn-retake:hover {
+    background-color: #ea580c; /* Darker orange on hover */
+}
+
 
 /* === [HEADER STYLING] === */
 header {
