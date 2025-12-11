@@ -4,7 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduMetrics | Student Dashboard</title>
-    <link rel="stylesheet" href="studassdb.css"> 
+    <link rel="stylesheet" href="studassdb.css">
+    <style>
+        .header-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .btn-logout {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: #b91c1c;
+        }
+
+        header {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
 
@@ -12,6 +38,9 @@
         <div class="container">
             <h1>EduMetrics</h1>
             <p>AI-Driven Student Competency Evaluation</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-logout" onclick="logout()">Log Out</button>
         </div>
     </header>
 
@@ -47,7 +76,26 @@
             return urlParams.get(param); 
         }
 
-        // Run on page load to personalize the greeting
+        // Function for the Start Evaluation button
+        function startEvaluation() {
+            // Navigates to the actual assessment page (studasspage.html)
+            window.location.href = "studassinstruc.html";
+        }
+
+        // Function for the View Results button
+        function viewResults() {
+            window.location.href = "assessment-results.html";
+        }
+
+        // LOGOUT FUNCTION
+        function logout() {
+            if (confirm('Are you sure you want to log out? This will clear all your data.')) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Check for existing assessment results on page load
         window.onload = function() {
             const studentName = getQueryParameter('name');
             const welcomeElement = document.getElementById('welcomeStudentName');
@@ -59,12 +107,62 @@
                 // Default message if name parameter is missing
                 welcomeElement.textContent = "Welcome, Student!";
             }
+
+            // Check for existing assessment results
+            checkAssessmentStatus();
         };
-        
-        // Function for the Start Evaluation button
-        function startEvaluation() {
-            // Navigates to the actual assessment page (studasspage.html)
-            window.location.href = "studassinstruc.html";
+
+        function checkAssessmentStatus() {
+            const assessmentResult = localStorage.getItem('assessmentResult');
+            const statusText = document.querySelector('.status-text');
+            const startButton = document.querySelector('.btn-ready');
+            const mainActionButton = document.querySelector('.btn-evaluation');
+            
+            if (assessmentResult) {
+                // Assessment already completed
+                statusText.textContent = 'Completed';
+                
+                // Hide start buttons
+                if (startButton) startButton.style.display = 'none';
+                if (mainActionButton) {
+                    mainActionButton.style.display = 'none';
+                }
+                
+                // Add View Results button
+                addViewResultsButton();
+            } else {
+                // No assessment completed yet
+                statusText.textContent = 'Not yet taken';
+            }
+        }
+
+        function addViewResultsButton() {
+            const statusBox = document.querySelector('.status-box');
+            if (statusBox && !document.querySelector('.btn-view-results')) {
+                const viewResultsBtn = document.createElement('button');
+                viewResultsBtn.className = 'btn-view-results';
+                viewResultsBtn.textContent = 'View Results';
+                viewResultsBtn.onclick = viewResults;
+                viewResultsBtn.style.cssText = `
+                    background: #10b981;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-top: 15px;
+                    transition: background-color 0.2s;
+                `;
+                viewResultsBtn.onmouseover = function() {
+                    this.style.background = '#059669';
+                };
+                viewResultsBtn.onmouseout = function() {
+                    this.style.background = '#10b981';
+                };
+                statusBox.appendChild(viewResultsBtn);
+            }
         }
     </script>
 </body>

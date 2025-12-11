@@ -480,6 +480,7 @@ ${data.readinessLevel === "Ready"
     `;
     
     alert(message);
+    window.location.href = 'assessment-results.html';
     window.location.href = 'studassdb.html';
 }
 
