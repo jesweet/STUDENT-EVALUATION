@@ -5,6 +5,7 @@ let currentQuestion = 0;
 let answers = new Array(questions.length).fill(null);
 let startTime = null;
 let timerInterval = null;
+let isSubmitting = false; // Global variable to prevent "Leave Page" warning during submission
 
 // INITIALIZATION
 
@@ -52,7 +53,7 @@ function startTimer() {
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
         const minutes = Math.floor(elapsed / 60);
         const seconds = elapsed % 60;
-        document.getElementById('timer').textContent = 
+        document.getElementById('timer').textContent =
             `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }, 1000);
 }
@@ -333,7 +334,7 @@ function constructAIPrompt(data) {
     }
 
     return analysis;
-}       
+}
 
 // Call Groq API for AI feedback
 async function callGroqAPI(prompt, data) {
@@ -430,6 +431,9 @@ async function saveToFirestore(data, aiFeedback) {
 // SHOW RESULTS WITH AI FEEDBACK
 
 function showAIResults(data, aiFeedback) {
+    // Set isSubmitting = true BEFORE running window.location.href to prevent "Leave Site?" popup
+    isSubmitting = true;
+    
     // Redirect directly to results page - all info is displayed there
     window.location.href = 'assessment-results.html';
 }
@@ -437,6 +441,9 @@ function showAIResults(data, aiFeedback) {
 // SHOW BASIC RESULTS (FALLBACK)
 
 function showBasicResults(data) {
+    // Set isSubmitting = true BEFORE running window.location.href to prevent "Leave Site?" popup
+    isSubmitting = true;
+    
     const minutes = Math.floor(data.timeSpent / 60);
     const seconds = data.timeSpent % 60;
     
@@ -471,8 +478,8 @@ Overall Score: ${data.totalScore}/${data.totalQuestions} (${data.percentage}%)
 
 ${wrongAnswersSummary}
 
-${data.readinessLevel === "Ready" 
-    ? "🌟 Excellent work! You're ready for the next level!" 
+${data.readinessLevel === "Ready"
+    ? "🌟 Excellent work! You're ready for the next level!"
     : "💪 Keep practicing! Review the questions above with your teacher."}
     `;
     
@@ -498,10 +505,11 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// PREVENT ACCIDENTAL PAGE LEAVE
+// PREVENT ACCIDENTAL PAGE LEAVE - Updated to check isSubmitting
 
 window.addEventListener('beforeunload', function(e) {
-    if (currentQuestion < questions.length) {
+    // Only show warning if assessment is not complete AND not currently submitting
+    if (currentQuestion < questions.length && !isSubmitting) {
         e.preventDefault();
         e.returnValue = 'You have not finished the assessment. Are you sure you want to leave?';
         return e.returnValue;

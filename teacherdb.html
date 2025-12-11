@@ -9,17 +9,17 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-      /* Additional styles for AI feedback display */
+      /* Additional styles for AI feedback display - Dark theme compatible */
       .ai-section {
         margin: 25px 0;
         padding: 20px;
-        background-color: #f3f4f6;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
         border-radius: 8px;
-        border-left: 4px solid #1e40af;
+        border-left: 4px solid var(--clr-primary);
       }
 
       .ai-section h5 {
-        color: #1f2937;
+        color: var(--clr-dark-blue);
         font-size: 1.1rem;
         margin-bottom: 12px;
         display: flex;
@@ -29,7 +29,7 @@
 
       .ai-section p,
       .ai-section ul {
-        color: #4b5563;
+        color: #374151;
         line-height: 1.7;
         margin-bottom: 10px;
       }
@@ -41,7 +41,7 @@
       .answer-review {
         margin-top: 20px;
         padding: 15px;
-        background-color: #fff;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
         border-radius: 6px;
         border: 1px solid #e5e7eb;
       }
@@ -49,7 +49,7 @@
       .answer-item {
         padding: 12px;
         margin-bottom: 10px;
-        background-color: #f9fafb;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
         border-radius: 6px;
         border-left: 3px solid #ef4444;
       }
@@ -59,7 +59,7 @@
       }
 
       .answer-item strong {
-        color: #1f2937;
+        color: var(--clr-dark-blue);
       }
 
       .answer-item .correct-answer {
@@ -71,133 +71,146 @@
         color: #dc2626;
         font-weight: 600;
       }
-
-      .header-actions {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-      }
-
-      .btn-logout {
-        background: #dc2626;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.2s;
-      }
-
-      .btn-logout:hover {
-        background: #b91c1c;
-      }
-
-      header {
-        position: relative;
-      }
     </style>
   </head>
   <body>
-    <header>
-      <div class="container">
-        <h1>EduMetrics</h1>
-        <p>AI-Driven Student Competency Evaluation</p>
-      </div>
-      <div class="header-actions">
-        <button class="btn-logout" onclick="logout()">Log Out</button>
+    <header class="main-header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="logo-section">
+            <h1 class="logo">🎓 EduMetrics</h1>
+            <p class="tagline">AI-Driven Student Competency Evaluation</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="teacher-info">
+            <span class="teacher-welcome">Welcome, Teacher!</span>
+          </div>
+          <button class="btn-logout" onclick="logout()">
+            <span>🚪</span> Log Out
+          </button>
+        </div>
       </div>
     </header>
 
-    <main class="dashboard-page">
-      <div class="dashboard-container">
-        <div class="dashboard-header">
-          <h2>Teacher Dashboard</h2>
-          <p>Monitor student performance and AI-generated insights</p>
+    <main class="dashboard-main">
+      <div class="dashboard-wrapper">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header-section">
+          <div class="header-content-main">
+            <h2 class="dashboard-title">Teacher Dashboard</h2>
+            <p class="dashboard-subtitle">Monitor student performance and AI-generated insights</p>
+          </div>
         </div>
+
+        <!-- Quick Stats Section -->
+        <section class="stats-section">
+          <div class="section-header">
+            <h3 class="section-title">📊 Quick Overview</h3>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card stat-card-primary">
+              <div class="stat-icon">👥</div>
+              <div class="stat-content">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Students</div>
+              </div>
+            </div>
+            <div class="stat-card stat-card-success">
+              <div class="stat-icon">📈</div>
+              <div class="stat-content">
+                <div class="stat-number" id="avgScore">0%</div>
+                <div class="stat-label">Average Score</div>
+              </div>
+            </div>
+            <div class="stat-card stat-card-ready">
+              <div class="stat-icon">✅</div>
+              <div class="stat-content">
+                <div class="stat-number" id="readyStudents">0</div>
+                <div class="stat-label">Ready Students</div>
+              </div>
+            </div>
+            <div class="stat-card stat-card-warning">
+              <div class="stat-icon">⚠️</div>
+              <div class="stat-content">
+                <div class="stat-number" id="needImprovement">0</div>
+                <div class="stat-label">Need Improvement</div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <!-- Section Filter -->
-        <div class="section-filter-card">
-          <h3>Filter by Section</h3>
-          <div class="section-buttons">
-            <button class="section-btn active" onclick="filterBySection('All')">
-              All Sections
-            </button>
-            <button class="section-btn" onclick="filterBySection('A')">
-              Section A
-            </button>
-            <button class="section-btn" onclick="filterBySection('B')">
-              Section B
-            </button>
-            <button class="section-btn" onclick="filterBySection('C')">
-              Section C
-            </button>
-            <button class="section-btn" onclick="filterBySection('D')">
-              Section D
-            </button>
-            <button class="section-btn" onclick="filterBySection('Rizal')">
-              Rizal
-            </button>
-            <button class="section-btn" onclick="filterBySection('Bonifacio')">
-              Bonifacio
-            </button>
+        <section class="filter-section">
+          <div class="section-header">
+            <h3 class="section-title">🔍 Filter by Section</h3>
           </div>
-          <p class="filter-info">
-            Showing: <strong id="currentFilter">All Sections</strong>
-          </p>
-        </div>
+          <div class="section-filter-card">
+            <div class="filter-controls">
+              <div class="section-buttons">
+                <button class="section-btn active" onclick="filterBySection('All')">
+                  All Sections
+                </button>
+                <button class="section-btn" onclick="filterBySection('A')">
+                  Section A
+                </button>
+                <button class="section-btn" onclick="filterBySection('B')">
+                  Section B
+                </button>
+                <button class="section-btn" onclick="filterBySection('C')">
+                  Section C
+                </button>
+                <button class="section-btn" onclick="filterBySection('D')">
+                  Section D
+                </button>
+                <button class="section-btn" onclick="filterBySection('Rizal')">
+                  Rizal
+                </button>
+                <button class="section-btn" onclick="filterBySection('Bonifacio')">
+                  Bonifacio
+                </button>
+              </div>
+            </div>
+            <div class="filter-info">
+              <span class="filter-label">Currently showing:</span>
+              <span class="filter-value" id="currentFilter">All Sections</span>
+            </div>
+          </div>
+        </section>
 
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-number" id="totalStudents">0</div>
-            <div class="stat-label">Total Students</div>
+        <!-- Students Performance Section -->
+        <section class="table-section">
+          <div class="section-header">
+            <h3 class="section-title">📋 Students Performance Overview</h3>
           </div>
-          <div class="stat-card">
-            <div class="stat-number" id="avgScore">0%</div>
-            <div class=" Score</div>
-stat-label">Average          </div>
-          <div class="stat-card">
-            <div class="stat-number" id="readyStudents">0</div>
-            <div class="stat-label">Ready Students</div>
+          <div class="section-card">
+            <div class="table-wrapper">
+              <table class="students-table">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Section</th>
+                    <th>Overall Score</th>
+                    <th>Reading Comp.</th>
+                    <th>Grammar</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                  <tr class="loading-row">
+                    <td colspan="7" class="loading-cell">
+                      <div class="loading-content">
+                        <div class="loading-spinner"></div>
+                        <span>Loading students... If data doesn't load, check backend connection.</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-number" id="needImprovement">0</div>
-            <div class="stat-label">Need Improvement</div>
-          </div>
-        </div>
-
-        <!-- Students Performance Overview -->
-        <div class="section-card">
-          <h3>Students Performance Overview</h3>
-
-          <div class="table-container">
-            <table class="students-table">
-              <thead>
-                <tr>
-                  <th>Student Name</th>
-                  <th>Section</th>
-                  <th>Score</th>
-                  <th>Reading</th>
-                  <th>Grammar</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="studentsTableBody">
-                <tr>
-                  <td
-                    colspan="7"
-                    style="text-align: center; padding: 40px; color: #6b7280"
-                  >
-                    Loading students... If data doesn't load, check backend
-                    connection.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        </section>
       </div>
     </main>
 

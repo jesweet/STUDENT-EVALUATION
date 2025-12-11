@@ -15,12 +15,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Detect if we're on signup or login page
-const isSignupPage = document.querySelector('h2').textContent.includes('Sign Up');
+// Detect if we're on signup or login page by checking URL and form ID
+const isSignupPage = window.location.pathname.includes('studsignup.html') ||
+                     document.querySelector('form')?.id === 'signupForm' ||
+                     document.querySelector('h2')?.textContent.includes('Sign Up');
 
 // Form submission handler
 document.querySelector('form').addEventListener('submit', async function(event) {
-    event.preventDefault(); 
+    event.preventDefault();
     
     const studentName = document.getElementById('student-name').value.trim();
     const birthday = document.getElementById('birthday').value.trim();
@@ -43,12 +45,13 @@ document.querySelector('form').addEventListener('submit', async function(event) 
 // Signup function - Save to Firestore + LocalStorage + Redirect
 async function handleSignup(studentName, birthday) {
     try {
-        // Get additional fields for signup
-        const gradeLevel = document.getElementById('grade-level')?.value.trim() || 'Grade 6';
+        // Get additional fields for signup - check for Name, Birthday, Section
         const section = document.getElementById('section')?.value.trim() || '';
+        const gradeLevel = document.getElementById('grade-level')?.value.trim() || 'Grade 6';
 
+        // Check if all fields are filled (Name, Birthday, Section)
         if (!section) {
-            showCustomAlert('Validation Error', 'Please select your section.');
+            showCustomAlert('Validation Error', 'Please fill in all required fields (Name, Birthday, and Section).');
             return;
         }
 
@@ -64,7 +67,7 @@ async function handleSignup(studentName, birthday) {
             return;
         }
 
-        // Save to Firestore
+        // Save to Firestore students collection
         await db.collection('students').add({
             name: studentName,
             birthday: birthday,
@@ -74,7 +77,7 @@ async function handleSignup(studentName, birthday) {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // Store student information in localStorage
+        // Save to localStorage
         localStorage.setItem('studentName', studentName);
         localStorage.setItem('studentGrade', gradeLevel);
         localStorage.setItem('studentBirthday', birthday);
@@ -92,7 +95,7 @@ async function handleSignup(studentName, birthday) {
 
         showCustomAlert('Registration Successful', 'Welcome! Your account has been created successfully.');
 
-        // Navigate to student dashboard
+        // Redirect to studassdb.html
         setTimeout(() => {
             window.location.href = `studassdb.html?${params.toString()}`;
         }, 1500);
@@ -106,27 +109,29 @@ async function handleSignup(studentName, birthday) {
 // Login function - Check Firestore + LocalStorage + Redirect or Error
 async function handleLogin(studentName, birthday) {
     try {
-        // Check Firestore for matching student
+        // Query the students collection in Firestore matching studentName AND birthday
         const querySnapshot = await db.collection('students')
             .where('name', '==', studentName)
             .where('birthday', '==', birthday)
             .limit(1)
             .get();
 
+        // If NOT found: Show modal/alert and do NOT redirect
         if (querySnapshot.empty) {
-            showCustomAlert('Login Failed', 'No student found with this name and birthday combination. Please check your information or register as a new student.');
+            showCustomAlert('Student Not Found', 'Student not found. Please sign up first.');
             return;
         }
 
-        // Student found, get their data
+        // If found: Get the section from the database result
         const studentDoc = querySnapshot.docs[0];
         const studentData = studentDoc.data();
+        const studentSection = studentData.section;
 
-        // Store student information in localStorage
+        // Save studentName, studentBirthday, AND studentSection to localStorage
         localStorage.setItem('studentName', studentData.name);
-        localStorage.setItem('studentGrade', studentData.grade || 'Grade 6');
         localStorage.setItem('studentBirthday', studentData.birthday);
-        localStorage.setItem('studentSection', studentData.section);
+        localStorage.setItem('studentSection', studentSection);
+        localStorage.setItem('studentGrade', studentData.grade || 'Grade 6');
         localStorage.setItem('studentLoginTime', new Date().toISOString());
         localStorage.setItem('isNewStudent', 'false');
         localStorage.setItem('studentId', studentDoc.id);
@@ -136,12 +141,12 @@ async function handleLogin(studentName, birthday) {
             name: studentData.name,
             grade: studentData.grade || 'Grade 6',
             birthday: studentData.birthday,
-            section: studentData.section
+            section: studentSection
         });
 
         showCustomAlert('Login Successful', `Welcome back, ${studentData.name}!`);
 
-        // Navigate to student dashboard
+        // Redirect to studassdb.html
         setTimeout(() => {
             window.location.href = `studassdb.html?${params.toString()}`;
         }, 1500);
