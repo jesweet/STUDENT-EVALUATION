@@ -308,9 +308,8 @@
 
       // LOGOUT FUNCTION
       function logout() {
-        showCustomConfirm('Logout Confirmation', 'Are you sure you want to log out?', () => {
-          window.location.href = 'index.html';
-        });
+        // Direct logout without confirmation modal
+        window.location.href = 'index.html';
       }
 
       // LOAD STUDENTS FROM BACKEND

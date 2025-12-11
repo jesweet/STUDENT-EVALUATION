@@ -1011,4 +1011,24 @@ h1, h2, h3, h4, h5, h6,
 .filter-info,
 .students-table {
     color: var(--clr-dark-blue) !important;
+/* Force Dark Text on White Containers to fix contrast issues */
+.section-card, .stat-card, .section-filter-card, .modal-content {
+    color: #1f2937 !important;
+}
+
+/* Ensure links and headers inside cards are also dark */
+.section-card h3, .stat-number, .modal-content h2, .modal-content h4, .modal-content p, .modal-content span, .modal-content li {
+    color: #1f2937 !important;
+/* Fix Custom Modal contrast issues */
+.custom-modal-overlay .modal-box,
+.custom-modal-overlay .modal-title,
+.custom-modal-overlay .modal-message {
+    color: #1f2937 !important; /* Force dark text in custom confirm modals */
+}
+}
+
+/* AI Feedback Text specific fix */
+.ai-section p, .ai-section ul, .ai-section li {
+    color: #374151 !important; /* Dark Gray for readability */
+}
 }
