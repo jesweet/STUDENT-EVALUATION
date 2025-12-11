@@ -3,9 +3,4 @@ function startAssessment() {
     window.location.href = "studlogin.html";
 }
 
-function viewDashboard() {
-    // Keep the dummy function for the Teacher Dashboard, or update it later
-    window.location.href = "teachersignup.html";
-}
-
 
