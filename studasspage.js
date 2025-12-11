@@ -228,7 +228,8 @@ function proceedWithSubmission() {
             studentAnswer: answer,
             correctAnswer: question.correct,
             isCorrect: isCorrect,
-            options: question.options
+            options: question.options,
+            passage: question.passage || null
         });
     });
     
@@ -314,26 +315,62 @@ function constructAIPrompt(data) {
             wrongAnswersByCategory[answer.category].push({
                 questionId: answer.questionId,
                 difficulty: answer.difficulty,
+                questionText: answer.question,
                 studentAnswer: answer.studentAnswer,
-                correctAnswer: answer.correctAnswer
+                correctAnswer: answer.correctAnswer,
+                options: answer.options,
+                passage: answer.passage
             });
         }
     });
 
     // Build detailed analysis for prompt
     let analysis = `Student Assessment Analysis for ${data.studentName} (${data.section}):\n\n`;
-    analysis += `Overall Performance: ${data.totalScore}/${data.totalQuestions} (${data.percentage}%)\n`;
-    analysis += `Reading Comprehension: ${data.comprehensionScore}/${data.comprehensionTotal} (${data.comprehensionPercentage}%)\n`;
-    analysis += `Grammar: ${data.grammarScore}/${data.grammarTotal} (${data.grammarPercentage}%)\n`;
+    
+    // Summarize High-Level Stats First - clearly and explicitly
+    analysis += `Total Score: ${data.totalScore}/${data.totalQuestions}\n`;
+    analysis += `Reading Score: ${data.comprehensionScore}/${data.comprehensionTotal}\n`;
+    analysis += `Grammar Score: ${data.grammarScore}/${data.grammarTotal}\n`;
+    analysis += `Overall Percentage: ${data.percentage}%\n`;
+    analysis += `Reading Comprehension Percentage: ${data.comprehensionPercentage}%\n`;
+    analysis += `Grammar Percentage: ${data.grammarPercentage}%\n`;
     analysis += `Time Spent: ${Math.floor(data.timeSpent / 60)} minutes ${data.timeSpent % 60} seconds\n\n`;
 
-    // Add wrong answer analysis by category
+    // Limit Detailed Examples - filter to just the first 3 wrong answers per category
     for (const [category, wrongAnswers] of Object.entries(wrongAnswersByCategory)) {
-        analysis += `${category} Weaknesses:\n`;
-        wrongAnswers.forEach(wrong => {
-            analysis += `- Question ${wrong.questionId} (${wrong.difficulty}): Student chose option ${String.fromCharCode(65 + wrong.studentAnswer)}, correct was ${String.fromCharCode(65 + wrong.correctAnswer)}\n`;
+        analysis += `${category} - Key Examples to Review:\n`;
+        
+        // Take only the first 3 wrong answers for this category
+        const limitedWrongAnswers = wrongAnswers.slice(0, 3);
+        
+        limitedWrongAnswers.forEach(wrong => {
+            // Enrich Examples - include the question text and correct answer text
+            const studentAnswerText = wrong.options[wrong.studentAnswer];
+            const correctAnswerText = wrong.options[wrong.correctAnswer];
+            const studentAnswerLetter = String.fromCharCode(65 + wrong.studentAnswer);
+            const correctAnswerLetter = String.fromCharCode(65 + wrong.correctAnswer);
+
+            analysis += `- Question ${wrong.questionId} (${wrong.difficulty}):\n`;
+            analysis += `  Question: "${wrong.questionText}"\n`;
+            analysis += `  Student's Answer (${studentAnswerLetter}): "${studentAnswerText}"\n`;
+            analysis += `  Correct Answer (${correctAnswerLetter}): "${correctAnswerText}"\n`;
+
+            // For Reading Comprehension questions, include passage context if available
+            if (category === "Reading Comprehension" && wrong.passage) {
+                const passageSnippet = wrong.passage.length > 100
+                    ? wrong.passage.substring(0, 100) + "..."
+                    : wrong.passage;
+                analysis += `  Passage Context: "${passageSnippet}"\n`;
+            }
+            analysis += '\n';
         });
-        analysis += '\n';
+        
+        // If there are more than 3 wrong answers, indicate this
+        if (wrongAnswers.length > 3) {
+            analysis += `... and ${wrongAnswers.length - 3} more ${category.toLowerCase()} questions need review.\n\n`;
+        } else {
+            analysis += '\n';
+        }
     }
 
     return analysis;
@@ -342,69 +379,39 @@ function constructAIPrompt(data) {
 // Call Groq API directly for AI feedback
 async function callGroqAPI(prompt, data) {
     try {
+        console.log('🔧 DEBUG: callGroqAPI called with data:', data);
+        console.log('🔧 DEBUG: Checking if Firebase functions is available...');
+        
+        // Check if Firebase is properly initialized
+        if (!firebase || !firebase.functions) {
+            throw new Error('Firebase functions not available - Firebase not initialized');
+        }
+        
+        // Check if the function exists (this will fail if not deployed)
+        const functions = firebase.functions();
+        console.log('🔧 DEBUG: Firebase functions object:', functions);
+        
+        // Try to get the callable function
+        const generateAIFeedback = functions.httpsCallable('generateAIFeedback');
+        console.log('🔧 DEBUG: generateAIFeedback function reference created');
+        
         // Construct AI prompt from student data
         const analysisPrompt = constructAIPrompt(data);
+        console.log('🔧 DEBUG: Analysis prompt constructed');
         
-        const apiKey = "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";
+        // Call the function
+        console.log('🔧 DEBUG: Calling Firebase function...');
+        const result = await generateAIFeedback({ assessmentData: data });
+        console.log('🔧 DEBUG: Firebase function call successful:', result);
         
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'llama3-8b-8192',
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are an AI educational assistant that analyzes student assessment results and provides constructive feedback. Provide specific, actionable feedback in a structured format.'
-                    },
-                    {
-                        role: 'user',
-                        content: `${analysisPrompt}\n\nPlease provide feedback in this exact JSON format:\n{\n  "generalFeedback": "Overall assessment summary",\n  "strengths": "What the student did well",\n  "areasForImprovement": "Specific areas needing work",\n  "recommendations": "Actionable next steps"\n}`
-                    }
-                ],
-                max_tokens: 1000,
-                temperature: 0.7
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        
-        if (result.choices && result.choices[0] && result.choices[0].message) {
-            const aiContent = result.choices[0].message.content;
-            try {
-                // Try to parse the JSON response
-                const feedbackData = JSON.parse(aiContent);
-                return feedbackData;
-            } catch (parseError) {
-                console.error('JSON parsing failed:', parseError);
-                // Try to extract JSON from markdown code blocks
-                const jsonMatch = aiContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
-                if (jsonMatch) {
-                    try {
-                        const feedbackData = JSON.parse(jsonMatch[1]);
-                        console.log('Extracted JSON from markdown');
-                        return feedbackData;
-                    } catch (e) {
-                        console.error('Failed to parse extracted JSON');
-                    }
-                }
-                
-                // Enhanced fallback with more dynamic content
-                return createDynamicFallback(data, aiContent);
-            }
-        } else {
-            throw new Error('Invalid response structure from Groq API');
-        }
+        return result.data;
 
     } catch (error) {
-        console.error('Groq API error:', error);
+        console.error('🔧 DEBUG: Groq API error caught:', error);
+        console.error('🔧 DEBUG: Error type:', error.constructor.name);
+        console.error('🔧 DEBUG: Error message:', error.message);
+        console.error('🔧 DEBUG: Error code:', error.code);
+        
         // Return enhanced fallback AI feedback
         return createDynamicFallback(data, error.message);
     }
@@ -439,6 +446,9 @@ callGroqAPI = async function(prompt, data) {
 
 // Enhanced fallback function with dynamic content generation
 function createDynamicFallback(data, aiContent) {
+    console.log('🔧 DEBUG: createDynamicFallback called with data:', data);
+    console.log('🔧 DEBUG: data keys:', Object.keys(data));
+    
     // Analyze performance patterns for more personalized fallback
     const wrongAnswersByCategory = {};
     const wrongAnswersByDifficulty = {};
@@ -472,14 +482,29 @@ function createDynamicFallback(data, aiContent) {
     const strongerArea = data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar';
     const weakerArea = data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar';
     
+    console.log('🔧 DEBUG: strongerArea:', strongerArea);
+    console.log('🔧 DEBUG: weakerArea:', weakerArea);
+    console.log('🔧 DEBUG: data.comprehensionPercentage:', data.comprehensionPercentage);
+    console.log('🔧 DEBUG: data.grammarPercentage:', data.grammarPercentage);
+    console.log('🔧 DEBUG: data.percentage:', data.percentage);
+    console.log('🔧 DEBUG: data.readinessLevel:', data.readinessLevel);
+    console.log('🔧 DEBUG: data.timeSpent:', data.timeSpent);
+    
+    // Check for undefined values before using them
+    const comprehensionPercentage = data.comprehensionPercentage ?? '0';
+    const grammarPercentage = data.grammarPercentage ?? '0';
+    const percentage = data.percentage ?? '0';
+    const readinessLevel = data.readinessLevel ?? 'Unknown';
+    const timeSpent = data.timeSpent ?? 0;
+    
     return {
-        generalFeedback: `Based on your assessment results, you scored ${data.percentage}% overall, which indicates ${data.readinessLevel === 'Ready' ? 'strong readiness for advanced topics' : 'opportunities for growth in foundational concepts'}. Your performance shows particular ${data.comprehensionPercentage > data.grammarPercentage ? 'strength in reading comprehension' : 'proficiency in grammar skills'}.`,
+        generalFeedback: `Based on your assessment results, you scored ${percentage}% overall, which indicates ${readinessLevel === 'Ready' ? 'strong readiness for advanced topics' : 'opportunities for growth in foundational concepts'}. Your performance shows particular ${data.comprehensionPercentage > data.grammarPercentage ? 'strength in reading comprehension' : 'proficiency in grammar skills'}.`,
         
-        strengths: `You demonstrated particular strength in ${strongerArea} with ${data[strongerArea.toLowerCase().replace(' ', '') + 'Percentage']}% accuracy. You showed consistency across ${data.comprehensionPercentage === data.grammarPercentage ? 'both skill areas' : 'your stronger subject area'}. Your time management was effective, completing the assessment in ${Math.floor(data.timeSpent / 60)} minutes.`,
+        strengths: `You demonstrated particular strength in ${strongerArea} with ${comprehensionPercentage}% accuracy. You showed consistency across ${data.comprehensionPercentage === data.grammarPercentage ? 'both skill areas' : 'your stronger subject area'}. Your time management was effective, completing the assessment in ${Math.floor(timeSpent / 60)} minutes.`,
         
-        areasForImprovement: `Focus on improving your ${weakerArea} skills (${data[weakerArea.toLowerCase().replace(' ', '') + 'Percentage']}% accuracy). ${categoryInsights ? `Specific attention needed in: ${categoryInsights}.` : ''} ${difficultyInsights ? `Difficulty breakdown: ${difficultyInsights}.` : ''} ${data.percentage < 50 ? 'Consider reviewing fundamental concepts before moving to more advanced material.' : 'Continue building on your solid foundation while addressing identified weak areas.'}`,
+        areasForImprovement: `Focus on improving your ${weakerArea} skills (${grammarPercentage}% accuracy). ${categoryInsights ? `Specific attention needed in: ${categoryInsights}.` : ''} ${difficultyInsights ? `Difficulty breakdown: ${difficultyInsights}.` : ''} ${percentage < 50 ? 'Consider reviewing fundamental concepts before moving to more advanced material.' : 'Continue building on your solid foundation while addressing identified weak areas.'}`,
         
-        recommendations: `${data.percentage >= 80 ? 'Excellent work! ' : ''}Practice regularly in your ${weakerArea.toLowerCase()} skills. ${data.timeSpent > 1800 ? 'Work on time management while maintaining accuracy. ' : ''}Review the specific questions you answered incorrectly, focusing on the concepts behind each answer. ${categoryInsights ? `Pay special attention to: ${categoryInsights}. ` : ''}Consider seeking additional practice materials or tutoring support in challenging areas. Set small, achievable goals for improvement and track your progress over time.`
+        recommendations: `${percentage >= 80 ? 'Excellent work! ' : ''}Practice regularly in your ${weakerArea.toLowerCase()} skills. ${timeSpent > 1800 ? 'Work on time management while maintaining accuracy. ' : ''}Review the specific questions you answered incorrectly, focusing on the concepts behind each answer. ${categoryInsights ? `Pay special attention to: ${categoryInsights}. ` : ''}Consider seeking additional practice materials or tutoring support in challenging areas. Set small, achievable goals for improvement and track your progress over time.`
     };
 }
 

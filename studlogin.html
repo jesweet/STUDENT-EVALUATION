@@ -32,6 +32,21 @@
     </style>
 </head>
 <body>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLUXbAALnqjtLyQNCktQO8eS1TKvE6-Dc",
+            authDomain: "edumetrics-62601.firebaseapp.com",
+            projectId: "edumetrics-62601",
+            storageBucket: "edumetrics-62601.firebasestorage.app",
+            messagingSenderId: "1008049617356",
+            appId: "1:1008049617356:web:ce2aa07a1ebc3533444569"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
     
     <header>
         <div class="container">
@@ -45,7 +60,7 @@
             <h2>Student Login</h2>
             <p>Welcome back! Let's start your evaluation!</p>
 
-            <form action="studassdb.html" method="GET">
+            <form id="loginForm">
 
                 <div class="form-group">
                     <label for="student-name">Student Name</label>

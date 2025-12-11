@@ -28,8 +28,29 @@
             text-decoration: underline;
         }
     </style>
+    <!-- Firebase App and Firestore SDK scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script src="modal.js"></script>
+    <script src="studlogin.js"></script>
 </head>
 <body>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLUXbAALnqjtLyQNCktQO8eS1TKvE6-Dc",
+            authDomain: "edumetrics-62601.firebaseapp.com",
+            projectId: "edumetrics-62601",
+            storageBucket: "edumetrics-62601.firebasestorage.app",
+            messagingSenderId: "1008049617356",
+            appId: "1:1008049617356:web:ce2aa07a1ebc3533444569"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
     
     <header>
         <div class="container">
@@ -43,7 +64,7 @@
             <h2>Student Sign Up</h2>
             <p>Create your account to start your evaluation!</p>
 
-            <form action="studassdb.html" method="GET">
+            <form id="signupForm">
 
                 <div class="form-group">
                     <label for="student-name">Student Name</label>

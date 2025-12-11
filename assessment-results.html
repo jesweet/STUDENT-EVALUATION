@@ -16,13 +16,14 @@
         }
 
         .congratulations-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px;
+            background-color: var(--clr-slate-container);
+            color: var(--clr-white);
+            border-radius: var(--radius-lg);
             padding: 40px;
             text-align: center;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .congratulations-card h1 {
@@ -178,10 +179,11 @@
 
         header {
             position: relative;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background-color: var(--clr-deep-slate);
+            color: var(--clr-white);
             padding: 30px 0;
             margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header-content {
@@ -304,87 +306,118 @@
         };
 
         function loadResults() {
-            // Get assessment data from localStorage
-            const assessmentData = localStorage.getItem('assessmentResult');
-            const aiFeedback = localStorage.getItem('aiFeedback');
-
-            if (!assessmentData) {
-                showCustomAlert('No Results Found', 'No assessment results found. Redirecting to dashboard.');
-                setTimeout(() => {
-                    window.location.href = 'studassdb.html';
-                }, 2000);
-                return;
-            }
-
-            try {
-                const data = JSON.parse(assessmentData);
-                const feedback = aiFeedback ? JSON.parse(aiFeedback) : null;
-
-                // Display student name
-                document.getElementById('studentName').textContent = data.studentName || 'Student';
-
-                // Display scores
-                document.getElementById('overallScore').textContent = `${data.totalScore}/${data.totalQuestions}`;
-                document.getElementById('overallPercentage').textContent = `${data.percentage}%`;
-                document.getElementById('readingScore').textContent = `${data.comprehensionScore}/${data.comprehensionTotal}`;
-                document.getElementById('grammarScore').textContent = `${data.grammarScore}/${data.grammarTotal}`;
-
-                // Display AI feedback if available
-                if (feedback) {
-                    displayFeedback(feedback);
-                } else {
-                    displayFallbackFeedback(data);
+                    console.log('🔧 DEBUG: loadResults called');
+                    
+                    // Get assessment data from localStorage
+                    const assessmentData = localStorage.getItem('assessmentResult');
+                    const aiFeedback = localStorage.getItem('aiFeedback');
+        
+                    console.log('🔧 DEBUG: assessmentData from localStorage:', assessmentData);
+                    console.log('🔧 DEBUG: aiFeedback from localStorage:', aiFeedback);
+        
+                    if (!assessmentData) {
+                        showCustomAlert('No Results Found', 'No assessment results found. Redirecting to dashboard.');
+                        setTimeout(() => {
+                            window.location.href = 'studassdb.html';
+                        }, 2000);
+                        return;
+                    }
+        
+                    try {
+                        const data = JSON.parse(assessmentData);
+                        const feedback = aiFeedback ? JSON.parse(aiFeedback) : null;
+        
+                        console.log('🔧 DEBUG: Parsed data:', data);
+                        console.log('🔧 DEBUG: Parsed feedback:', feedback);
+        
+                        // Display student name
+                        document.getElementById('studentName').textContent = data.studentName || 'Student';
+        
+                        // Display scores
+                        document.getElementById('overallScore').textContent = `${data.totalScore}/${data.totalQuestions}`;
+                        document.getElementById('overallPercentage').textContent = `${data.percentage}%`;
+                        document.getElementById('readingScore').textContent = `${data.comprehensionScore}/${data.comprehensionTotal}`;
+                        document.getElementById('grammarScore').textContent = `${data.grammarScore}/${data.grammarTotal}`;
+        
+                        // Display AI feedback if available
+                        if (feedback) {
+                            console.log('🔧 DEBUG: Displaying AI feedback');
+                            displayFeedback(feedback);
+                        } else {
+                            console.log('🔧 DEBUG: No AI feedback, using fallback');
+                            displayFallbackFeedback(data);
+                        }
+        
+                    } catch (error) {
+                        console.error('Error loading results:', error);
+                        displayErrorMessage();
+                    }
                 }
-
-            } catch (error) {
-                console.error('Error loading results:', error);
-                displayErrorMessage();
-            }
-        }
 
         function displayFeedback(feedback) {
-            document.getElementById('generalFeedback').textContent = feedback.generalFeedback || 'No feedback available.';
-            document.getElementById('strengths').innerHTML = formatFeedbackText(feedback.strengths);
-            document.getElementById('weaknesses').innerHTML = formatFeedbackText(feedback.areasForImprovement);
-            document.getElementById('recommendations').innerHTML = formatFeedbackText(feedback.recommendations);
-        }
+                    console.log('🔧 DEBUG: displayFeedback called with feedback:', feedback);
+                    console.log('🔧 DEBUG: feedback.generalFeedback:', feedback.generalFeedback);
+                    console.log('🔧 DEBUG: feedback.strengths:', feedback.strengths);
+                    console.log('🔧 DEBUG: feedback.areasForImprovement:', feedback.areasForImprovement);
+                    console.log('🔧 DEBUG: feedback.recommendations:', feedback.recommendations);
+                    
+                    document.getElementById('generalFeedback').textContent = feedback.generalFeedback || 'No feedback available.';
+                    document.getElementById('strengths').innerHTML = formatFeedbackText(feedback.strengths);
+                    document.getElementById('weaknesses').innerHTML = formatFeedbackText(feedback.areasForImprovement);
+                    document.getElementById('recommendations').innerHTML = formatFeedbackText(feedback.recommendations);
+                }
 
         function displayFallbackFeedback(data) {
-            console.log('Using enhanced fallback feedback system');
-            
-            // Show that this is fallback feedback
-            const fallbackNotice = '<p style="font-style: italic; color: #666; font-size: 0.9em; margin-bottom: 15px;">Note: Using standard feedback due to AI processing unavailability</p>';
-            
-            // Create more dynamic fallback content
-            const wrongAnswers = data.detailedAnswers.filter(answer => !answer.isCorrect);
-            const categoryPerformance = {};
-            
-            data.detailedAnswers.forEach(answer => {
-                if (!categoryPerformance[answer.category]) {
-                    categoryPerformance[answer.category] = { correct: 0, total: 0 };
+                    console.log('🔧 DEBUG: displayFallbackFeedback called with data:', data);
+                    console.log('🔧 DEBUG: data.percentage:', data.percentage);
+                    console.log('🔧 DEBUG: data.readinessLevel:', data.readinessLevel);
+                    console.log('🔧 DEBUG: data.comprehensionPercentage:', data.comprehensionPercentage);
+                    console.log('🔧 DEBUG: data.grammarPercentage:', data.grammarPercentage);
+                    console.log('🔧 DEBUG: data.timeSpent:', data.timeSpent);
+                    
+                    console.log('Using enhanced fallback feedback system');
+                    
+                    // Show that this is fallback feedback
+                    const fallbackNotice = '<p style="font-style: italic; color: #666; font-size: 0.9em; margin-bottom: 15px;">Note: Using standard feedback due to AI processing unavailability</p>';
+                    
+                    // Create more dynamic fallback content
+                    const wrongAnswers = data.detailedAnswers.filter(answer => !answer.isCorrect);
+                    const categoryPerformance = {};
+                    
+                    data.detailedAnswers.forEach(answer => {
+                        if (!categoryPerformance[answer.category]) {
+                            categoryPerformance[answer.category] = { correct: 0, total: 0 };
+                        }
+                        categoryPerformance[answer.category].total++;
+                        if (answer.isCorrect) {
+                            categoryPerformance[answer.category].correct++;
+                        }
+                    });
+                    
+                    const strongestCategory = Object.entries(categoryPerformance)
+                        .reduce((a, b) => (a[1].correct / a[1].total) > (b[1].correct / b[1].total) ? a : b)[0];
+                    
+                    console.log('🔧 DEBUG: strongestCategory:', strongestCategory);
+                    
+                    const generalFeedback = `Based on your score of ${data.percentage}%, you have ${data.readinessLevel === 'Ready' ? 'demonstrated strong understanding and readiness for advanced topics' : 'areas that need focused improvement to build a solid foundation'}. Your performance shows particular strength in ${strongestCategory}.`;
+                    
+                    const strengths = `You scored well in ${data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} (${Math.max(data.comprehensionPercentage, data.grammarPercentage)}%). ${wrongAnswers.length < 3 ? 'You demonstrated good consistency across most questions.' : 'You showed determination in completing the full assessment.'}`;
+                    
+                    const weaknesses = `Focus on improving your ${data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} skills. ${wrongAnswers.length > 0 ? `Review the ${wrongAnswers.length} questions you answered incorrectly for targeted practice.` : 'Maintain your excellent performance while challenging yourself with more difficult concepts.'}`;
+                    
+                    const recommendations = `Practice regularly and review the questions you got wrong. Consider additional study time on challenging topics. Focus on understanding the underlying concepts rather than memorizing answers. ${data.timeSpent > 1800 ? 'Work on time management skills while maintaining accuracy.' : 'Continue developing your efficient test-taking strategies.'}`;
+        
+                    console.log('🔧 DEBUG: Final feedback strings:');
+                    console.log('🔧 DEBUG: generalFeedback:', generalFeedback);
+                    console.log('🔧 DEBUG: strengths:', strengths);
+                    console.log('🔧 DEBUG: weaknesses:', weaknesses);
+                    console.log('🔧 DEBUG: recommendations:', recommendations);
+        
+                    document.getElementById('generalFeedback').innerHTML = fallbackNotice + generalFeedback;
+                    document.getElementById('strengths').innerHTML = fallbackNotice + strengths;
+                    document.getElementById('weaknesses').innerHTML = fallbackNotice + weaknesses;
+                    document.getElementById('recommendations').innerHTML = fallbackNotice + recommendations;
                 }
-                categoryPerformance[answer.category].total++;
-                if (answer.isCorrect) {
-                    categoryPerformance[answer.category].correct++;
-                }
-            });
-            
-            const strongestCategory = Object.entries(categoryPerformance)
-                .reduce((a, b) => (a[1].correct / a[1].total) > (b[1].correct / b[1].total) ? a : b)[0];
-            
-            const generalFeedback = `Based on your score of ${data.percentage}%, you have ${data.readinessLevel === 'Ready' ? 'demonstrated strong understanding and readiness for advanced topics' : 'areas that need focused improvement to build a solid foundation'}. Your performance shows particular strength in ${strongestCategory}.`;
-            
-            const strengths = `You scored well in ${data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} (${Math.max(data.comprehensionPercentage, data.grammarPercentage)}%). ${wrongAnswers.length < 3 ? 'You demonstrated good consistency across most questions.' : 'You showed determination in completing the full assessment.'}`;
-            
-            const weaknesses = `Focus on improving your ${data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} skills. ${wrongAnswers.length > 0 ? `Review the ${wrongAnswers.length} questions you answered incorrectly for targeted practice.` : 'Maintain your excellent performance while challenging yourself with more difficult concepts.'}`;
-            
-            const recommendations = `Practice regularly and review the questions you got wrong. Consider additional study time on challenging topics. Focus on understanding the underlying concepts rather than memorizing answers. ${data.timeSpent > 1800 ? 'Work on time management skills while maintaining accuracy.' : 'Continue developing your efficient test-taking strategies.'}`;
-
-            document.getElementById('generalFeedback').innerHTML = fallbackNotice + generalFeedback;
-            document.getElementById('strengths').innerHTML = fallbackNotice + strengths;
-            document.getElementById('weaknesses').innerHTML = fallbackNotice + weaknesses;
-            document.getElementById('recommendations').innerHTML = fallbackNotice + recommendations;
-        }
 
         function formatFeedbackText(text) {
             if (!text || text === 'Not available') return text;

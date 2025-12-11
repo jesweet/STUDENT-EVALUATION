@@ -1,19 +1,8 @@
 // Student Login/Signup JavaScript
 // Handles both student login and registration with Firestore integration
 
-// Firebase Configuration (same as other files)
-const firebaseConfig = {
-    apiKey: "AIzaSyBLUXbAALnqjtLyQNCktQO8eS1TKvE6-Dc",
-    authDomain: "edumetrics-62601.firebaseapp.com",
-    projectId: "edumetrics-62601",
-    storageBucket: "edumetrics-62601.firebasestorage.app",
-    messagingSenderId: "1008049617356",
-    appId: "1:1008049617356:web:ce2aa07a1ebc3533444569",
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// Firebase is already initialized in the HTML files
+// const db = firebase.firestore(); // Already declared in HTML
 
 // Detect if we're on signup or login page by checking URL and form ID
 const isSignupPage = window.location.pathname.includes('studsignup.html') ||
@@ -21,24 +10,40 @@ const isSignupPage = window.location.pathname.includes('studsignup.html') ||
                      document.querySelector('h2')?.textContent.includes('Sign Up');
 
 // Form submission handler
-document.querySelector('form').addEventListener('submit', async function(event) {
-    event.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    console.log(`Student ${isSignupPage ? 'Signup' : 'Login'} page loaded`);
     
-    const studentName = document.getElementById('student-name').value.trim();
-    const birthday = document.getElementById('birthday').value.trim();
-    
-    // Common validation for both signup and login
-    if (!studentName || !birthday) {
-        showCustomAlert('Validation Error', 'Please fill in all required fields (name and birthday).');
-        return;
+    // Add any page-specific initialization here
+    if (isSignupPage) {
+        console.log('Student registration page');
+    } else {
+        console.log('Student login page');
     }
 
-    if (isSignupPage) {
-        // Handle Signup Logic
-        await handleSignup(studentName, birthday);
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const studentName = document.getElementById('student-name').value.trim();
+            const birthday = document.getElementById('birthday').value.trim();
+            
+            // Common validation for both signup and login
+            if (!studentName || !birthday) {
+                showCustomAlert('Validation Error', 'Please fill in all required fields (name and birthday).');
+                return;
+            }
+
+            if (isSignupPage) {
+                // Handle Signup Logic
+                await handleSignup(studentName, birthday);
+            } else {
+                // Handle Login Logic
+                await handleLogin(studentName, birthday);
+            }
+        });
     } else {
-        // Handle Login Logic
-        await handleLogin(studentName, birthday);
+        console.error('Form not found on page');
     }
 });
 
@@ -95,7 +100,7 @@ async function handleSignup(studentName, birthday) {
 
         showCustomAlert('Registration Successful', 'Welcome! Your account has been created successfully.');
 
-        // Redirect to studassdb.html
+        // Redirect to studassdb.html (dashboard) first
         setTimeout(() => {
             window.location.href = `studassdb.html?${params.toString()}`;
         }, 1500);
@@ -146,7 +151,7 @@ async function handleLogin(studentName, birthday) {
 
         showCustomAlert('Login Successful', `Welcome back, ${studentData.name}!`);
 
-        // Redirect to studassdb.html
+        // Redirect to studassdb.html (dashboard) first
         setTimeout(() => {
             window.location.href = `studassdb.html?${params.toString()}`;
         }, 1500);
@@ -156,15 +161,3 @@ async function handleLogin(studentName, birthday) {
         showCustomAlert('Login Error', 'There was an error during login. Please try again.');
     }
 }
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log(`Student ${isSignupPage ? 'Signup' : 'Login'} page loaded`);
-    
-    // Add any page-specific initialization here
-    if (isSignupPage) {
-        console.log('Student registration page');
-    } else {
-        console.log('Student login page');
-    }
-});

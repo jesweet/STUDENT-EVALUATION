@@ -1,12 +1,20 @@
 /* === [SECTION 1: CORE VARIABLES & RESET] === */
 :root {
-    /* Color Palette */
-    --clr-dark-blue: #1f2937; 
-    --clr-medium-blue: #374151; 
-    --clr-white: #ffffff;
-    --clr-text-light: #d1d5db;
-    --clr-primary: #1e40af; 
-    --clr-primary-hover: #1e3a8a;
+    /* Modern Dark Theme - EdTech Color Palette (matching other pages) */
+    --clr-deep-slate: #0f172a;       /* Deep Slate Blue - Background */
+    --clr-slate-container: #1e293b;  /* Semi-transparent dark slate */
+    --clr-white: #ffffff;           /* White text */
+    --clr-text-light: #d1d5db;      /* Light text */
+    --clr-primary: #3b82f6;         /* Vibrant Blue/Indigo - Primary Action */
+    --clr-primary-dark: #2563eb;    /* Darker blue for hover */
+    --clr-success: #10b981;         /* Emerald Green - Success/Progress */
+    --clr-success-dark: #059669;    /* Darker green */
+    --clr-warning: #f59e0b;         /* Amber - Warnings */
+    --clr-warning-dark: #d97706;    /* Darker amber */
+    --clr-danger: #ef4444;          /* Red - Danger/Delete */
+    --clr-danger-dark: #dc2626;     /* Darker red */
+    --clr-secondary: #64748b;       /* Slate Gray - Secondary Action */
+    --clr-secondary-dark: #475569;  /* Darker slate for hover */
 
     /* Typography */
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,18 +30,18 @@
 
 body {
     font-family: var(--font-family);
-    background-color: var(--clr-dark-blue);
+    background: linear-gradient(135deg, var(--clr-deep-slate) 0%, #1a2332 100%);
     line-height: 1.6;
     color: var(--clr-white);
     min-height: 100vh;
-    display: flex; 
+    display: flex;
     flex-direction: column;
 }
 
 /* Used for centering content and general padding */
 .container {
     width: 90%;
-    max-width: 1200px; 
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -45,14 +53,14 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 /* === [SECTION 3: HEADER STYLING] === */
 
 header {
     padding: 20px 0;
-    border-bottom: 1px solid var(--clr-white);
-    background-color: var(--clr-dark-blue);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--clr-deep-slate);
 }
 
 header h1 {
@@ -78,14 +86,15 @@ header p {
 }
 
 .login-card {
-    background-color: var(--clr-white); 
-    color: var(--clr-dark-blue); 
+    background-color: var(--clr-slate-container);
+    color: var(--clr-white);
     padding: 50px 40px;
     border-radius: 10px;
     width: 50%;
-    max-width: 400px; 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
     text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .login-card h2 {
@@ -95,7 +104,7 @@ header p {
 }
 
 .login-card p {
-    color: #6b7280;
+    color: var(--clr-text-light);
     margin-bottom: 30px;
     font-size: 1rem;
 }
@@ -109,20 +118,21 @@ header p {
     display: block;
     font-weight: 600;
     margin-bottom: 8px;
-    color: var(--clr-dark-blue);
+    color: var(--clr-white);
 }
 
 /* Input Styles - UPDATED to handle text, number, and date inputs */
 .login-card input[type="text"],
 .login-card input[type="number"],
-.login-card input[type="date"] { 
+.login-card input[type="date"],
+.login-card select {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #d1d5db;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     font-size: 1rem;
-    color: var(--clr-dark-blue);
-    background-color: var(--clr-white);
+    color: var(--clr-white);
+    background-color: #2c3748;
     transition: all 0.3s ease;
 }
 
@@ -144,17 +154,19 @@ header p {
 }
 
 /* Focus styles for editable inputs (Student Name, Birthday, Section) */
-.login-card input:not([readonly]):focus {
+.login-card input:not([readonly]):focus,
+.login-card select:focus {
     outline: none;
     border-color: var(--clr-primary);
-    box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 /* Styling for the FIXED/READONLY Grade Level Input */
 .login-card input[readonly] {
-    background-color: #f3f4f6;
+    background-color: #2c3748;
     cursor: not-allowed;
-    color: #6b7280;
+    color: var(--clr-text-light);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Evaluation Button Styles */
@@ -165,12 +177,15 @@ header p {
     align-items: center;
     gap: 10px;
     margin-top: 30px;
-    background-color: var(--clr-medium-blue); 
+    background-color: var(--clr-primary);
     color: var(--clr-white);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .btn-evaluation:hover {
-    background-color: #2c3748;
+    background-color: var(--clr-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 /* === [SECTION 5: CUSTOM MODAL SYSTEM] === */
@@ -225,7 +240,7 @@ header p {
 .modal-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--clr-dark-blue);
+    color: var(--clr-deep-slate);
     margin: 0 0 15px 0;
     line-height: 1.3;
 }
@@ -265,20 +280,20 @@ header p {
 }
 
 .modal-btn-primary:hover {
-    background-color: var(--clr-primary-hover);
+    background-color: var(--clr-primary-dark);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(30, 64, 175, 0.3);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
 }
 
 .modal-btn-primary:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.3);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 /* Secondary button (Cancel) */
 .modal-btn-secondary {
     background-color: #f3f4f6;
-    color: var(--clr-dark-blue);
+    color: var(--clr-deep-slate);
     border: 1px solid #d1d5db;
 }
 

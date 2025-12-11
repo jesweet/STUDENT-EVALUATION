@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dashboard - EduMetrics</title>
+    <link rel="stylesheet" href="studassdb.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            color: #333;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .control-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .control-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .btn-test {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-test:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        .test-result {
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        .test-result.success {
+            display: block;
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        .test-result.error {
+            display: block;
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 Dashboard Testing Suite</h1>
+            <p>Test the enhanced student dashboard functionality</p>
+        </div>
+
+        <div class="test-controls">
+            <div class="control-card">
+                <h4>🧪 Test 1: Dashboard with Sample Data</h4>
+                <p>Load dashboard with sample assessment results to test all features.</p>
+                <button class="btn-test" onclick="testDashboardWithData()">Load Dashboard with Data</button>
+            </div>
+
+            <div class="control-card">
+                <h4>🧪 Test 2: Empty Dashboard</h4>
+                <p>Load dashboard without any assessment data.</p>
+                <button class="btn-test" onclick="testDashboardEmpty()">Load Empty Dashboard</button>
+            </div>
+
+            <div class="control-card">
+                <h4>🧪 Test 3: History Functionality</h4>
+                <p>Test the assessment history features.</p>
+                <button class="btn-test" onclick="testHistory()">Test History</button>
+            </div>
+
+            <div class="control-card">
+                <h4>🧪 Test 4: Clear Test Data</h4>
+                <p>Clear all test data from localStorage.</p>
+                <button class="btn-test" onclick="clearTestData()">Clear Test Data</button>
+            </div>
+        </div>
+
+        <div id="testResult" class="test-result">
+            Test results will appear here...
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+            <h3>📋 Test Instructions:</h3>
+            <ol>
+                <li><strong>Test 1:</strong> Click "Load Dashboard with Data" to populate localStorage with sample assessment data and open the dashboard.</li>
+                <li><strong>Test 2:</strong> Click "Load Empty Dashboard" to test the dashboard without any assessment data.</li>
+                <li><strong>Test 3:</strong> Click "Test History" to add multiple assessment results to the history and view them.</li>
+                <li><strong>Test 4:</strong> Click "Clear Test Data" to remove all test data from localStorage.</li>
+            </ol>
+            
+            <h3 style="margin-top: 20px;">🔍 What to Test:</h3>
+            <ul>
+                <li>Dashboard loads correctly with and without assessment data</li>
+                <li>Progress section displays correctly when assessment is completed</li>
+                <li>Performance insights are generated and displayed</li>
+                <li>Time analysis is shown when time data is available</li>
+                <li>History section shows assessment history correctly</li>
+                <li>Retake functionality works with confirmation dialog</li>
+                <li>Responsive design works on different screen sizes</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Sample assessment data for testing
+        const sampleAssessmentData = {
+            studentName: "John Doe",
+            section: "Grade 6 - Section A",
+            birthday: "2012-05-15",
+            gradeLevel: "Grade 6",
+            totalScore: 42,
+            totalQuestions: 50,
+            percentage: "84.0",
+            comprehensionScore: 23,
+            comprehensionTotal: 25,
+            comprehensionPercentage: "92.0",
+            grammarScore: 19,
+            grammarTotal: 25,
+            grammarPercentage: "76.0",
+            readinessLevel: "Ready",
+            answers: [0, 1, 2, 1, 0, 2, 1, 0, 1, 2, 0, 1, 2, 1, 0, 2, 1, 0, 1, 2, 0, 1, 2, 1, 0, 2, 1, 0, 1, 2, 0, 1, 2, 1, 0, 2, 1, 0, 1, 2, 0, 1, 2, 1, 0, 2, 1, 0, 1, 2],
+            detailedAnswers: [],
+            timeSpent: 1800,
+            timestamp: new Date().toISOString()
+        };
+
+        // Sample history data
+        const sampleHistoryData = [
+            {
+                ...sampleAssessmentData,
+                historyId: Date.now() - 86400000,
+                completedAt: new Date(Date.now() - 86400000).toISOString(),
+                totalScore: 38,
+                percentage: "76.0",
+                comprehensionPercentage: "84.0",
+                grammarPercentage: "68.0",
+                timeSpent: 2100
+            },
+            {
+                ...sampleAssessmentData,
+                historyId: Date.now() - 172800000,
+                completedAt: new Date(Date.now() - 172800000).toISOString(),
+                totalScore: 35,
+                percentage: "70.0",
+                comprehensionPercentage: "76.0",
+                grammarPercentage: "64.0",
+                timeSpent: 2400
+            }
+        ];
+
+        function showTestResult(message, type = 'success') {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.innerHTML = `<strong>${type === 'success' ? '✅' : '❌'}</strong> ${message}`;
+        }
+
+        function testDashboardWithData() {
+            try {
+                // Clear existing data
+                localStorage.removeItem('assessmentResult');
+                localStorage.removeItem('aiFeedback');
+                localStorage.removeItem('assessmentHistory');
+                
+                // Set student info
+                localStorage.setItem('studentName', 'John Doe');
+                localStorage.setItem('studentSection', 'Grade 6 - Section A');
+                localStorage.setItem('studentBirthday', '2012-05-15');
+                
+                // Set assessment result
+                localStorage.setItem('assessmentResult', JSON.stringify(sampleAssessmentData));
+                
+                showTestResult('Sample data loaded successfully! Opening dashboard...', 'success');
+                
+                // Open dashboard in new tab after a short delay
+                setTimeout(() => {
+                    window.open('studassdb.html?name=John%20Doe&section=Grade%206%20-%20Section%20A&birthday=2012-05-15', '_blank');
+                }, 1000);
+                
+            } catch (error) {
+                showTestResult('Error loading sample data: ' + error.message, 'error');
+            }
+        }
+
+        function testDashboardEmpty() {
+            try {
+                // Clear all assessment data
+                localStorage.removeItem('assessmentResult');
+                localStorage.removeItem('aiFeedback');
+                localStorage.removeItem('assessmentHistory');
+                
+                // Set student info
+                localStorage.setItem('studentName', 'Jane Smith');
+                localStorage.setItem('studentSection', 'Grade 6 - Section B');
+                localStorage.setItem('studentBirthday', '2012-08-22');
+                
+                showTestResult('Empty dashboard data loaded! Opening dashboard...', 'success');
+                
+                // Open dashboard in new tab after a short delay
+                setTimeout(() => {
+                    window.open('studassdb.html?name=Jane%20Smith&section=Grade%206%20-%20Section%20B&birthday=2012-08-22', '_blank');
+                }, 1000);
+                
+            } catch (error) {
+                showTestResult('Error loading empty data: ' + error.message, 'error');
+            }
+        }
+
+        function testHistory() {
+            try {
+                // Clear existing data
+                localStorage.removeItem('assessmentResult');
+                localStorage.removeItem('aiFeedback');
+                localStorage.removeItem('assessmentHistory');
+                
+                // Set student info
+                localStorage.setItem('studentName', 'Alex Johnson');
+                localStorage.setItem('studentSection', 'Grade 6 - Section C');
+                localStorage.setItem('studentBirthday', '2012-03-10');
+                
+                // Set current assessment result
+                localStorage.setItem('assessmentResult', JSON.stringify(sampleAssessmentData));
+                
+                // Set history
+                localStorage.setItem('assessmentHistory', JSON.stringify(sampleHistoryData));
+                
+                showTestResult('History test data loaded! Opening dashboard...', 'success');
+                
+                // Open dashboard in new tab after a short delay
+                setTimeout(() => {
+                    window.open('studassdb.html?name=Alex%20Johnson&section=Grade%206%20-%20Section%20C&birthday=2012-03-10', '_blank');
+                }, 1000);
+                
+            } catch (error) {
+                showTestResult('Error loading history data: ' + error.message, 'error');
+            }
+        }
+
+        function clearTestData() {
+            try {
+                // Clear all test data
+                localStorage.removeItem('assessmentResult');
+                localStorage.removeItem('aiFeedback');
+                localStorage.removeItem('assessmentHistory');
+                localStorage.removeItem('studentName');
+                localStorage.removeItem('studentSection');
+                localStorage.removeItem('studentBirthday');
+                localStorage.removeItem('studentGrade');
+                localStorage.removeItem('viewingHistory');
+                
+                showTestResult('All test data cleared from localStorage!', 'success');
+                
+            } catch (error) {
+                showTestResult('Error clearing test data: ' + error.message, 'error');
+            }
+        }
+
+        // Initialize test result display
+        document.addEventListener('DOMContentLoaded', function() {
+            showTestResult('Ready to test! Click any test button to begin.', 'success');
+        });
+    </script>
+</body>
+</html>

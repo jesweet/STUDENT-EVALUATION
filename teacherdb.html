@@ -329,147 +329,205 @@
       }
 
       // LOAD STUDENTS FROM BACKEND
-
+              
       async function loadStudents() {
-        try {
-          // Load students from Firestore
-          const snapshot = await db
-            .collection("assessments")
-            .orderBy("createdAt", "desc")
-            .get();
-
-          if (snapshot.empty) {
-            console.log("No assessments found in Firestore");
-            // Try loading from localStorage as fallback
-            loadFromLocalStorage();
+          console.log('🔧 DEBUG: loadStudents called');
+          
+          // Safety check: ensure Firebase is initialized
+          if (typeof firebase === 'undefined' || typeof window.db === 'undefined') {
+            console.error('🔧 DEBUG: ⚠️ Firebase not initialized. Cannot load students.');
+            document.getElementById("studentsTableBody").innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: #dc2626;">
+                        ⚠️ Firebase not initialized.<br>
+                        Please check the console for errors and reload the page.
+                    </td>
+                </tr>
+            `;
             return;
           }
-
-          // Map Firestore documents to student array
-          allStudents = snapshot.docs.map((doc) => {
-            const data = doc.data();
-            return {
-              id: doc.id, // Add unique ID for each student
-              studentName: data.studentName || "Unknown Student",
-              section: data.section || "Unknown Section",
-              birthday: data.birthday || "Unknown",
-              totalScore: data.totalScore || 0,
-              totalQuestions: data.totalQuestions || 0,
-              percentage: data.percentage || "0.0",
-              comprehensionScore: data.comprehensionScore || 0,
-              comprehensionTotal: data.comprehensionTotal || 0,
-              comprehensionPercentage: data.comprehensionPercentage || "0.0",
-              grammarScore: data.grammarScore || 0,
-              grammarTotal: data.grammarTotal || 0,
-              grammarPercentage: data.grammarPercentage || "0.0",
-              readinessLevel: data.readinessLevel || "Need Improvement",
-              timestamp: data.timestamp || new Date().toISOString(),
-              detailedAnswers: data.detailedAnswers || [],
-              aiFeedback:
-                data.aiFeedback ||
-                data.aiGeneralFeedback ||
-                "No feedback available",
-              aiStrengths:
-                data.aiStrengths || data.strengths || "Not available",
-              aiAreasForImprovement:
-                data.aiAreasForImprovement ||
-                data.areasForImprovement ||
-                "Not available",
-              aiRecommendations:
-                data.aiRecommendations ||
-                data.recommendations ||
-                "Not available",
-            };
-          });
-
-          displayStudents(allStudents);
-          updateStatistics(allStudents);
-        } catch (error) {
-          console.error("Error loading students from Firestore:", error);
-
-          // Show error message
-          document.getElementById("studentsTableBody").innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #dc2626;">
-                            ⚠️ Could not load students from Firestore.<br>
-                            Error: ${error.message}<br>
-                            <small>Check console for details or verify Firebase configuration.</small>
-                        </td>
-                    </tr>
-                `;
-
-          // Try loading from localStorage as fallback
-          loadFromLocalStorage();
-        }
-      }
+          
+          try {
+              // Load students from Firestore
+              console.log('🔧 DEBUG: Loading from Firestore...');
+              const snapshot = await db
+                  .collection("assessments")
+                  .orderBy("createdAt", "desc")
+                  .get();
+      
+                      if (snapshot.empty) {
+                          console.log("🔧 DEBUG: No assessments found in Firestore");
+                          // Try loading from localStorage as fallback
+                          loadFromLocalStorage();
+                          return;
+                      }
+      
+                      console.log('🔧 DEBUG: Firestore snapshot received, docs:', snapshot.size);
+      
+                      // Map Firestore documents to student array
+                      allStudents = snapshot.docs.map((doc) => {
+                          const data = doc.data();
+                          console.log('🔧 DEBUG: Processing document:', doc.id, 'Data keys:', Object.keys(data));
+                          
+                          return {
+                              id: doc.id, // Add unique ID for each student
+                              studentName: data.studentName || "Unknown Student",
+                              section: data.section || "Unknown Section",
+                              birthday: data.birthday || "Unknown",
+                              totalScore: data.totalScore || 0,
+                              totalQuestions: data.totalQuestions || 0,
+                              percentage: data.percentage || "0.0",
+                              comprehensionScore: data.comprehensionScore || 0,
+                              comprehensionTotal: data.comprehensionTotal || 0,
+                              comprehensionPercentage: data.comprehensionPercentage || "0.0",
+                              grammarScore: data.grammarScore || 0,
+                              grammarTotal: data.grammarTotal || 0,
+                              grammarPercentage: data.grammarPercentage || "0.0",
+                              readinessLevel: data.readinessLevel || "Need Improvement",
+                              timestamp: data.timestamp || new Date().toISOString(),
+                              detailedAnswers: data.detailedAnswers || [],
+                              aiFeedback:
+                                  data.aiFeedback ||
+                                  data.aiGeneralFeedback ||
+                                  "No feedback available",
+                              aiStrengths:
+                                  data.aiStrengths || data.strengths || "Not available",
+                              aiAreasForImprovement:
+                                  data.aiAreasForImprovement ||
+                                  data.areasForImprovement ||
+                                  "Not available",
+                              aiRecommendations:
+                                  data.aiRecommendations ||
+                                  data.recommendations ||
+                                  "Not available",
+                          };
+                      });
+      
+                      console.log('🔧 DEBUG: Processed students:', allStudents.length);
+                      console.log('🔧 DEBUG: Sample student data:', allStudents[0]);
+      
+                      displayStudents(allStudents);
+                      updateStatistics(allStudents);
+                  } catch (error) {
+                      console.error("🔧 DEBUG: Error loading students from Firestore:", error);
+      
+                      // Show error message
+                      document.getElementById("studentsTableBody").innerHTML = `
+                              <tr>
+                                  <td colspan="7" style="text-align: center; padding: 40px; color: #dc2626;">
+                                      ⚠️ Could not load students from Firestore.<br>
+                                      Error: ${error.message}<br>
+                                      <small>Check console for details or verify Firebase configuration.</small>
+                                  </td>
+                              </tr>
+                          `;
+      
+                      // Try loading from localStorage as fallback
+                      loadFromLocalStorage();
+                  }
+              }
 
       // DISPLAY STUDENTS IN TABLE
-
-      function displayStudents(students) {
-        const tbody = document.getElementById("studentsTableBody");
-
-        if (students.length === 0) {
-          tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">
-                            No students have taken the assessment yet.
-                        </td>
-                    </tr>
-                `;
-          return;
-        }
-
-        tbody.innerHTML = students
-          .map(
-            (student) => `
-                <tr data-section="${student.section}">
-                    <td>${student.studentName}</td>
-                    <td>${student.section}</td>
-                    <td><strong>${student.totalScore}/${
-              student.totalQuestions
-            }</strong> (${student.percentage}%)</td>
-                    <td>${student.comprehensionScore}/${
-              student.comprehensionTotal
-            } (${student.comprehensionPercentage}%)</td>
-                    <td>${student.grammarScore}/${student.grammarTotal} (${
-              student.grammarPercentage
-            }%)</td>
-                    <td><span class="status-badge ${
-                      student.readinessLevel === "Ready"
-                        ? "ready"
-                        : "need-improvement"
-                    }">${student.readinessLevel}</span></td>
-                    <td><button class="btn-view-details" onclick="openModal('${
-                      student.id
-                    }')">👁️ View Details</button></td>
-                </tr>
-            `
-          )
-          .join("");
-      }
+      
+              function displayStudents(students) {
+                  console.log('🔧 DEBUG: displayStudents called with students:', students.length);
+                  console.log('🔧 DEBUG: Students data:', students);
+                  
+                  const tbody = document.getElementById("studentsTableBody");
+                  console.log('🔧 DEBUG: Table body element found:', !!tbody);
+      
+                  if (students.length === 0) {
+                      console.log('🔧 DEBUG: No students to display');
+                      tbody.innerHTML = `
+                              <tr>
+                                  <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">
+                                      No students have taken the assessment yet.
+                                  </td>
+                              </tr>
+                          `;
+                      return;
+                  }
+      
+                  console.log('🔧 DEBUG: Generating table rows...');
+                  const html = students
+                      .map(
+                          (student, index) => {
+                              console.log(`🔧 DEBUG: Processing student ${index}:`, student.studentName, student.id);
+                              return `
+                          <tr data-section="${student.section}">
+                              <td>${student.studentName}</td>
+                              <td>${student.section}</td>
+                              <td><strong>${student.totalScore}/${student.totalQuestions}</strong> (${student.percentage}%)</td>
+                              <td>${student.comprehensionScore}/${student.comprehensionTotal} (${student.comprehensionPercentage}%)</td>
+                              <td>${student.grammarScore}/${student.grammarTotal} (${student.grammarPercentage}%)</td>
+                              <td><span class="status-badge ${
+                                  student.readinessLevel === "Ready"
+                                      ? "ready"
+                                      : "need-improvement"
+                              }">${student.readinessLevel}</span></td>
+                              <td><button class="btn-view-details" onclick="openModal('${student.id}')">👁️ View Details</button></td>
+                          </tr>
+                      `;
+                          }
+                      )
+                      .join("");
+      
+                  console.log('🔧 DEBUG: Generated HTML:', html);
+                  tbody.innerHTML = html;
+                  console.log('🔧 DEBUG: Table updated');
+              }
 
       // UPDATE STATISTICS
-
-      function updateStatistics(students) {
-        const total = students.length;
-        const totalScore = students.reduce(
-          (sum, s) => sum + parseFloat(s.percentage),
-          0
-        );
-        const avgScore = total > 0 ? (totalScore / total).toFixed(1) : 0;
-        const ready = students.filter(
-          (s) => s.readinessLevel === "Ready"
-        ).length;
-        const needImprovement = students.filter(
-          (s) => s.readinessLevel === "Need Improvement"
-        ).length;
-
-        document.getElementById("totalStudents").textContent = total;
-        document.getElementById("avgScore").textContent = avgScore + "%";
-        document.getElementById("readyStudents").textContent = ready;
-        document.getElementById("needImprovement").textContent =
-          needImprovement;
-      }
+      
+              function updateStatistics(students) {
+                  console.log('🔧 DEBUG: updateStatistics called with students:', students.length);
+                  console.log('🔧 DEBUG: Students array:', students);
+                  
+                  const total = students.length;
+                  console.log('🔧 DEBUG: Total students:', total);
+                  
+                  const totalScore = students.reduce(
+                      (sum, s) => {
+                          console.log('🔧 DEBUG: Processing student:', s.studentName, 'Percentage:', s.percentage);
+                          return sum + parseFloat(s.percentage);
+                      },
+                      0
+                  );
+                  console.log('🔧 DEBUG: Total score sum:', totalScore);
+                  
+                  const avgScore = total > 0 ? (totalScore / total).toFixed(1) : 0;
+                  console.log('🔧 DEBUG: Average score:', avgScore);
+                  
+                  const ready = students.filter(
+                      (s) => s.readinessLevel === "Ready"
+                  ).length;
+                  console.log('🔧 DEBUG: Ready students:', ready);
+                  
+                  const needImprovement = students.filter(
+                      (s) => s.readinessLevel === "Need Improvement"
+                  ).length;
+                  console.log('🔧 DEBUG: Need improvement students:', needImprovement);
+      
+                  // Update DOM elements
+                  const totalStudentsEl = document.getElementById("totalStudents");
+                  const avgScoreEl = document.getElementById("avgScore");
+                  const readyStudentsEl = document.getElementById("readyStudents");
+                  const needImprovementEl = document.getElementById("needImprovement");
+                  
+                  console.log('🔧 DEBUG: DOM elements found:', {
+                      totalStudents: !!totalStudentsEl,
+                      avgScore: !!avgScoreEl,
+                      readyStudents: !!readyStudentsEl,
+                      needImprovement: !!needImprovementEl
+                  });
+      
+                  if (totalStudentsEl) totalStudentsEl.textContent = total;
+                  if (avgScoreEl) avgScoreEl.textContent = avgScore + "%";
+                  if (readyStudentsEl) readyStudentsEl.textContent = ready;
+                  if (needImprovementEl) needImprovementEl.textContent = needImprovement;
+                  
+                  console.log('🔧 DEBUG: Statistics updated in DOM');
+              }
 
       // FILTER BY SECTION (FIXED - Case Insensitive and Flexible Matching)
 
@@ -680,28 +738,47 @@
       };
 
       // LOAD FROM LOCALSTORAGE (FALLBACK)
-
-      function loadFromLocalStorage() {
-        const stored = localStorage.getItem("assessmentResult");
-        if (stored) {
-          try {
-            const student = JSON.parse(stored);
-            // Add a unique ID for localStorage students
-            student.id = 'local_' + Date.now();
-            allStudents = [student];
-            displayStudents(allStudents);
-            updateStatistics(allStudents);
-
-            console.log("Loaded student data from localStorage");
-          } catch (e) {
-            console.error("Error loading from localStorage:", e);
-          }
-        }
-      }
+      
+              function loadFromLocalStorage() {
+                  console.log('🔧 DEBUG: loadFromLocalStorage called');
+                  const stored = localStorage.getItem("assessmentResult");
+                  console.log('🔧 DEBUG: localStorage assessmentResult:', stored);
+                  
+                  if (stored) {
+                      try {
+                          const student = JSON.parse(stored);
+                          console.log('🔧 DEBUG: Parsed localStorage student:', student);
+                          
+                          // Add a unique ID for localStorage students
+                          student.id = 'local_' + Date.now();
+                          allStudents = [student];
+                          
+                          console.log('🔧 DEBUG: Setting allStudents from localStorage:', allStudents);
+                          displayStudents(allStudents);
+                          updateStatistics(allStudents);
+      
+                          console.log("✅ Loaded student data from localStorage");
+                      } catch (e) {
+                          console.error("❌ Error loading from localStorage:", e);
+                      }
+                  } else {
+                      console.log('🔧 DEBUG: No data in localStorage');
+                      // Show empty state
+                      document.getElementById("studentsTableBody").innerHTML = `
+                          <tr>
+                              <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">
+                                  No students have taken the assessment yet.<br>
+                                  <small>Complete an assessment to see data here.</small>
+                              </td>
+                          </tr>
+                      `;
+                  }
+              }
     </script>
 
     <!-- Firebase Configuration -->
     <script>
+      // Initialize Firebase
       const firebaseConfig = {
         apiKey: "AIzaSyBLUXbAALnqjtLyQNCktQO8eS1TKvE6-Dc",
         authDomain: "edumetrics-62601.firebaseapp.com",
@@ -710,8 +787,36 @@
         messagingSenderId: "1008049617356",
         appId: "1:1008049617356:web:ce2aa07a1ebc3533444569",
       };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+      
+      // Check if Firebase SDK is loaded before initializing
+      if (typeof firebase !== 'undefined' && firebase.initializeApp) {
+        firebase.initializeApp(firebaseConfig);
+        window.db = firebase.firestore(); // Make db global
+        console.log('🔧 DEBUG: Firebase initialized successfully');
+        
+        // Add diagnostic logging here where variables are available
+        console.log('🔧 DEBUG: Teacher dashboard page loaded');
+        console.log('🔧 DEBUG: Firebase config is available:', firebaseConfig);
+        console.log('🔧 DEBUG: Firestore instance is available:', window.db);
+      } else {
+        console.error('🔧 DEBUG: ⚠️ Firebase SDK not loaded or initializeApp not available');
+        
+        // Show error message in the table
+        window.addEventListener("DOMContentLoaded", () => {
+          const tableBody = document.getElementById("studentsTableBody");
+          if (tableBody) {
+            tableBody.innerHTML = `
+              <tr>
+                  <td colspan="7" style="text-align: center; padding: 40px; color: #dc2626;">
+                      ⚠️ Firebase SDK failed to load.<br>
+                      Please check your internet connection and reload the page.<br>
+                      <small>Error: Firebase not available</small>
+                  </td>
+              </tr>
+            `;
+          }
+        });
+      }
     </script>
 
     <!-- Modal Container -->

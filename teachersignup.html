@@ -1,61 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EduMetrics | Teacher Sign Up</title>
-    <link rel="stylesheet" href="teachersignup.css"> 
-</head>
-<body>
-    
+    <link rel="stylesheet" href="teachersignup.css" />
+  </head>
+  <body>
     <header>
-        <div class="container">
-            <h1>EduMetrics</h1>
-            <p>AI-Driven Student Competency Evaluation</p>
-        </div>
+      <div class="container">
+        <h1>EduMetrics</h1>
+        <p>AI-Driven Student Competency Evaluation</p>
+      </div>
     </header>
 
     <main class="login-page">
-        <div class="login-card">
-            <h2>Teacher Sign up</h2>
-            <p>Assess academic readiness with precision</p>
+      <div class="login-card">
+        <h2>Teacher Sign up</h2>
+        <p>Assess academic readiness with precision</p>
 
-            <form id="signupForm">
-                
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="teacher@school.edu" required>
-                </div>
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="teacher@school.edu"
+              required
+            />
+          </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+          </div>
 
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
-                    <small id="passwordError" style="color: #dc2626; display: none; margin-top: 5px; font-size: 0.85rem;">Passwords do not match!</small>
-                </div>
+          <div class="form-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirm-password"
+              required
+            />
+            <small
+              id="passwordError"
+              style="
+                color: #dc2626;
+                display: none;
+                margin-top: 5px;
+                font-size: 0.85rem;
+              "
+              >Passwords do not match!</small
+            >
+          </div>
 
-                <button type="submit" class="btn btn-sign-in">
-                    Sign Up &rarr;
-                </button>
-            </form>
+          <button type="submit" class="btn btn-sign-in">Sign Up &rarr;</button>
+        </form>
 
-            <p class="login-prompt">
-                Already have an account?
-                <a href="teacherlogin.html">
-                    Log In
-                </a>
-            </p>
+        <p class="login-prompt">
+          Already have an account?
+          <a href="teacherlogin.html"> Log In </a>
+        </p>
 
-            <p class="back-home">
-                <a href="index.html">
-                    &larr; Back to Home
-                </a>
-            </p>
-        </div>
+        <p class="back-home">
+          <a href="index.html"> &larr; Back to Home </a>
+        </p>
+      </div>
     </main>
 
     <!-- Modal Container -->
@@ -67,76 +79,91 @@
 
     <script src="modal.js"></script>
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBLUXbAALnqjtLyQNCktQO8eS1TKvE6-Dc",
+        authDomain: "edumetrics-62601.firebaseapp.com",
+        projectId: "edumetrics-62601",
+        storageBucket: "edumetrics-62601.firebasestorage.app",
+        messagingSenderId: "1008049617356",
+        appId: "1:1008049617356:web:ce2aa07a1ebc3533444569",
+      };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
 
-        document.getElementById('signupForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Stop default form submission
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Stop default form submission
 
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            const email = document.getElementById('email').value;
-            const errorElement = document.getElementById('passwordError');
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("confirm-password").value;
+          const email = document.getElementById("email").value;
+          const errorElement = document.getElementById("passwordError");
 
-            if (password !== confirmPassword) {
-                // Passwords DO NOT match: show error and STOP navigation
-                errorElement.style.display = 'block';
-                document.getElementById('confirm-password').focus();
-                return;
+          if (password !== confirmPassword) {
+            // Passwords DO NOT match: show error and STOP navigation
+            errorElement.style.display = "block";
+            document.getElementById("confirm-password").focus();
+            return;
+          }
+
+          // Passwords match: proceed with Firestore save
+          errorElement.style.display = "none";
+
+          try {
+            // Show loading message
+            showCustomAlert(
+              "Creating Account",
+              "Creating your teacher account... Please wait."
+            );
+
+            // Check if teacher already exists
+            const existingTeacher = await db
+              .collection("teachers")
+              .where("email", "==", email)
+              .get();
+
+            if (!existingTeacher.empty) {
+              showCustomAlert(
+                "Account Exists",
+                "An account with this email already exists. Please use a different email or try logging in."
+              );
+              return;
             }
 
-            // Passwords match: proceed with Firestore save
-            errorElement.style.display = 'none';
-            
-            try {
-                // Show loading message
-                showCustomAlert('Creating Account', 'Creating your teacher account... Please wait.');
+            // Save new teacher to Firestore
+            const teacherData = {
+              email: email,
+              password: password, // Note: In production, use Firebase Auth for secure password handling
+              createdAt: new Date(),
+              isActive: true,
+            };
 
-                // Check if teacher already exists
-                const existingTeacher = await db.collection('teachers')
-                    .where('email', '==', email)
-                    .get();
+            const docRef = await db.collection("teachers").add(teacherData);
+            console.log("Teacher account created with ID: ", docRef.id);
 
-                if (!existingTeacher.empty) {
-                    showCustomAlert('Account Exists', 'An account with this email already exists. Please use a different email or try logging in.');
-                    return;
-                }
+            // Show success message
+            showCustomAlert(
+              "Sign Up Successful",
+              "Account created successfully! Please log in with your new credentials."
+            );
 
-                // Save new teacher to Firestore
-                const teacherData = {
-                    email: email,
-                    password: password, // Note: In production, use Firebase Auth for secure password handling
-                    createdAt: new Date(),
-                    isActive: true
-                };
-
-                const docRef = await db.collection('teachers').add(teacherData);
-                console.log('Teacher account created with ID: ', docRef.id);
-
-                // Show success message
-                showCustomAlert('Sign Up Successful', 'Account created successfully! Please log in with your new credentials.');
-
-                // Redirect to login page after 2 seconds
-                setTimeout(() => {
-                    window.location.href = "teacherlogin.html";
-                }, 2000);
-
-            } catch (error) {
-                console.error('Error creating teacher account:', error);
-                showCustomAlert('Error', 'Failed to create account. Please try again.');
-            }
+            // Redirect to login page after 2 seconds
+            setTimeout(() => {
+              window.location.href = "teacherlogin.html";
+            }, 2000);
+          } catch (error) {
+            console.error("Error creating teacher account:", error);
+            showCustomAlert(
+              "Error",
+              "Failed to create account. Please try again."
+            );
+          }
         });
     </script>
-</body>
+  </body>
 </html>

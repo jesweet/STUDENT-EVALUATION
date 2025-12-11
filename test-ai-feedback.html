@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test AI Feedback - Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .log-container {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-test {
+            background: #667eea;
+            color: white;
+        }
+        .btn-clear {
+            background: #dc2626;
+            color: white;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 AI Feedback Debug Test</h1>
+        <p>This page helps test the AI feedback system and diagnose the "undefined" issue.</p>
+        
+        <div class="test-buttons">
+            <button class="btn-test" onclick="testFallbackFeedback()">Test Fallback Feedback</button>
+            <button class="btn-test" onclick="testLocalStorage()">Test LocalStorage Data</button>
+            <button class="btn-test" onclick="testAIProcessing()">Test AI Processing</button>
+            <button class="btn-clear" onclick="clearLogs()">Clear Logs</button>
+        </div>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <h3>Console Logs:</h3>
+        <div id="logContainer" class="log-container"></div>
+    </div>
+
+    <script>
+        // Mock data similar to what would be generated during assessment
+        const mockAssessmentData = {
+            studentName: "John Doe",
+            section: "Grade 6 - Section A",
+            birthday: "2012-05-15",
+            gradeLevel: "Grade 6",
+            totalScore: 12,
+            totalQuestions: 100,
+            percentage: 12.0,
+            comprehensionScore: 12,
+            comprehensionTotal: 50,
+            comprehensionPercentage: 24.0,
+            grammarScore: 0,
+            grammarTotal: 50,
+            grammarPercentage: 0.0,
+            readinessLevel: "Need Improvement",
+            answers: [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3],
+            detailedAnswers: [],
+            timeSpent: 60,
+            timestamp: new Date().toISOString()
+        };
+
+        // Generate detailed answers
+        for (let i = 0; i < 100; i++) {
+            mockAssessmentData.detailedAnswers.push({
+                questionId: i + 1,
+                question: `Sample question ${i + 1}`,
+                category: i < 50 ? "Reading Comprehension" : "Grammar",
+                difficulty: i % 3 === 0 ? "easy" : i % 3 === 1 ? "medium" : "hard",
+                studentAnswer: i % 4,
+                correctAnswer: i % 4,
+                isCorrect: i % 4 === i % 4,
+                options: ["Option A", "Option B", "Option C", "Option D"],
+                passage: i < 50 ? "Sample passage text..." : null
+            });
+        }
+
+        // Make some answers incorrect to simulate the actual scenario
+        for (let i = 0; i < 100; i++) {
+            if (i % 5 !== 0) {
+                mockAssessmentData.detailedAnswers[i].isCorrect = false;
+                mockAssessmentData.detailedAnswers[i].studentAnswer = (i + 1) % 4;
+            }
+        }
+
+        // Override some scores to match the user's scenario
+        mockAssessmentData.totalScore = 20;
+        mockAssessmentData.percentage = 20.0;
+        mockAssessmentData.comprehensionScore = 12;
+        mockAssessmentData.comprehensionPercentage = 24.0;
+        mockAssessmentData.grammarScore = 8;
+        mockAssessmentData.grammarPercentage = 16.0;
+
+        let logContainer;
+
+        function init() {
+            logContainer = document.getElementById('logContainer');
+            log("🔧 Debug test page loaded");
+            log("📝 Mock assessment data prepared");
+        }
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logContainer.innerHTML += `[${timestamp}] ${message}\n`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(message);
+        }
+
+        function showStatus(message, type = 'success') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        function clearLogs() {
+            logContainer.innerHTML = '';
+            log("🧹 Logs cleared");
+        }
+
+        function testFallbackFeedback() {
+            log("🧪 Testing fallback feedback generation...");
+            
+            // Save mock data to localStorage
+            localStorage.setItem('assessmentResult', JSON.stringify(mockAssessmentData));
+            localStorage.removeItem('aiFeedback'); // Ensure no AI feedback
+            
+            log("💾 Mock assessment data saved to localStorage");
+            log("📊 Mock data summary:");
+            log(`   - Total Score: ${mockAssessmentData.totalScore}/${mockAssessmentData.totalQuestions}`);
+            log(`   - Percentage: ${mockAssessmentData.percentage}%`);
+            log(`   - Reading: ${mockAssessmentData.comprehensionScore}/${mockAssessmentData.comprehensionTotal} (${mockAssessmentData.comprehensionPercentage}%)`);
+            log(`   - Grammar: ${mockAssessmentData.grammarScore}/${mockAssessmentData.grammarTotal} (${mockAssessmentData.grammarPercentage}%)`);
+            log(`   - Readiness: ${mockAssessmentData.readinessLevel}`);
+            log(`   - Time: ${Math.floor(mockAssessmentData.timeSpent / 60)}m ${mockAssessmentData.timeSpent % 60}s`);
+            
+            showStatus("Mock data prepared. Open assessment-results.html to see the feedback!", "success");
+            log("✅ Test completed. Open assessment-results.html in a new tab to see the results.");
+        }
+
+        function testLocalStorage() {
+            log("🔍 Testing localStorage data...");
+            
+            const assessmentData = localStorage.getItem('assessmentResult');
+            const aiFeedback = localStorage.getItem('aiFeedback');
+            
+            log(`📋 Assessment data in localStorage: ${assessmentData ? 'YES' : 'NO'}`);
+            log(`🤖 AI feedback in localStorage: ${aiFeedback ? 'YES' : 'NO'}`);
+            
+            if (assessmentData) {
+                try {
+                    const data = JSON.parse(assessmentData);
+                    log("📊 Assessment data contents:");
+                    log(`   - Student: ${data.studentName}`);
+                    log(`   - Score: ${data.totalScore}/${data.totalQuestions} (${data.percentage}%)`);
+                    log(`   - Reading: ${data.comprehensionPercentage}%`);
+                    log(`   - Grammar: ${data.grammarPercentage}%`);
+                    log(`   - Readiness: ${data.readinessLevel}`);
+                } catch (e) {
+                    log(`❌ Error parsing assessment data: ${e.message}`);
+                }
+            }
+            
+            if (aiFeedback) {
+                try {
+                    const feedback = JSON.parse(aiFeedback);
+                    log("🤖 AI feedback contents:");
+                    log(`   - General: ${feedback.generalFeedback ? 'YES' : 'NO'}`);
+                    log(`   - Strengths: ${feedback.strengths ? 'YES' : 'NO'}`);
+                    log(`   - Weaknesses: ${feedback.areasForImprovement ? 'YES' : 'NO'}`);
+                    log(`   - Recommendations: ${feedback.recommendations ? 'YES' : 'NO'}`);
+                } catch (e) {
+                    log(`❌ Error parsing AI feedback: ${e.message}`);
+                }
+            }
+        }
+
+        function testAIProcessing() {
+            log("🤖 Testing AI processing simulation...");
+            
+            // Simulate the createDynamicFallback function
+            const wrongAnswersByCategory = {};
+            const wrongAnswersByDifficulty = {};
+            
+            mockAssessmentData.detailedAnswers.forEach(answer => {
+                if (!answer.isCorrect) {
+                    if (!wrongAnswersByCategory[answer.category]) {
+                        wrongAnswersByCategory[answer.category] = 0;
+                    }
+                    wrongAnswersByCategory[answer.category]++;
+                    
+                    if (!wrongAnswersByDifficulty[answer.difficulty]) {
+                        wrongAnswersByDifficulty[answer.difficulty] = 0;
+                    }
+                    wrongAnswersByDifficulty[answer.difficulty]++;
+                }
+            });
+            
+            const categoryInsights = Object.entries(wrongAnswersByCategory)
+                .map(([category, count]) => `${category}: ${count} incorrect answer${count > 1 ? 's' : ''}`)
+                .join(', ');
+            
+            const difficultyInsights = Object.entries(wrongAnswersByDifficulty)
+                .map(([difficulty, count]) => `${difficulty}: ${count} incorrect`)
+                .join(', ');
+            
+            const strongerArea = mockAssessmentData.comprehensionPercentage > mockAssessmentData.grammarPercentage ? 'Reading Comprehension' : 'Grammar';
+            const weakerArea = mockAssessmentData.comprehensionPercentage < mockAssessmentData.grammarPercentage ? 'Reading Comprehension' : 'Grammar';
+            
+            log(`📊 Analysis results:`);
+            log(`   - Stronger area: ${strongerArea}`);
+            log(`   - Weaker area: ${weakerArea}`);
+            log(`   - Category insights: ${categoryInsights}`);
+            log(`   - Difficulty insights: ${difficultyInsights}`);
+            
+            // Generate feedback
+            const feedback = {
+                generalFeedback: `Based on your assessment results, you scored ${mockAssessmentData.percentage}% overall, which indicates ${mockAssessmentData.readinessLevel === 'Ready' ? 'strong readiness for advanced topics' : 'opportunities for growth in foundational concepts'}. Your performance shows particular ${mockAssessmentData.comprehensionPercentage > mockAssessmentData.grammarPercentage ? 'strength in reading comprehension' : 'proficiency in grammar skills'}.`,
+                
+                strengths: `You demonstrated particular strength in ${strongerArea} with ${mockAssessmentData[strongerArea.toLowerCase().replace(' ', '') + 'Percentage']}% accuracy. You showed consistency across ${mockAssessmentData.comprehensionPercentage === mockAssessmentData.grammarPercentage ? 'both skill areas' : 'your stronger subject area'}. Your time management was effective, completing the assessment in ${Math.floor(mockAssessmentData.timeSpent / 60)} minutes.`,
+                
+                areasForImprovement: `Focus on improving your ${weakerArea} skills (${mockAssessmentData[weakerArea.toLowerCase().replace(' ', '') + 'Percentage']}% accuracy). ${categoryInsights ? `Specific attention needed in: ${categoryInsights}.` : ''} ${difficultyInsights ? `Difficulty breakdown: ${difficultyInsights}.` : ''} ${mockAssessmentData.percentage < 50 ? 'Consider reviewing fundamental concepts before moving to more advanced material.' : 'Continue building on your solid foundation while addressing identified weak areas.'}`,
+                
+                recommendations: `${mockAssessmentData.percentage >= 80 ? 'Excellent work! ' : ''}Practice regularly in your ${weakerArea.toLowerCase()} skills. ${mockAssessmentData.timeSpent > 1800 ? 'Work on time management while maintaining accuracy. ' : ''}Review the specific questions you answered incorrectly, focusing on the concepts behind each answer. ${categoryInsights ? `Pay special attention to: ${categoryInsights}. ` : ''}Consider seeking additional practice materials or tutoring support in challenging areas. Set small, achievable goals for improvement and track your progress over time.`
+            };
+            
+            log("🤖 Generated feedback:");
+            log(`   - General: ${feedback.generalFeedback}`);
+            log(`   - Strengths: ${feedback.strengths}`);
+            log(`   - Weaknesses: ${feedback.areasForImprovement}`);
+            log(`   - Recommendations: ${feedback.recommendations}`);
+            
+            // Save to localStorage
+            localStorage.setItem('aiFeedback', JSON.stringify(feedback));
+            log("💾 AI feedback saved to localStorage");
+            
+            showStatus("AI feedback generated and saved. Check assessment-results.html!", "success");
+        }
+
+        // Initialize when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>

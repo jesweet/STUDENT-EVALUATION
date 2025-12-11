@@ -30,55 +30,411 @@
         header {
             position: relative;
         }
+
+        /* Enhanced Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-card {
+            background-color: var(--clr-slate-container);
+            color: var(--clr-white);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(20px, -20px);
+        }
+
+        .welcome-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .student-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .student-info-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 20px;
+            font-size: 0.95rem;
+        }
+
+        .status-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .status-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .status-info p {
+            margin: 0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16,185,129,0.8);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .btn-primary {
+            background: #22c55e;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34,197,94,0.3);
+        }
+
+        .btn-secondary {
+            background: #f59e0b;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245,158,11,0.3);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239,68,68,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
+        .progress-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .progress-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .progress-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .history-section {
+            background: white;
+            color: #333;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .history-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .history-item {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .history-details h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .history-details p {
+            margin: 0;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state .emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-card {
+                padding: 25px;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary, .btn-danger, .btn-outline {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-
     <header>
         <div class="container">
             <h1>EduMetrics</h1>
             <p>AI-Driven Student Competency Evaluation</p>
         </div>
         <div class="header-actions">
-            <button onclick="logout()" class="btn-logout" style="float: right; padding: 8px 15px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer;">Log Out</button>
+            <button onclick="logout()" class="btn-logout">Log Out</button>
         </div>
     </header>
 
     <main class="dashboard-page">
-        <div class="dashboard-card">
-            
-            <div class="welcome-header">
-                <div class="welcome-icon">⭐</div>
-                <div class="welcome-title-group">
-                    <h2 class="welcome-title" id="welcomeStudentName">Welcome!</h2>
-                    <p class="welcome-subtitle">Grade 6</p>
+        <div class="dashboard-grid">
+            <!-- Main Dashboard Card -->
+            <div class="dashboard-card">
+                <div class="welcome-header">
+                    <div class="welcome-title-group">
+                        <h1 class="welcome-title" id="welcomeStudentName">Welcome!</h1>
+                        <p class="welcome-subtitle">Grade 6 Student</p>
+                    </div>
+                    <div class="student-info" id="studentInfo">
+                        <span class="student-info-item">👤 <span id="studentNameDisplay">Student</span></span>
+                        <span class="student-info-item">🏫 <span id="studentSectionDisplay">Section</span></span>
+                        <span class="student-info-item">📅 <span id="studentBirthdayDisplay">Birthday</span></span>
+                    </div>
+                </div>
+
+                <div class="status-section">
+                    <div class="status-grid">
+                        <div class="status-info">
+                            <h3>Assessment Status</h3>
+                            <p id="assessmentStatusText">Ready to begin your learning journey!</p>
+                        </div>
+                        <div class="status-badge">
+                            <span class="status-dot" id="statusDot"></span>
+                            <span id="assessmentStatus">Not Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons" id="actionButtons">
+                    <!-- Buttons will be populated by JavaScript -->
+                </div>
+
+                <div class="progress-section" id="progressSection" style="display: none;">
+                    <h3 class="modal-title" style="margin: 0 0 20px 0; text-align: center; color: white; font-size: 1rem;">📊 Performance Analytics</h3>
+                    <div class="progress-grid">
+                        <div class="progress-card">
+                            <div class="progress-value" id="overallScore" style="font-size: 1.6rem;">-</div>
+                            <div class="progress-label" style="font-size: 0.8rem;">Overall Score</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-value" id="readingScore" style="font-size: 1.6rem;">-</div>
+                            <div class="progress-label" style="font-size: 0.8rem;">Reading Comprehension</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-value" id="grammarScore" style="font-size: 1.6rem;">-</div>
+                            <div class="progress-label" style="font-size: 0.8rem;">Grammar</div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-value" id="readinessLevel" style="font-size: 1.6rem;">-</div>
+                            <div class="progress-label" style="font-size: 0.8rem;">Readiness Level</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Insights -->
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <h4 class="modal-title" style="margin: 0 0 15px 0; font-size: 0.9rem; text-align: center; color: white;">💡 Key Insights</h4>
+                        <div id="insightsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                            <!-- Insights will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Time Analysis -->
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <h4 class="modal-title" style="margin: 0 0 15px 0; font-size: 0.9rem; text-align: center; color: white;">⏱️ Time Analysis</h4>
+                        <div id="timeAnalysis" style="font-size: 1rem; opacity: 0.9;">
+                            <!-- Time analysis will be populated -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="status-box">
-                <div class="status-info">
-                    <div class="status-title">Evaluation Status</div>
-                    <div class="status-text">Not yet taken</div>
+            <!-- History Section -->
+            <div class="history-section">
+                <h3>Assessment History</h3>
+                <div id="historyContainer">
+                    <!-- History items will be populated by JavaScript -->
                 </div>
-                <button class="btn-ready" onclick="startEvaluation()">Ready to Start!</button>
             </div>
-
-            <button class="btn btn-evaluation btn-main-action" onclick="startEvaluation()">
-                Start Evaluation <span style="font-size: 1.2rem;">&rarr;</span>
-            </button>
         </div>
     </main>
 
     <script>
-        // Function to get a query parameter value (the name) from the URL
+        // Function to get a query parameter value from the URL
         function getQueryParameter(param) {
-            const urlParams = new URLSearchParams(window.location.search)
-            return urlParams.get(param); 
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
 
         // Function for the Start Evaluation button
         function startEvaluation() {
-            // Navigates to the actual assessment page (studasspage.html)
             window.location.href = "studassinstruc.html";
         }
 
@@ -89,13 +445,67 @@
 
         // Function for retaking the assessment
         function retakeAssessment() {
-            showCustomConfirm('Retake Assessment', 'Are you sure you want to retake the assessment? Your previous local results will be cleared.', () => {
-                // Clear previous assessment data
-                localStorage.removeItem('assessmentResult');
-                localStorage.removeItem('aiFeedback');
-                // Redirect to start over
-                window.location.href = "studassinstruc.html";
-            });
+            showCustomConfirm(
+                'Retake Assessment',
+                'Are you sure you want to retake the assessment? This will clear your previous results and start a new evaluation.',
+                () => {
+                    // Clear previous assessment data
+                    localStorage.removeItem('assessmentResult');
+                    localStorage.removeItem('aiFeedback');
+                    
+                    // Add to history before clearing
+                    saveToHistory();
+                    
+                    // Redirect to start over
+                    window.location.href = "studassinstruc.html";
+                }
+            );
+        }
+
+        // Function to save current results to history
+        function saveToHistory() {
+            const currentResult = localStorage.getItem('assessmentResult');
+            if (currentResult) {
+                const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
+                const result = JSON.parse(currentResult);
+                
+                // Add timestamp and ID
+                const historyItem = {
+                    ...result,
+                    historyId: Date.now(),
+                    completedAt: new Date().toISOString()
+                };
+                
+                history.push(historyItem);
+                localStorage.setItem('assessmentHistory', JSON.stringify(history));
+            }
+        }
+
+        // Function to view specific history item
+        function viewHistoryResults(historyId) {
+            const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
+            const item = history.find(h => h.historyId === historyId);
+            
+            if (item) {
+                // Temporarily store this history item as the current result
+                localStorage.setItem('assessmentResult', JSON.stringify(item));
+                localStorage.setItem('viewingHistory', 'true');
+                window.location.href = "assessment-results.html";
+            }
+        }
+
+        // Function to delete history item
+        function deleteHistoryItem(historyId) {
+            showCustomConfirm(
+                'Delete History Item',
+                'Are you sure you want to delete this assessment from your history? This action cannot be undone.',
+                () => {
+                    const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
+                    const newHistory = history.filter(h => h.historyId !== historyId);
+                    localStorage.setItem('assessmentHistory', JSON.stringify(newHistory));
+                    loadDashboard();
+                }
+            );
         }
 
         // LOGOUT FUNCTION
@@ -106,76 +516,316 @@
             });
         }
 
-        // Retake Prevention
-        window.onload = function() {
+        // Format date helper
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+
+        // Load dashboard based on assessment status
+        function loadDashboard() {
             // Get all student data from URL query parameters
             const studentName = getQueryParameter('name');
             const section = getQueryParameter('section');
             const birthday = getQueryParameter('birthday');
             const grade = getQueryParameter('grade');
-            const welcomeElement = document.getElementById('welcomeStudentName');
             
-            // Explicitly save all student data to localStorage if they exist in URL
+            // Save to localStorage if they exist in URL
             if (studentName) localStorage.setItem('studentName', studentName);
             if (section) localStorage.setItem('studentSection', section);
             if (birthday) localStorage.setItem('studentBirthday', birthday);
             if (grade) localStorage.setItem('studentGrade', grade);
             
-            // Display student name in welcome message
-            if (studentName && welcomeElement) {
-                welcomeElement.textContent = `Welcome, ${studentName}!`;
+            // Display student information
+            const savedName = localStorage.getItem('studentName') || 'Student';
+            const savedSection = localStorage.getItem('studentSection') || 'Unknown Section';
+            const savedBirthday = localStorage.getItem('studentBirthday') || 'Unknown Birthday';
+            
+            document.getElementById('welcomeStudentName').textContent = `Welcome, ${savedName}!`;
+            document.getElementById('studentNameDisplay').textContent = savedName;
+            document.getElementById('studentSectionDisplay').textContent = savedSection;
+            document.getElementById('studentBirthdayDisplay').textContent = savedBirthday;
+            
+            const actionButtons = document.getElementById('actionButtons');
+            const progressSection = document.getElementById('progressSection');
+            const assessmentResult = localStorage.getItem('assessmentResult');
+            
+            if (assessmentResult) {
+                // Student has completed assessment
+                const result = JSON.parse(assessmentResult);
+                
+                // Update status
+                document.getElementById('assessmentStatusText').textContent =
+                    `Completed on ${formatDate(result.timestamp || new Date().toISOString())}`;
+                document.getElementById('assessmentStatus').textContent = 'Completed';
+                document.getElementById('statusDot').style.background = '#10b981';
+                
+                // Show progress section
+                progressSection.style.display = 'block';
+                document.getElementById('overallScore').textContent =
+                    `${result.totalScore}/${result.totalQuestions} (${result.percentage}%)`;
+                document.getElementById('readingScore').textContent =
+                    `${result.comprehensionScore}/${result.comprehensionTotal} (${result.comprehensionPercentage}%)`;
+                document.getElementById('grammarScore').textContent =
+                    `${result.grammarScore}/${result.grammarTotal} (${result.grammarPercentage}%)`;
+                document.getElementById('readinessLevel').textContent = result.readinessLevel;
+                
+                // Generate and display performance insights
+                generatePerformanceInsights(result);
+                
+                // Generate and display time analysis
+                generateTimeAnalysis(result);
+                
+                // Create action buttons for completed assessment
+                actionButtons.innerHTML = `
+                    <button class="btn-primary" onclick="viewResults()">
+                        📊 View Detailed Results
+                    </button>
+                    <button class="btn-secondary" onclick="retakeAssessment()">
+                        🔄 Retake Assessment
+                    </button>
+                    <button class="btn-outline" onclick="window.location.href='studassdb.html'">
+                        📈 View Progress History
+                    </button>
+                `;
             } else {
-                // If not in URL, try to get from localStorage for greeting
-                const savedName = localStorage.getItem('studentName');
-                if (savedName && welcomeElement) {
-                    welcomeElement.textContent = `Welcome, ${savedName}!`;
-                } else if (welcomeElement) {
-                    // Default message if name parameter is missing
-                    welcomeElement.textContent = "Welcome, Student!";
+                // Student hasn't taken assessment yet
+                document.getElementById('assessmentStatusText').textContent =
+                    'Ready to begin your learning journey!';
+                document.getElementById('assessmentStatus').textContent = 'Not Started';
+                document.getElementById('statusDot').style.background = '#f59e0b';
+                
+                // Hide progress section
+                progressSection.style.display = 'none';
+                
+                // Create action buttons for new assessment
+                actionButtons.innerHTML = `
+                    <button class="btn-primary" onclick="startEvaluation()">
+                        🚀 Start New Assessment
+                    </button>
+                    <button class="btn-outline" onclick="window.location.href='studassdb.html'">
+                        📈 View Progress History
+                    </button>
+                `;
+            }
+            
+            // Load history
+            loadHistory();
+        }
+
+        // Load assessment history
+        function loadHistory() {
+            const historyContainer = document.getElementById('historyContainer');
+            const history = JSON.parse(localStorage.getItem('assessmentHistory') || '[]');
+            
+            if (history.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">📚</div>
+                        <h3>No Assessment History</h3>
+                        <p>Complete your first assessment to see your progress over time.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort history by completion date (newest first)
+            history.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+            
+            historyContainer.innerHTML = history.map(item => `
+                <div class="history-item">
+                    <div class="history-details">
+                        <h4>Assessment Completed - ${formatDate(item.completedAt)}</h4>
+                        <p>
+                            Overall: ${item.totalScore}/${item.totalQuestions} (${item.percentage}%) |
+                            Reading: ${item.comprehensionScore}/${item.comprehensionTotal} (${item.comprehensionPercentage}%) |
+                            Grammar: ${item.grammarScore}/${item.grammarTotal} (${item.grammarPercentage}%) |
+                            Status: ${item.readinessLevel}
+                        </p>
+                    </div>
+                    <div class="history-actions">
+                        <button class="btn-outline" onclick="viewHistoryResults(${item.historyId})">
+                            📊 View Results
+                        </button>
+                        <button class="btn-danger" onclick="deleteHistoryItem(${item.historyId})">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generate performance insights based on assessment results
+        function generatePerformanceInsights(result) {
+            const insightsContainer = document.getElementById('insightsContainer');
+            const insights = [];
+            
+            // Overall performance insight
+            const overallScore = parseFloat(result.percentage);
+            if (overallScore >= 85) {
+                insights.push({
+                    title: '🌟 Excellent Performance',
+                    text: 'You demonstrated outstanding understanding across all areas. Keep up the excellent work!',
+                    emoji: '🌟',
+                    color: '#22c55e'
+                });
+            } else if (overallScore >= 70) {
+                insights.push({
+                    title: '👍 Strong Foundation',
+                    text: 'You have a solid understanding of the material. Focus on your weaker areas to reach excellence.',
+                    emoji: '👍',
+                    color: '#f59e0b'
+                });
+            } else {
+                insights.push({
+                    title: '💪 Room for Growth',
+                    text: 'You\'re making progress! With focused practice, you can improve your scores significantly.',
+                    emoji: '💪',
+                    color: '#ef4444'
+                });
+            }
+            
+            // Reading vs Grammar comparison
+            const readingScore = parseFloat(result.comprehensionPercentage);
+            const grammarScore = parseFloat(result.grammarPercentage);
+            
+            if (readingScore > grammarScore + 10) {
+                insights.push({
+                    title: '📚 Reading Strength',
+                    text: 'You excel in reading comprehension. Use your strong reading skills to help improve grammar understanding.',
+                    emoji: '📚',
+                    color: '#3b82f6'
+                });
+            } else if (grammarScore > readingScore + 10) {
+                insights.push({
+                    title: '✍️ Grammar Strength',
+                    text: 'Your grammar skills are strong. Apply this precision to enhance your reading analysis.',
+                    emoji: '✍️',
+                    color: '#8b5cf6'
+                });
+            } else {
+                insights.push({
+                    title: '⚖️ Balanced Skills',
+                    text: 'You have well-balanced skills in both reading and grammar. Continue practicing both areas equally.',
+                    emoji: '⚖️',
+                    color: '#10b981'
+                });
+            }
+            
+            // Readiness level insight
+            if (result.readinessLevel === 'Ready') {
+                insights.push({
+                    title: '🚀 Ready for Advanced Topics',
+                    text: 'Your performance indicates you\'re prepared for more challenging material. Keep pushing forward!',
+                    emoji: '🚀',
+                    color: '#8b5cf6'
+                });
+            } else {
+                insights.push({
+                    title: '🎯 Focus Areas Identified',
+                    text: 'Target these specific areas for improvement to reach your full potential.',
+                    emoji: '🎯',
+                    color: '#f59e0b'
+                });
+            }
+            
+            // Time management insight (if time data available)
+            if (result.timeSpent) {
+                const minutes = Math.floor(result.timeSpent / 60);
+                const seconds = result.timeSpent % 60;
+                if (minutes < 20) {
+                    insights.push({
+                        title: '⏱️ Efficient Time Management',
+                        text: `Completed in ${minutes}m ${seconds}s. You managed your time well during the assessment.`,
+                        emoji: '⏱️',
+                        color: '#10b981'
+                    });
+                } else if (minutes > 40) {
+                    insights.push({
+                        title: '⏰ Time Management Opportunity',
+                        text: `Took ${minutes}m ${seconds}s. Consider practicing with timed exercises to improve speed.`,
+                        emoji: '⏰',
+                        color: '#f59e0b'
+                    });
                 }
             }
             
-            if (localStorage.getItem('assessmentResult')) {
-                // Student has already taken the test
-                document.querySelector('.status-text').textContent = "Completed";
-                document.querySelector('.status-text').style.color = "green";
-                
-                // Hide Start Button
-                const startBtn = document.querySelector('.btn-main-action');
-                startBtn.style.display = 'none';
-                
-                // Hide Ready Button
-                document.querySelector('.btn-ready').style.display = 'none';
-
-                // Create button container
-                const buttonContainer = document.createElement('div');
-                buttonContainer.className = 'button-container';
-
-                // Add "View Results" Button
-                const resultsBtn = document.createElement('button');
-                resultsBtn.className = 'btn btn-evaluation';
-                resultsBtn.textContent = 'View Past Results';
-                resultsBtn.onclick = function() { window.location.href = 'assessment-results.html'; };
-
-                // Add "Retake Assessment" Button
-                const retakeBtn = document.createElement('button');
-                retakeBtn.className = 'btn btn-retake';
-                retakeBtn.textContent = 'Retake Assessment';
-                retakeBtn.onclick = retakeAssessment;
-
-                // Add buttons to container
-                buttonContainer.appendChild(resultsBtn);
-                buttonContainer.appendChild(retakeBtn);
-
-                // Add container to dashboard card
-                document.querySelector('.dashboard-card').appendChild(buttonContainer);
+            // Generate insights HTML
+            insightsContainer.innerHTML = insights.map(insight => `
+                <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; border-left: 4px solid ${insight.color};">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <span style="font-size: 1.2rem;">${insight.emoji}</span>
+                        <h5 style="margin: 0; font-size: 1rem; color: white;">${insight.title}</h5>
+                    </div>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.95; line-height: 1.5;">${insight.text}</p>
+                </div>
+            `).join('');
+        }
+        
+        // Generate time analysis
+        function generateTimeAnalysis(result) {
+            const timeAnalysis = document.getElementById('timeAnalysis');
+            
+            if (!result.timeSpent) {
+                timeAnalysis.innerHTML = `
+                    <p>⏱️ Time data not available for this assessment.</p>
+                    <p style="margin-top: 10px; opacity: 0.8;">Tip: Complete assessments to track your time management progress over time.</p>
+                `;
+                return;
             }
+            
+            const minutes = Math.floor(result.timeSpent / 60);
+            const seconds = result.timeSpent % 60;
+            const totalQuestions = result.totalQuestions || 50;
+            const avgTimePerQuestion = Math.floor(result.timeSpent / totalQuestions);
+            const avgMin = Math.floor(avgTimePerQuestion / 60);
+            const avgSec = avgTimePerQuestion % 60;
+            
+            let timeEfficiency = '';
+            let efficiencyColor = '';
+            
+            if (minutes < 20) {
+                timeEfficiency = 'Excellent time management!';
+                efficiencyColor = '#22c55e';
+            } else if (minutes < 35) {
+                timeEfficiency = 'Good time management.';
+                efficiencyColor = '#f59e0b';
+            } else {
+                timeEfficiency = 'Consider improving time management.';
+                efficiencyColor = '#ef4444';
+            }
+            
+            timeAnalysis.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
+                        <h6 style="margin: 0 0 5px 0; font-size: 0.9rem; opacity: 0.9;">Total Time</h6>
+                        <p style="margin: 0; font-size: 1.1rem; font-weight: 700;">${minutes}m ${seconds}s</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
+                        <h6 style="margin: 0 0 5px 0; font-size: 0.9rem; opacity: 0.9;">Avg Time per Question</h6>
+                        <p style="margin: 0; font-size: 1.1rem; font-weight: 700;">${avgMin}m ${avgSec}s</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px;">
+                        <h6 style="margin: 0 0 5px 0; font-size: 0.9rem; opacity: 0.9;">Efficiency</h6>
+                        <p style="margin: 0; font-size: 1.1rem; font-weight: 700; color: ${efficiencyColor};">${timeEfficiency}</p>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+                    <p style="margin: 0; font-size: 0.95rem; opacity: 0.9;">
+                        💡 <strong>Time Management Tip:</strong> Aim for 1-2 minutes per question. Practice with timed quizzes to improve your pacing.
+                    </p>
+                </div>
+            `;
+        }
+
+        // Initialize dashboard when page loads
+        window.onload = function() {
+            loadDashboard();
         };
     </script>
 
     <!-- Modal Container -->
     <div id="modalContainer" class="modal-hidden"></div>
-
     <script src="modal.js"></script>
 </body>
 </html>

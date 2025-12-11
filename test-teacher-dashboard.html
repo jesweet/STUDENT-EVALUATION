@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Teacher Dashboard - Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .log-container {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-test {
+            background: #667eea;
+            color: white;
+        }
+        .btn-clear {
+            background: #dc2626;
+            color: white;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .stats-preview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teacher Dashboard Debug Test</h1>
+        <p>This page helps test the teacher dashboard quick overview and identify display issues.</p>
+        
+        <div class="test-buttons">
+            <button class="btn-test" onclick="testStatistics()">Test Statistics Calculation</button>
+            <button class="btn-test" onclick="testLocalStorage()">Test LocalStorage Data</button>
+            <button class="btn-test" onclick="testDisplay()">Test Display Functions</button>
+            <button class="btn-clear" onclick="clearLogs()">Clear Logs</button>
+        </div>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <h3>Statistics Preview:</h3>
+        <div class="stats-preview">
+            <div class="stat-card">
+                <div class="stat-number" id="previewTotal">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="previewAvg">0%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="previewReady">0</div>
+                <div class="stat-label">Ready Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="previewNeed">0</div>
+                <div class="stat-label">Need Improvement</div>
+            </div>
+        </div>
+        
+        <h3>Console Logs:</h3>
+        <div id="logContainer" class="log-container"></div>
+    </div>
+
+    <script>
+        // Mock student data similar to what would be in the teacher dashboard
+        const mockStudents = [
+            {
+                id: 'student1',
+                studentName: 'John Doe',
+                section: 'Grade 6 - Section A',
+                totalScore: 20,
+                totalQuestions: 100,
+                percentage: 20.0,
+                comprehensionScore: 12,
+                comprehensionTotal: 50,
+                comprehensionPercentage: 24.0,
+                grammarScore: 8,
+                grammarTotal: 50,
+                grammarPercentage: 16.0,
+                readinessLevel: 'Need Improvement'
+            },
+            {
+                id: 'student2',
+                studentName: 'Jane Smith',
+                section: 'Grade 6 - Section A',
+                totalScore: 75,
+                totalQuestions: 100,
+                percentage: 75.0,
+                comprehensionScore: 40,
+                comprehensionTotal: 50,
+                comprehensionPercentage: 80.0,
+                grammarScore: 35,
+                grammarTotal: 50,
+                grammarPercentage: 70.0,
+                readinessLevel: 'Ready'
+            },
+            {
+                id: 'student3',
+                studentName: 'Bob Johnson',
+                section: 'Grade 6 - Section B',
+                totalScore: 45,
+                totalQuestions: 100,
+                percentage: 45.0,
+                comprehensionScore: 25,
+                comprehensionTotal: 50,
+                comprehensionPercentage: 50.0,
+                grammarScore: 20,
+                grammarTotal: 50,
+                grammarPercentage: 40.0,
+                readinessLevel: 'Need Improvement'
+            }
+        ];
+
+        let logContainer;
+
+        function init() {
+            logContainer = document.getElementById('logContainer');
+            log("🔧 Debug test page loaded");
+            log("📝 Mock student data prepared");
+        }
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logContainer.innerHTML += `[${timestamp}] ${message}\n`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(message);
+        }
+
+        function showStatus(message, type = 'success') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        function clearLogs() {
+            logContainer.innerHTML = '';
+            log("🧹 Logs cleared");
+        }
+
+        function testStatistics() {
+            log("🧪 Testing statistics calculation...");
+            
+            const total = mockStudents.length;
+            const totalScore = mockStudents.reduce((sum, s) => sum + parseFloat(s.percentage), 0);
+            const avgScore = total > 0 ? (totalScore / total).toFixed(1) : 0;
+            const ready = mockStudents.filter(s => s.readinessLevel === "Ready").length;
+            const needImprovement = mockStudents.filter(s => s.readinessLevel === "Need Improvement").length;
+
+            log(`📊 Statistics calculated:`);
+            log(`   - Total students: ${total}`);
+            log(`   - Total score sum: ${totalScore}`);
+            log(`   - Average score: ${avgScore}%`);
+            log(`   - Ready students: ${ready}`);
+            log(`   - Need improvement: ${needImprovement}`);
+
+            // Update preview
+            document.getElementById('previewTotal').textContent = total;
+            document.getElementById('previewAvg').textContent = avgScore + '%';
+            document.getElementById('previewReady').textContent = ready;
+            document.getElementById('previewNeed').textContent = needImprovement;
+
+            showStatus("Statistics calculated successfully!", "success");
+        }
+
+        function testLocalStorage() {
+            log("🔍 Testing localStorage data...");
+            
+            const assessmentData = localStorage.getItem('assessmentResult');
+            
+            if (assessmentData) {
+                try {
+                    const data = JSON.parse(assessmentData);
+                    log("📋 Assessment data found in localStorage:");
+                    log(`   - Student: ${data.studentName}`);
+                    log(`   - Score: ${data.totalScore}/${data.totalQuestions} (${data.percentage}%)`);
+                    log(`   - Reading: ${data.comprehensionPercentage}%`);
+                    log(`   - Grammar: ${data.grammarPercentage}%`);
+                    log(`   - Readiness: ${data.readinessLevel}`);
+                } catch (e) {
+                    log(`❌ Error parsing assessment data: ${e.message}`);
+                }
+            } else {
+                log("📋 No assessment data found in localStorage");
+                
+                // Save mock data to localStorage
+                const mockData = mockStudents[0];
+                localStorage.setItem('assessmentResult', JSON.stringify(mockData));
+                log("💾 Mock assessment data saved to localStorage");
+            }
+        }
+
+        function testDisplay() {
+            log("👁️ Testing display functions...");
+            
+            // Test the displayStudents function logic
+            const tbody = document.createElement('tbody');
+            const html = mockStudents.map((student, index) => {
+                log(`   Processing student ${index}: ${student.studentName}`);
+                return `
+                    <tr data-section="${student.section}">
+                        <td>${student.studentName}</td>
+                        <td>${student.section}</td>
+                        <td><strong>${student.totalScore}/${student.totalQuestions}</strong> (${student.percentage}%)</td>
+                        <td>${student.comprehensionScore}/${student.comprehensionTotal} (${student.comprehensionPercentage}%)</td>
+                        <td>${student.grammarScore}/${student.grammarTotal} (${student.grammarPercentage}%)</td>
+                        <td><span class="status-badge ${student.readinessLevel === "Ready" ? "ready" : "need-improvement"}">${student.readinessLevel}</span></td>
+                        <td><button class="btn-view-details" onclick="openModal('${student.id}')">👁️ View Details</button></td>
+                    </tr>
+                `;
+            }).join('');
+
+            log("📄 Generated HTML:");
+            log(html);
+            
+            showStatus("Display test completed!", "success");
+        }
+
+        // Initialize when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>
