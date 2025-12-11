@@ -42,16 +42,17 @@
                     >
                 </div>
 
-                <!-- 🚀 UPDATED FIELD: Section changed from select to text input 🚀 -->
                 <div class="form-group">
                     <label for="section">Section</label>
-                    <input 
-                        type="text" 
-                        id="section" 
-                        name="section" 
-                        placeholder="e.g., Rizal or Section A" 
-                        required
-                    >
+                    <select id="section" name="section" required style="width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; color: #1f2937; background-color: #ffffff;">
+                        <option value="" disabled selected>Select your section</option>
+                        <option value="Rizal">Rizal</option>
+                        <option value="Bonifacio">Bonifacio</option>
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                        <option value="C">Section C</option>
+                        <option value="D">Section D</option>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-evaluation">

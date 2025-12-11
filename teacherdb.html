@@ -321,6 +321,7 @@ stat-label">Average          </div>
           allStudents = snapshot.docs.map((doc) => {
             const data = doc.data();
             return {
+              id: doc.id, // Add unique ID for each student
               studentName: data.studentName || "Unknown Student",
               section: data.section || "Unknown Section",
               birthday: data.birthday || "Unknown",
@@ -410,9 +411,9 @@ stat-label">Average          </div>
                         ? "ready"
                         : "need-improvement"
                     }">${student.readinessLevel}</span></td>
-                    <td><button class="btn-view-details" onclick='openModal(${JSON.stringify(
-                      student
-                    ).replace(/'/g, "'")})'>👁️ View Details</button></td>
+                    <td><button class="btn-view-details" onclick="openModal('${
+                      student.id
+                    }')">👁️ View Details</button></td>
                 </tr>
             `
           )
@@ -442,7 +443,7 @@ stat-label">Average          </div>
           needImprovement;
       }
 
-      // FILTER BY SECTION
+      // FILTER BY SECTION (FIXED - Case Insensitive and Flexible Matching)
 
       function filterBySection(section) {
         // Update active button
@@ -455,19 +456,34 @@ stat-label">Average          </div>
         document.getElementById("currentFilter").textContent =
           section === "All" ? "All Sections" : section;
 
-        // Filter students
+        // Filter students with flexible case-insensitive matching
         const filtered =
           section === "All"
             ? allStudents
-            : allStudents.filter((s) => s.section === section);
+            : allStudents.filter((s) => {
+                // Flexible comparison: convert both to lowercase and check if includes
+                const studentSection = (s.section || '').toLowerCase();
+                const filterValue = section.toLowerCase();
+                
+                // Check if student's section includes the filter value
+                return studentSection.includes(filterValue);
+              });
 
         displayStudents(filtered);
         updateStatistics(filtered);
       }
 
-      // OPEN MODAL WITH STUDENT DETAILS
+      // OPEN MODAL WITH STUDENT DETAILS (FIXED - Accepts ID instead of object)
 
-      function openModal(student) {
+      function openModal(studentId) {
+        // Find the student by ID
+        const student = allStudents.find(s => s.id === studentId);
+        
+        if (!student) {
+          console.error("Student not found with ID:", studentId);
+          return;
+        }
+
         const modal = document.getElementById("studentModal");
 
         // Basic Information
@@ -623,6 +639,8 @@ stat-label">Average          </div>
         if (stored) {
           try {
             const student = JSON.parse(stored);
+            // Add a unique ID for localStorage students
+            student.id = 'local_' + Date.now();
             allStudents = [student];
             displayStudents(allStudents);
             updateStatistics(allStudents);

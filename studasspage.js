@@ -149,6 +149,11 @@ function previousQuestion() {
 // SUBMIT ASSESSMENT
 
 function submitAssessment() {
+    // Add submit confirmation
+    if (!confirm("Are you sure you want to submit your assessment? You cannot change your answers after this.")) {
+        return;
+    }
+    
     const unanswered = answers.filter(a => a === null).length;
     
     if (unanswered > 0) {
@@ -206,7 +211,7 @@ function submitAssessment() {
     const grammarPercentage = (grammarScore / grammarTotal) * 100;
     const readinessLevel = percentage >= 70 ? "Ready" : "Need Improvement";
     
-    const studentName = localStorage.getItem('studentName') || 'Unknown Student';
+    const studentName = localStorage.getItem('studentName') || "Student";
     const studentSection = localStorage.getItem('studentSection') || 'Unknown Section';
     const studentBirthday = localStorage.getItem('studentBirthday') || 'Unknown';
     
@@ -400,40 +405,7 @@ async function saveToFirestore(data, aiFeedback) {
 // SHOW RESULTS WITH AI FEEDBACK
 
 function showAIResults(data, aiFeedback) {
-    const minutes = Math.floor(data.timeSpent / 60);
-    const seconds = data.timeSpent % 60;
-    
-    const message = `
-🎉 ASSESSMENT COMPLETED! 🎉
-
-📊 YOUR RESULTS:
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-Overall Score: ${data.totalScore}/${data.totalQuestions} (${data.percentage}%)
-📖 Reading: ${data.comprehensionScore}/${data.comprehensionTotal} (${data.comprehensionPercentage}%)
-✍️ Grammar: ${data.grammarScore}/${data.grammarTotal} (${data.grammarPercentage}%)
-⏱️ Time: ${minutes}m ${seconds}s
-📈 Status: ${data.readinessLevel}
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🤖 AI FEEDBACK:
-${aiFeedback.generalFeedback}
-
-✨ STRENGTHS:
-${aiFeedback.strengths}
-
-📝 AREAS TO IMPROVE:
-${aiFeedback.areasForImprovement}
-
-💡 RECOMMENDATIONS:
-${aiFeedback.recommendations}
-
-✅ Detailed answer analysis has been saved.
-Your teacher can review all your answers and the AI's analysis.
-    `;
-    
-    alert(message);
-    
-    // Redirect to results page
+    // Redirect directly to results page - all info is displayed there
     window.location.href = 'assessment-results.html';
 }
 

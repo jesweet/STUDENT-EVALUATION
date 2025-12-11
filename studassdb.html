@@ -40,7 +40,7 @@
             <p>AI-Driven Student Competency Evaluation</p>
         </div>
         <div class="header-actions">
-            <button class="btn-logout" onclick="logout()">Log Out</button>
+            <button onclick="logout()" class="btn-logout" style="float: right; padding: 8px 15px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer;">Log Out</button>
         </div>
     </header>
 
@@ -89,81 +89,54 @@
 
         // LOGOUT FUNCTION
         function logout() {
-            if (confirm('Are you sure you want to log out? This will clear all your data.')) {
-                localStorage.clear();
-                window.location.href = 'index.html';
-            }
+            if (!confirm("Are you sure you want to log out? Your progress will be lost.")) return;
+            localStorage.clear();
+            window.location.href = 'index.html';
         }
 
-        // Check for existing assessment results on page load
+        // Retake Prevention
         window.onload = function() {
+            // Get student name from URL query parameters
             const studentName = getQueryParameter('name');
             const welcomeElement = document.getElementById('welcomeStudentName');
             
-            if (studentName && welcomeElement) {
-                // Update the greeting
-                welcomeElement.textContent = `Welcome, ${studentName}!`;
-            } else if (welcomeElement) {
-                // Default message if name parameter is missing
-                welcomeElement.textContent = "Welcome, Student!";
-            }
-
-            // Check for existing assessment results
-            checkAssessmentStatus();
-        };
-
-        function checkAssessmentStatus() {
-            const assessmentResult = localStorage.getItem('assessmentResult');
-            const statusText = document.querySelector('.status-text');
-            const startButton = document.querySelector('.btn-ready');
-            const mainActionButton = document.querySelector('.btn-evaluation');
-            
-            if (assessmentResult) {
-                // Assessment already completed
-                statusText.textContent = 'Completed';
-                
-                // Hide start buttons
-                if (startButton) startButton.style.display = 'none';
-                if (mainActionButton) {
-                    mainActionButton.style.display = 'none';
+            // Force save studentName to localStorage if found in URL
+            if (studentName) {
+                localStorage.setItem('studentName', studentName);
+                if (welcomeElement) {
+                    welcomeElement.textContent = `Welcome, ${studentName}!`;
                 }
-                
-                // Add View Results button
-                addViewResultsButton();
             } else {
-                // No assessment completed yet
-                statusText.textContent = 'Not yet taken';
+                // If not in URL, try to get from localStorage for greeting
+                const savedName = localStorage.getItem('studentName');
+                if (savedName && welcomeElement) {
+                    welcomeElement.textContent = `Welcome, ${savedName}!`;
+                } else if (welcomeElement) {
+                    // Default message if name parameter is missing
+                    welcomeElement.textContent = "Welcome, Student!";
+                }
             }
-        }
+            
+            if (localStorage.getItem('assessmentResult')) {
+                // Student has already taken the test
+                document.querySelector('.status-text').textContent = "Completed";
+                document.querySelector('.status-text').style.color = "green";
+                
+                // Hide Start Button
+                const startBtn = document.querySelector('.btn-main-action');
+                startBtn.style.display = 'none';
+                
+                // Hide Ready Button
+                document.querySelector('.btn-ready').style.display = 'none';
 
-        function addViewResultsButton() {
-            const statusBox = document.querySelector('.status-box');
-            if (statusBox && !document.querySelector('.btn-view-results')) {
-                const viewResultsBtn = document.createElement('button');
-                viewResultsBtn.className = 'btn-view-results';
-                viewResultsBtn.textContent = 'View Results';
-                viewResultsBtn.onclick = viewResults;
-                viewResultsBtn.style.cssText = `
-                    background: #10b981;
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    font-size: 16px;
-                    font-weight: 600;
-                    margin-top: 15px;
-                    transition: background-color 0.2s;
-                `;
-                viewResultsBtn.onmouseover = function() {
-                    this.style.background = '#059669';
-                };
-                viewResultsBtn.onmouseout = function() {
-                    this.style.background = '#10b981';
-                };
-                statusBox.appendChild(viewResultsBtn);
+                // Add "View Results" Button
+                const resultsBtn = document.createElement('button');
+                resultsBtn.className = 'btn btn-evaluation';
+                resultsBtn.textContent = 'View Past Results';
+                resultsBtn.onclick = function() { window.location.href = 'assessment-results.html'; };
+                document.querySelector('.dashboard-card').appendChild(resultsBtn);
             }
-        }
+        };
     </script>
 </body>
 </html>
