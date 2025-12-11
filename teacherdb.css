@@ -411,3 +411,12 @@ header p {
         grid-template-columns: 1fr;
     }
 }
+
+/* === [SECTION 13: MODAL TEXT COLOR FIX] === */
+/* Force all modal text to be dark to fix white-on-white issue */
+.modal-content, .modal-content h2, .modal-content h4, .modal-content p, .modal-content li, .modal-content span {
+    color: #1f2937 !important; /* Force Dark Blue */
+}
+.ai-section p, .ai-section ul {
+    color: #374151 !important; /* Force Gray for readability */
+}

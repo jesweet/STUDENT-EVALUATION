@@ -9,6 +9,27 @@ let timerInterval = null;
 // INITIALIZATION
 
 window.onload = function() {
+    // Check if studentName exists in localStorage - if not, redirect back to login
+    const studentName = localStorage.getItem('studentName');
+    if (!studentName) {
+        // Check if there's URL parameter (user came from proper flow)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlStudentName = urlParams.get('name');
+        
+        if (!urlStudentName) {
+            // No localStorage and no URL parameter - redirect to login
+            alert("Session expired. Please log in again.");
+            window.location.href = 'studlogin.html';
+            return; // Stop execution if no valid session
+        } else {
+            // User has URL parameter but no localStorage - save it and continue
+            localStorage.setItem('studentName', urlStudentName);
+            localStorage.setItem('studentSection', urlParams.get('section') || 'Unknown');
+            localStorage.setItem('studentBirthday', urlParams.get('birthday') || 'Unknown');
+            localStorage.setItem('studentGrade', urlParams.get('grade') || 'Grade 6');
+        }
+    }
+    
     console.log("Assessment started!");
     console.log("Total questions:", questions.length);
     
