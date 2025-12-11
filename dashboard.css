@@ -1,14 +1,28 @@
 :root {
-    /* Color Palette */
-    --clr-dark-blue: #1f2937; 
-    --clr-medium-blue: #ffffff; 
-    --clr-white: #ffffff;
-    --clr-text-light: #ffffff; 
-    --clr-primary: #323d4c; 
-    --clr-primary-hover: #323d4c;
+    /* Modern Dark Theme - EdTech Color Palette */
+    --clr-deep-slate: #0f172a;       /* Deep Slate Blue - Background */
+    --clr-slate-container: #1e293b;  /* Semi-transparent dark slate */
+    --clr-white: #ffffff;           /* White text */
+    --clr-text-light: #d1d5db;      /* Light text */
+    --clr-primary: #3b82f6;         /* Vibrant Blue/Indigo - Primary Action */
+    --clr-primary-hover: #2563eb;   /* Darker blue for hover */
+    --clr-secondary: #64748b;       /* Slate Gray - Secondary Action */
+    --clr-secondary-hover: #475569; /* Darker slate for hover */
+    --clr-success: #10b981;         /* Emerald Green - Success/Progress */
+    --clr-warning: #f59e0b;         /* Amber - Warnings */
 
-    /* Type */
+    /* Typography */
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-weight-normal: 400;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Spacing & Sizing */
+    --border-radius: 12px;
+    --border-radius-circle: 50%;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --box-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+    --transition: all 0.3s ease;
 }
 
 /* Global Reset and Base Styles */
@@ -20,11 +34,13 @@
 
 body {
     font-family: var(--font-family);
-    background-color: var(--clr-dark-blue);
+    background: linear-gradient(135deg, var(--clr-deep-slate) 0%, #1a2332 100%);
     color: var(--clr-white);
     line-height: 1.6;
+    min-height: 100vh;
 }
 
+/* Container */
 .container {
     width: 90%;
     max-width: 1200px;
@@ -34,18 +50,20 @@ body {
 /* Header Styling */
 header {
     padding: 20px 0;
-    border-bottom: 1px solid var(--clr-medium-blue);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--clr-deep-slate);
 }
 
 header h1 {
     font-size: 1.8rem;
     color: var(--clr-white);
     margin-bottom: 5px;
+    font-weight: var(--font-weight-semibold);
 }
 
 header p {
     font-size: 0.9rem;
-    color: var(--clr-textlight);
+    color: var(--clr-text-light);
 }
 
 /* Welcome Section */
@@ -56,95 +74,113 @@ header p {
 
 .welcome-title {
     font-size: 3rem;
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     margin-bottom: 15px;
+    letter-spacing: -0.02em;
 }
 
 .welcome-subtitle {
     font-size: 1.1rem;
     color: var(--clr-text-light);
     margin-bottom: 60px;
+    font-weight: var(--font-weight-normal);
 }
 
 /* Role Cards Layout (using Flexbox) */
 .role-cards {
     display: flex;
     justify-content: center;
-    gap: 40px; 
-    flex-wrap: wrap; 
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
 /* Individual Card Styling */
 .card {
-    background-color: var(--clr-medium-blue);
+    background-color: var(--clr-slate-container);
     padding: 40px 30px;
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     width: 100%;
-    max-width: 400px; 
+    max-width: 400px;
     text-align: center;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
+    box-shadow: var(--box-shadow-lg);
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .card:hover {
-    transform: translateY(-5px); 
+    transform: translateY(-8px);
+    box-shadow: 0 15px 25px rgba(59, 130, 246, 0.2);
+    border-color: var(--clr-primary);
 }
 
 .card-icon {
-    font-size: 4rem; 
+    font-size: 4rem;
     margin-bottom: 20px;
-    /* Simulate the circular icon background */
     display: inline-flex;
     justify-content: center;
     align-items: center;
     width: 80px;
     height: 80px;
-    border-radius: 50%;
-    background-color: var(--clr-dark-blue); 
+    border-radius: var(--border-radius-circle);
+    background-color: var(--clr-primary);
+    color: var(--clr-white);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .card h3 {
     font-size: 1.5rem;
     margin-bottom: 10px;
-    color: #1f2937;
+    color: var(--clr-white);
+    font-weight: var(--font-weight-semibold);
 }
 
 .card p {
-    color: var(--clr-primary);
+    color: var(--clr-text-light);
     margin-bottom: 30px;
     min-height: 40px;
+    font-weight: var(--font-weight-normal);
 }
 
 /* Button Styling */
 .btn {
-    padding: 12px 25px;
+    padding: 14px 28px;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--border-radius);
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%; 
+    transition: var(--transition);
+    width: 100%;
     max-width: 250px;
+    display: inline-block;
+    text-align: center;
 }
 
+/* Primary Button - Vibrant Blue/Indigo */
 .btn-primary {
     background-color: var(--clr-primary);
     color: var(--clr-white);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .btn-primary:hover {
     background-color: var(--clr-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
+/* Secondary Button - Dark with Light Border */
 .btn-secondary {
-    background-color: var(--clr-primary);
+    background-color: transparent;
     color: var(--clr-white);
-    
+    border: 2px solid var(--clr-secondary);
+    box-shadow: none;
 }
 
 .btn-secondary:hover {
-    background-color: #e5e7eb;
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--clr-primary);
+    transform: translateY(-2px);
 }
 
 /* Media Query for Responsiveness */
@@ -155,10 +191,24 @@ header p {
     }
 
     .card {
-        max-width: 90%; 
+        max-width: 90%;
     }
 
     .welcome-title {
         font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1rem;
+    }
+
+    .card {
+        padding: 30px 20px;
     }
 }
