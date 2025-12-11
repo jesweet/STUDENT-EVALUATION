@@ -1,477 +1,617 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EduMetrics | Teacher Dashboard</title>
-    <link rel="stylesheet" href="teacherdb.css">
+    <link rel="stylesheet" href="teacherdb.css" />
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        /* Additional styles for AI feedback display */
-        .ai-section {
-            margin: 25px 0;
-            padding: 20px;
-            background-color: #f3f4f6;
-            border-radius: 8px;
-            border-left: 4px solid #1e40af;
-        }
-        
-        .ai-section h5 {
-            color: #1f2937;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .ai-section p, .ai-section ul {
-            color: #4b5563;
-            line-height: 1.7;
-            margin-bottom: 10px;
-        }
-        
-        .ai-section ul {
-            margin-left: 20px;
-        }
-        
-        .answer-review {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .answer-item {
-            padding: 12px;
-            margin-bottom: 10px;
-            background-color: #f9fafb;
-            border-radius: 6px;
-            border-left: 3px solid #ef4444;
-        }
-        
-        .answer-item.correct {
-            border-left-color: #10b981;
-        }
-        
-        .answer-item strong {
-            color: #1f2937;
-        }
-        
-        .answer-item .correct-answer {
-            color: #059669;
-            font-weight: 600;
-        }
-        
-        .answer-item .wrong-answer {
-            color: #dc2626;
-            font-weight: 600;
-        }
+      /* Additional styles for AI feedback display */
+      .ai-section {
+        margin: 25px 0;
+        padding: 20px;
+        background-color: #f3f4f6;
+        border-radius: 8px;
+        border-left: 4px solid #1e40af;
+      }
+
+      .ai-section h5 {
+        color: #1f2937;
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ai-section p,
+      .ai-section ul {
+        color: #4b5563;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .ai-section ul {
+        margin-left: 20px;
+      }
+
+      .answer-review {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .answer-item {
+        padding: 12px;
+        margin-bottom: 10px;
+        background-color: #f9fafb;
+        border-radius: 6px;
+        border-left: 3px solid #ef4444;
+      }
+
+      .answer-item.correct {
+        border-left-color: #10b981;
+      }
+
+      .answer-item strong {
+        color: #1f2937;
+      }
+
+      .answer-item .correct-answer {
+        color: #059669;
+        font-weight: 600;
+      }
+
+      .answer-item .wrong-answer {
+        color: #dc2626;
+        font-weight: 600;
+      }
     </style>
-</head>
-<body>
-    
+  </head>
+  <body>
     <header>
-        <div class="container">
-            <h1>EduMetrics</h1>
-            <p>AI-Driven Student Competency Evaluation</p>
-        </div>
+      <div class="container">
+        <h1>EduMetrics</h1>
+        <p>AI-Driven Student Competency Evaluation</p>
+      </div>
     </header>
 
     <main class="dashboard-page">
-        <div class="dashboard-container">
-            
-            <div class="dashboard-header">
-                <h2>Teacher Dashboard</h2>
-                <p>Monitor student performance and AI-generated insights</p>
-            </div>
-
-            <!-- Section Filter -->
-            <div class="section-filter-card">
-                <h3>Filter by Section</h3>
-                <div class="section-buttons">
-                    <button class="section-btn active" onclick="filterBySection('All')">All Sections</button>
-                    <button class="section-btn" onclick="filterBySection('A')">Section A</button>
-                    <button class="section-btn" onclick="filterBySection('B')">Section B</button>
-                    <button class="section-btn" onclick="filterBySection('C')">Section C</button>
-                    <button class="section-btn" onclick="filterBySection('D')">Section D</button>
-                    <button class="section-btn" onclick="filterBySection('Rizal')">Rizal</button>
-                    <button class="section-btn" onclick="filterBySection('Bonifacio')">Bonifacio</button>
-                </div>
-                <p class="filter-info">Showing: <strong id="currentFilter">All Sections</strong></p>
-            </div>
-
-            <!-- Statistics Cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalStudents">0</div>
-                    <div class="stat-label">Total Students</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="avgScore">0%</div>
-                    <div class="stat-label">Average Score</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="readyStudents">0</div>
-                    <div class="stat-label">Ready Students</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="needImprovement">0</div>
-                    <div class="stat-label">Need Improvement</div>
-                </div>
-            </div>
-
-            <!-- Students Performance Overview -->
-            <div class="section-card">
-                <h3>Students Performance Overview</h3>
-                
-                <div class="table-container">
-                    <table class="students-table">
-                        <thead>
-                            <tr>
-                                <th>Student Name</th>
-                                <th>Section</th>
-                                <th>Score</th>
-                                <th>Reading</th>
-                                <th>Grammar</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentsTableBody">
-                            <tr>
-                                <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">
-                                    Loading students... If data doesn't load, check backend connection.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+      <div class="dashboard-container">
+        <div class="dashboard-header">
+          <h2>Teacher Dashboard</h2>
+          <p>Monitor student performance and AI-generated insights</p>
         </div>
+
+        <!-- Section Filter -->
+        <div class="section-filter-card">
+          <h3>Filter by Section</h3>
+          <div class="section-buttons">
+            <button class="section-btn active" onclick="filterBySection('All')">
+              All Sections
+            </button>
+            <button class="section-btn" onclick="filterBySection('A')">
+              Section A
+            </button>
+            <button class="section-btn" onclick="filterBySection('B')">
+              Section B
+            </button>
+            <button class="section-btn" onclick="filterBySection('C')">
+              Section C
+            </button>
+            <button class="section-btn" onclick="filterBySection('D')">
+              Section D
+            </button>
+            <button class="section-btn" onclick="filterBySection('Rizal')">
+              Rizal
+            </button>
+            <button class="section-btn" onclick="filterBySection('Bonifacio')">
+              Bonifacio
+            </button>
+          </div>
+          <p class="filter-info">
+            Showing: <strong id="currentFilter">All Sections</strong>
+          </p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalStudents">0</div>
+            <div class="stat-label">Total Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="avgScore">0%</div>
+            <div class="stat-label">Average Score</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="readyStudents">0</div>
+            <div class="stat-label">Ready Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="needImprovement">0</div>
+            <div class="stat-label">Need Improvement</div>
+          </div>
+        </div>
+
+        <!-- Students Performance Overview -->
+        <div class="section-card">
+          <h3>Students Performance Overview</h3>
+
+          <div class="table-container">
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Section</th>
+                  <th>Score</th>
+                  <th>Reading</th>
+                  <th>Grammar</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <tr>
+                  <td
+                    colspan="7"
+                    style="text-align: center; padding: 40px; color: #6b7280"
+                  >
+                    Loading students... If data doesn't load, check backend
+                    connection.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Student Details Modal -->
     <div id="studentModal" class="modal">
-        <div class="modal-content" style="max-width: 900px;">
-            <span class="close" onclick="closeModal()">&times;</span>
-            
-            <h2 id="modalStudentName">Student Details</h2>
-            
-            <!-- Student Information -->
-            <div class="modal-section">
-                <h4>👤 Student Information</h4>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Name:</span>
-                        <span class="info-value" id="modalName">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Section:</span>
-                        <span class="info-value" id="modalSection">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Birthday:</span>
-                        <span class="info-value" id="modalBirthday">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Date Taken:</span>
-                        <span class="info-value" id="modalDate">-</span>
-                    </div>
-                </div>
+      <div class="modal-content" style="max-width: 900px">
+        <span class="close" onclick="closeModal()">&times;</span>
+
+        <h2 id="modalStudentName">Student Details</h2>
+
+        <!-- Student Information -->
+        <div class="modal-section">
+          <h4>👤 Student Information</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Name:</span>
+              <span class="info-value" id="modalName">-</span>
             </div>
-
-            <!-- Score Breakdown -->
-            <div class="modal-section">
-                <h4>📊 Score Breakdown</h4>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Overall Score:</span>
-                        <span class="info-value" id="modalScore">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Reading Comprehension:</span>
-                        <span class="info-value" id="modalReading">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Grammar:</span>
-                        <span class="info-value" id="modalGrammar">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Status:</span>
-                        <span class="status-badge" id="modalStatus">-</span>
-                    </div>
-                </div>
+            <div class="info-item">
+              <span class="info-label">Section:</span>
+              <span class="info-value" id="modalSection">-</span>
             </div>
-
-            <!-- AI Feedback Section -->
-            <div class="modal-section" id="aiFeedbackSection">
-                <h4>🤖 AI-Generated Feedback</h4>
-                
-                <div class="ai-section">
-                    <h5>📝 General Feedback</h5>
-                    <p id="aiGeneralFeedback">Loading AI feedback...</p>
-                </div>
-
-                <div class="ai-section">
-                    <h5>✨ Strengths</h5>
-                    <div id="aiStrengths">-</div>
-                </div>
-
-                <div class="ai-section">
-                    <h5>📈 Areas for Improvement</h5>
-                    <div id="aiImprovement">-</div>
-                </div>
-
-                <div class="ai-section">
-                    <h5>💡 Recommendations</h5>
-                    <div id="aiRecommendations">-</div>
-                </div>
-
-                <!-- Incorrect Answers Section -->
-                <div class="answer-review" id="incorrectAnswersSection">
-                    <h5>❌ Incorrect Answers (with Correct Answers)</h5>
-                    <div id="incorrectAnswersList">-</div>
-                </div>
+            <div class="info-item">
+              <span class="info-label">Birthday:</span>
+              <span class="info-value" id="modalBirthday">-</span>
             </div>
-
+            <div class="info-item">
+              <span class="info-label">Date Taken:</span>
+              <span class="info-value" id="modalDate">-</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Score Breakdown -->
+        <div class="modal-section">
+          <h4>📊 Score Breakdown</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Overall Score:</span>
+              <span class="info-value" id="modalScore">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Reading Comprehension:</span>
+              <span class="info-value" id="modalReading">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Grammar:</span>
+              <span class="info-value" id="modalGrammar">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Status:</span>
+              <span class="status-badge" id="modalStatus">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Feedback Section -->
+        <div class="modal-section" id="aiFeedbackSection">
+          <h4>🤖 AI-Generated Feedback</h4>
+
+          <div class="ai-section">
+            <h5>📝 General Feedback</h5>
+            <p id="aiGeneralFeedback">Loading AI feedback...</p>
+          </div>
+
+          <div class="ai-section">
+            <h5>✨ Strengths</h5>
+            <div id="aiStrengths">-</div>
+          </div>
+
+          <div class="ai-section">
+            <h5>📈 Areas for Improvement</h5>
+            <div id="aiImprovement">-</div>
+          </div>
+
+          <div class="ai-section">
+            <h5>💡 Recommendations</h5>
+            <div id="aiRecommendations">-</div>
+          </div>
+
+          <!-- Incorrect Answers Section -->
+          <div class="answer-review" id="incorrectAnswersSection">
+            <h5>❌ Incorrect Answers (with Correct Answers)</h5>
+            <div id="incorrectAnswersList">-</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-        let allStudents = [];
+      let allStudents = [];
 
-        // Load students on page load
-        window.addEventListener('DOMContentLoaded', loadStudents);
+      // Load students on page load
+      window.addEventListener("DOMContentLoaded", loadStudents);
 
-        // LOAD STUDENTS FROM BACKEND
+      // LOAD STUDENTS FROM BACKEND
 
-        async function loadStudents() {
-            try {
-                // REPLACE with your actual Firebase function URL
-                const BACKEND_URL = 'YOUR_FIREBASE_FUNCTION_URL/getStudents';
-                
-                const response = await fetch(BACKEND_URL);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to load students');
-                }
-                
-                const data = await response.json();
-                
-                if (data.success && data.students) {
-                    allStudents = data.students;
-                    displayStudents(allStudents);
-                    updateStatistics(allStudents);
-                } else {
-                    throw new Error('Invalid data format');
-                }
-                
-            } catch (error) {
-                console.error('Error loading students:', error);
-                
-                // Show error message
-                document.getElementById('studentsTableBody').innerHTML = `
+      async function loadStudents() {
+        try {
+          // Load students from Firestore
+          const snapshot = await db
+            .collection("assessments")
+            .orderBy("createdAt", "desc")
+            .get();
+
+          if (snapshot.empty) {
+            console.log("No assessments found in Firestore");
+            // Try loading from localStorage as fallback
+            loadFromLocalStorage();
+            return;
+          }
+
+          // Map Firestore documents to student array
+          allStudents = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+              studentName: data.studentName || "Unknown Student",
+              section: data.section || "Unknown Section",
+              birthday: data.birthday || "Unknown",
+              totalScore: data.totalScore || 0,
+              totalQuestions: data.totalQuestions || 0,
+              percentage: data.percentage || "0.0",
+              comprehensionScore: data.comprehensionScore || 0,
+              comprehensionTotal: data.comprehensionTotal || 0,
+              comprehensionPercentage: data.comprehensionPercentage || "0.0",
+              grammarScore: data.grammarScore || 0,
+              grammarTotal: data.grammarTotal || 0,
+              grammarPercentage: data.grammarPercentage || "0.0",
+              readinessLevel: data.readinessLevel || "Need Improvement",
+              timestamp: data.timestamp || new Date().toISOString(),
+              detailedAnswers: data.detailedAnswers || [],
+              aiFeedback:
+                data.aiFeedback ||
+                data.aiGeneralFeedback ||
+                "No feedback available",
+              aiStrengths:
+                data.aiStrengths || data.strengths || "Not available",
+              aiAreasForImprovement:
+                data.aiAreasForImprovement ||
+                data.areasForImprovement ||
+                "Not available",
+              aiRecommendations:
+                data.aiRecommendations ||
+                data.recommendations ||
+                "Not available",
+            };
+          });
+
+          displayStudents(allStudents);
+          updateStatistics(allStudents);
+        } catch (error) {
+          console.error("Error loading students from Firestore:", error);
+
+          // Show error message
+          document.getElementById("studentsTableBody").innerHTML = `
                     <tr>
                         <td colspan="7" style="text-align: center; padding: 40px; color: #dc2626;">
-                            ⚠️ Could not load students.<br>
+                            ⚠️ Could not load students from Firestore.<br>
                             Error: ${error.message}<br>
-                            <small>Check console for details or verify backend URL.</small>
+                            <small>Check console for details or verify Firebase configuration.</small>
                         </td>
                     </tr>
                 `;
-                
-                // Try loading from localStorage as fallback
-                loadFromLocalStorage();
-            }
+
+          // Try loading from localStorage as fallback
+          loadFromLocalStorage();
         }
+      }
 
-        // DISPLAY STUDENTS IN TABLE
+      // DISPLAY STUDENTS IN TABLE
 
-        function displayStudents(students) {
-            const tbody = document.getElementById('studentsTableBody');
-            
-            if (students.length === 0) {
-                tbody.innerHTML = `
+      function displayStudents(students) {
+        const tbody = document.getElementById("studentsTableBody");
+
+        if (students.length === 0) {
+          tbody.innerHTML = `
                     <tr>
                         <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">
                             No students have taken the assessment yet.
                         </td>
                     </tr>
                 `;
-                return;
-            }
-            
-            tbody.innerHTML = students.map(student => `
+          return;
+        }
+
+        tbody.innerHTML = students
+          .map(
+            (student) => `
                 <tr data-section="${student.section}">
                     <td>${student.studentName}</td>
                     <td>${student.section}</td>
-                    <td><strong>${student.totalScore}/${student.totalQuestions}</strong> (${student.percentage}%)</td>
-                    <td>${student.comprehensionScore}/${student.comprehensionTotal} (${student.comprehensionPercentage}%)</td>
-                    <td>${student.grammarScore}/${student.grammarTotal} (${student.grammarPercentage}%)</td>
-                    <td><span class="status-badge ${student.readinessLevel === 'Ready' ? 'ready' : 'need-improvement'}">${student.readinessLevel}</span></td>
-                    <td><button class="btn-view-details" onclick='openModal(${JSON.stringify(student).replace(/'/g, "&apos;")})'>👁️ View Details</button></td>
+                    <td><strong>${student.totalScore}/${
+              student.totalQuestions
+            }</strong> (${student.percentage}%)</td>
+                    <td>${student.comprehensionScore}/${
+              student.comprehensionTotal
+            } (${student.comprehensionPercentage}%)</td>
+                    <td>${student.grammarScore}/${student.grammarTotal} (${
+              student.grammarPercentage
+            }%)</td>
+                    <td><span class="status-badge ${
+                      student.readinessLevel === "Ready"
+                        ? "ready"
+                        : "need-improvement"
+                    }">${student.readinessLevel}</span></td>
+                    <td><button class="btn-view-details" onclick='openModal(${JSON.stringify(
+                      student
+                    ).replace(/'/g, "&apos;")})'>👁️ View Details</button></td>
                 </tr>
-            `).join('');
+            `
+          )
+          .join("");
+      }
+
+      // UPDATE STATISTICS
+
+      function updateStatistics(students) {
+        const total = students.length;
+        const totalScore = students.reduce(
+          (sum, s) => sum + parseFloat(s.percentage),
+          0
+        );
+        const avgScore = total > 0 ? (totalScore / total).toFixed(1) : 0;
+        const ready = students.filter(
+          (s) => s.readinessLevel === "Ready"
+        ).length;
+        const needImprovement = students.filter(
+          (s) => s.readinessLevel === "Need Improvement"
+        ).length;
+
+        document.getElementById("totalStudents").textContent = total;
+        document.getElementById("avgScore").textContent = avgScore + "%";
+        document.getElementById("readyStudents").textContent = ready;
+        document.getElementById("needImprovement").textContent =
+          needImprovement;
+      }
+
+      // FILTER BY SECTION
+
+      function filterBySection(section) {
+        // Update active button
+        document.querySelectorAll(".section-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        // Update filter info
+        document.getElementById("currentFilter").textContent =
+          section === "All" ? "All Sections" : section;
+
+        // Filter students
+        const filtered =
+          section === "All"
+            ? allStudents
+            : allStudents.filter((s) => s.section === section);
+
+        displayStudents(filtered);
+        updateStatistics(filtered);
+      }
+
+      // OPEN MODAL WITH STUDENT DETAILS
+
+      function openModal(student) {
+        const modal = document.getElementById("studentModal");
+
+        // Basic Information
+        document.getElementById("modalStudentName").textContent =
+          student.studentName;
+        document.getElementById("modalName").textContent = student.studentName;
+        document.getElementById("modalSection").textContent = student.section;
+        document.getElementById("modalBirthday").textContent =
+          student.birthday || "Not provided";
+        document.getElementById("modalDate").textContent = student.timestamp
+          ? new Date(student.timestamp).toLocaleDateString()
+          : "Unknown";
+
+        // Scores
+        document.getElementById(
+          "modalScore"
+        ).textContent = `${student.totalScore}/${student.totalQuestions} (${student.percentage}%)`;
+        document.getElementById(
+          "modalReading"
+        ).textContent = `${student.comprehensionScore}/${student.comprehensionTotal} (${student.comprehensionPercentage}%)`;
+        document.getElementById(
+          "modalGrammar"
+        ).textContent = `${student.grammarScore}/${student.grammarTotal} (${student.grammarPercentage}%)`;
+
+        const statusBadge = document.getElementById("modalStatus");
+        statusBadge.textContent = student.readinessLevel;
+        statusBadge.className =
+          "status-badge " +
+          (student.readinessLevel === "Ready" ? "ready" : "need-improvement");
+
+        // AI Feedback
+        if (student.aiFeedback || student.aiGeneralFeedback) {
+          document.getElementById("aiGeneralFeedback").textContent =
+            student.aiFeedback ||
+            student.aiGeneralFeedback ||
+            "No feedback available";
+          document.getElementById("aiStrengths").innerHTML = formatText(
+            student.aiStrengths || student.strengths || "Not available"
+          );
+          document.getElementById("aiImprovement").innerHTML = formatText(
+            student.aiAreasForImprovement ||
+              student.areasForImprovement ||
+              "Not available"
+          );
+          document.getElementById("aiRecommendations").innerHTML = formatText(
+            student.aiRecommendations ||
+              student.recommendations ||
+              "Not available"
+          );
+        } else {
+          document.getElementById("aiGeneralFeedback").textContent =
+            "AI feedback not yet generated for this student.";
         }
 
-        // UPDATE STATISTICS
+        // Show incorrect answers with correct answers
+        displayIncorrectAnswers(student);
 
-        function updateStatistics(students) {
-            const total = students.length;
-            const totalScore = students.reduce((sum, s) => sum + parseFloat(s.percentage), 0);
-            const avgScore = total > 0 ? (totalScore / total).toFixed(1) : 0;
-            const ready = students.filter(s => s.readinessLevel === 'Ready').length;
-            const needImprovement = students.filter(s => s.readinessLevel === 'Need Improvement').length;
-            
-            document.getElementById('totalStudents').textContent = total;
-            document.getElementById('avgScore').textContent = avgScore + '%';
-            document.getElementById('readyStudents').textContent = ready;
-            document.getElementById('needImprovement').textContent = needImprovement;
+        modal.style.display = "block";
+      }
+
+      // DISPLAY INCORRECT ANSWERS
+
+      function displayIncorrectAnswers(student) {
+        const container = document.getElementById("incorrectAnswersList");
+
+        if (!student.detailedAnswers || student.detailedAnswers.length === 0) {
+          container.innerHTML = "<p>No detailed answer data available.</p>";
+          return;
         }
 
-        // FILTER BY SECTION
+        const incorrectAnswers = student.detailedAnswers.filter(
+          (a) => !a.isCorrect
+        );
 
-        function filterBySection(section) {
-            // Update active button
-            document.querySelectorAll('.section-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Update filter info
-            document.getElementById('currentFilter').textContent = section === 'All' ? 'All Sections' : section;
-            
-            // Filter students
-            const filtered = section === 'All' 
-                ? allStudents 
-                : allStudents.filter(s => s.section === section);
-            
-            displayStudents(filtered);
-            updateStatistics(filtered);
+        if (incorrectAnswers.length === 0) {
+          container.innerHTML =
+            '<p style="color: #059669; font-weight: 600;">🌟 Perfect score! All answers were correct!</p>';
+          return;
         }
 
-        // OPEN MODAL WITH STUDENT DETAILS
+        let html = "";
+        incorrectAnswers.forEach((answer) => {
+          const studentAnswerLetter =
+            answer.studentAnswer !== null
+              ? String.fromCharCode(65 + answer.studentAnswer)
+              : "No answer";
+          const correctAnswerLetter = String.fromCharCode(
+            65 + answer.correctAnswer
+          );
 
-        function openModal(student) {
-            const modal = document.getElementById('studentModal');
-            
-            // Basic Information
-            document.getElementById('modalStudentName').textContent = student.studentName;
-            document.getElementById('modalName').textContent = student.studentName;
-            document.getElementById('modalSection').textContent = student.section;
-            document.getElementById('modalBirthday').textContent = student.birthday || 'Not provided';
-            document.getElementById('modalDate').textContent = student.timestamp ? new Date(student.timestamp).toLocaleDateString() : 'Unknown';
-            
-            // Scores
-            document.getElementById('modalScore').textContent = `${student.totalScore}/${student.totalQuestions} (${student.percentage}%)`;
-            document.getElementById('modalReading').textContent = `${student.comprehensionScore}/${student.comprehensionTotal} (${student.comprehensionPercentage}%)`;
-            document.getElementById('modalGrammar').textContent = `${student.grammarScore}/${student.grammarTotal} (${student.grammarPercentage}%)`;
-            
-            const statusBadge = document.getElementById('modalStatus');
-            statusBadge.textContent = student.readinessLevel;
-            statusBadge.className = 'status-badge ' + (student.readinessLevel === 'Ready' ? 'ready' : 'need-improvement');
-            
-            // AI Feedback
-            if (student.aiFeedback || student.aiGeneralFeedback) {
-                document.getElementById('aiGeneralFeedback').textContent = student.aiFeedback || student.aiGeneralFeedback || 'No feedback available';
-                document.getElementById('aiStrengths').innerHTML = formatText(student.aiStrengths || student.strengths || 'Not available');
-                document.getElementById('aiImprovement').innerHTML = formatText(student.aiAreasForImprovement || student.areasForImprovement || 'Not available');
-                document.getElementById('aiRecommendations').innerHTML = formatText(student.aiRecommendations || student.recommendations || 'Not available');
-            } else {
-                document.getElementById('aiGeneralFeedback').textContent = 'AI feedback not yet generated for this student.';
-            }
-            
-            // Show incorrect answers with correct answers
-            displayIncorrectAnswers(student);
-            
-            modal.style.display = 'block';
-        }
-
-        // DISPLAY INCORRECT ANSWERS
-
-        function displayIncorrectAnswers(student) {
-            const container = document.getElementById('incorrectAnswersList');
-            
-            if (!student.detailedAnswers || student.detailedAnswers.length === 0) {
-                container.innerHTML = '<p>No detailed answer data available.</p>';
-                return;
-            }
-            
-            const incorrectAnswers = student.detailedAnswers.filter(a => !a.isCorrect);
-            
-            if (incorrectAnswers.length === 0) {
-                container.innerHTML = '<p style="color: #059669; font-weight: 600;">🌟 Perfect score! All answers were correct!</p>';
-                return;
-            }
-            
-            let html = '';
-            incorrectAnswers.forEach(answer => {
-                const studentAnswerLetter = answer.studentAnswer !== null ? String.fromCharCode(65 + answer.studentAnswer) : 'No answer';
-                const correctAnswerLetter = String.fromCharCode(65 + answer.correctAnswer);
-                
-                html += `
+          html += `
                     <div class="answer-item">
-                        <strong>Question ${answer.questionId}</strong> (${answer.category} - ${answer.difficulty})<br>
+                        <strong>Question ${answer.questionId}</strong> (${
+            answer.category
+          } - ${answer.difficulty})<br>
                         <span class="wrong-answer">Student's answer: ${studentAnswerLetter}</span><br>
                         <span class="correct-answer">Correct answer: ${correctAnswerLetter}</span>
-                        ${answer.options ? `<br><small>Correct option: ${answer.options[answer.correctAnswer]}</small>` : ''}
+                        ${
+                          answer.options
+                            ? `<br><small>Correct option: ${
+                                answer.options[answer.correctAnswer]
+                              }</small>`
+                            : ""
+                        }
                     </div>
                 `;
-            });
-            
-            container.innerHTML = html;
+        });
+
+        container.innerHTML = html;
+      }
+
+      // HELPER FUNCTION TO FORMAT TEXT
+
+      function formatText(text) {
+        if (!text || text === "Not available") return text;
+
+        // Convert bullet points to HTML list
+        if (text.includes("\n-") || text.includes("\n•")) {
+          const lines = text.split("\n").filter((l) => l.trim());
+          return (
+            "<ul>" +
+            lines
+              .map((line) => {
+                const cleaned = line.trim().replace(/^[-•]\s*/, "");
+                return cleaned ? `<li>${cleaned}</li>` : "";
+              })
+              .filter((l) => l)
+              .join("") +
+            "</ul>"
+          );
         }
 
-        // HELPER FUNCTION TO FORMAT TEXT
+        return text.replace(/\n/g, "<br>");
+      }
 
-        function formatText(text) {
-            if (!text || text === 'Not available') return text;
-            
-            // Convert bullet points to HTML list
-            if (text.includes('\n-') || text.includes('\n•')) {
-                const lines = text.split('\n').filter(l => l.trim());
-                return '<ul>' + lines.map(line => {
-                    const cleaned = line.trim().replace(/^[-•]\s*/, '');
-                    return cleaned ? `<li>${cleaned}</li>` : '';
-                }).filter(l => l).join('') + '</ul>';
-            }
-            
-            return text.replace(/\n/g, '<br>');
+      // CLOSE MODAL
+
+      function closeModal() {
+        document.getElementById("studentModal").style.display = "none";
+      }
+
+      window.onclick = function (event) {
+        const modal = document.getElementById("studentModal");
+        if (event.target === modal) {
+          modal.style.display = "none";
         }
+      };
 
-        // CLOSE MODAL
+      // LOAD FROM LOCALSTORAGE (FALLBACK)
 
-        function closeModal() {
-            document.getElementById('studentModal').style.display = 'none';
+      function loadFromLocalStorage() {
+        const stored = localStorage.getItem("assessmentResult");
+        if (stored) {
+          try {
+            const student = JSON.parse(stored);
+            allStudents = [student];
+            displayStudents(allStudents);
+            updateStatistics(allStudents);
+
+            console.log("Loaded student data from localStorage");
+          } catch (e) {
+            console.error("Error loading from localStorage:", e);
+          }
         }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('studentModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // LOAD FROM LOCALSTORAGE (FALLBACK)
-
-        function loadFromLocalStorage() {
-            const stored = localStorage.getItem('assessmentResult');
-            if (stored) {
-                try {
-                    const student = JSON.parse(stored);
-                    allStudents = [student];
-                    displayStudents(allStudents);
-                    updateStatistics(allStudents);
-                    
-                    console.log('Loaded student data from localStorage');
-                } catch (e) {
-                    console.error('Error loading from localStorage:', e);
-                }
-            }
-        }
+      }
     </script>
 
-</body>
+    <!-- Firebase Configuration -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBLUXbAALnqjtLyQNCktQO8eS1TKvE6-Dc",
+        authDomain: "edumetrics-62601.firebaseapp.com",
+        projectId: "edumetrics-62601",
+        storageBucket: "edumetrics-62601.firebasestorage.app",
+        messagingSenderId: "1008049617356",
+        appId: "1:1008049617356:web:ce2aa07a1ebc3533444569",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
+  </body>
 </html>

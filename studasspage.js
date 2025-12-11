@@ -246,42 +246,154 @@ async function submitToBackend(data) {
     try {
         // Show loading message
         alert('Submitting your assessment and generating AI feedback...\n\nThis may take 10-15 seconds. Please wait.');
-        
-        // REPLACE THIS URL with your actual Firebase function URL
-        // Example: https://us-central1-your-project.cloudfunctions.net/submitAssessment
-        const BACKEND_URL = 'YOUR_FIREBASE_FUNCTION_URL_HERE/submitAssessment';
-        
-        const response = await fetch(BACKEND_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        console.log('Backend response:', result);
-        
-        if (result.success && result.feedback) {
-            // Store AI feedback
-            localStorage.setItem('aiFeedback', JSON.stringify(result.feedback));
-            
-            // Show comprehensive results with AI feedback
-            showAIResults(data, result.feedback);
-        } else {
-            throw new Error('Failed to get AI feedback');
-        }
-        
+
+        // Step 1: Construct AI prompt from student's answers
+        const aiPrompt = constructAIPrompt(data);
+
+        // Step 2: Call Groq API for AI feedback
+        const aiFeedback = await callGroqAPI(aiPrompt, data);
+
+        // Step 3: Save assessment data + AI feedback to Firestore
+        await saveToFirestore(data, aiFeedback);
+
+        // Step 4: Show results with AI feedback
+        showAIResults(data, aiFeedback);
+
     } catch (error) {
-        console.error('Error submitting to backend:', error);
-        alert('⚠️ Could not connect to server.\n\nYour results are saved locally.\n\nError: ' + error.message);
-        
+        console.error('Error in client-side processing:', error);
+        alert('⚠️ Could not complete processing.\n\nYour results are saved locally.\n\nError: ' + error.message);
+
         // Show results without AI feedback
         showBasicResults(data);
+    }
+}
+
+// Construct AI prompt from student's answers
+function constructAIPrompt(data) {
+    // Analyze wrong answers by category
+    const wrongAnswersByCategory = {};
+    data.detailedAnswers.forEach(answer => {
+        if (!answer.isCorrect) {
+            if (!wrongAnswersByCategory[answer.category]) {
+                wrongAnswersByCategory[answer.category] = [];
+            }
+            wrongAnswersByCategory[answer.category].push({
+                questionId: answer.questionId,
+                difficulty: answer.difficulty,
+                studentAnswer: answer.studentAnswer,
+                correctAnswer: answer.correctAnswer
+            });
+        }
+    });
+
+    // Build detailed analysis for prompt
+    let analysis = `Student Assessment Analysis for ${data.studentName} (${data.section}):\n\n`;
+    analysis += `Overall Performance: ${data.totalScore}/${data.totalQuestions} (${data.percentage}%)\n`;
+    analysis += `Reading Comprehension: ${data.comprehensionScore}/${data.comprehensionTotal} (${data.comprehensionPercentage}%)\n`;
+    analysis += `Grammar: ${data.grammarScore}/${data.grammarTotal} (${data.grammarPercentage}%)\n`;
+    analysis += `Time Spent: ${Math.floor(data.timeSpent / 60)} minutes ${data.timeSpent % 60} seconds\n\n`;
+
+    // Add wrong answer analysis by category
+    for (const [category, wrongAnswers] of Object.entries(wrongAnswersByCategory)) {
+        analysis += `${category} Weaknesses:\n`;
+        wrongAnswers.forEach(wrong => {
+            analysis += `- Question ${wrong.questionId} (${wrong.difficulty}): Student chose option ${String.fromCharCode(65 + wrong.studentAnswer)}, correct was ${String.fromCharCode(65 + wrong.correctAnswer)}\n`;
+        });
+        analysis += '\n';
+    }
+
+    return analysis;
+}
+
+// Call Groq API for AI feedback
+async function callGroqAPI(prompt, data) {
+    try {
+        // REPLACE WITH YOUR ACTUAL GROQ API KEY
+        const GROQ_API_KEY = 'PASTE_YOUR_GROQ_API_KEY_HERE';
+
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${GROQ_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "llama3-8b-8192",
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are an expert English teacher providing detailed, constructive feedback on student assessments. Analyze the student's performance and provide specific strengths, areas for improvement, and actionable recommendations."
+                    },
+                    {
+                        role: "user",
+                        content: `Based on this assessment data, provide comprehensive feedback:\n\n${prompt}\n\nPlease provide your analysis in JSON format with these fields:\n- generalFeedback: Overall assessment of student performance\n- strengths: Specific areas where student performed well\n- areasForImprovement: Specific areas needing improvement\n- recommendations: Actionable study recommendations`
+                    }
+                ],
+                temperature: 0.7,
+                max_tokens: 1024
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Groq API error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Groq API response:', result);
+
+        if (result.choices && result.choices[0].message.content) {
+            try {
+                return JSON.parse(result.choices[0].message.content);
+            } catch (e) {
+                // If JSON parsing fails, return structured feedback
+                return {
+                    generalFeedback: result.choices[0].message.content,
+                    strengths: "Detailed analysis available in general feedback",
+                    areasForImprovement: "Detailed analysis available in general feedback",
+                    recommendations: "Review the general feedback for specific recommendations"
+                };
+            }
+        } else {
+            throw new Error('Invalid Groq API response format');
+        }
+
+    } catch (error) {
+        console.error('Groq API error:', error);
+        // Return fallback AI feedback if API fails
+        return {
+            generalFeedback: `Based on your score of ${data.percentage}%, you have ${data.readinessLevel === 'Ready' ? 'demonstrated strong understanding' : 'areas that need improvement'}.`,
+            strengths: `You scored well in ${data.comprehensionPercentage > data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'}.`,
+            areasForImprovement: `Focus on improving your ${data.comprehensionPercentage < data.grammarPercentage ? 'Reading Comprehension' : 'Grammar'} skills.`,
+            recommendations: `Practice regularly and review the questions you got wrong. Consider additional study time on challenging topics.`
+        };
+    }
+}
+
+// Save assessment data to Firestore
+async function saveToFirestore(data, aiFeedback) {
+    try {
+        // Add AI feedback to assessment data
+        const assessmentWithFeedback = {
+            ...data,
+            aiFeedback: aiFeedback.generalFeedback,
+            aiStrengths: aiFeedback.strengths,
+            aiAreasForImprovement: aiFeedback.areasForImprovement,
+            aiRecommendations: aiFeedback.recommendations,
+            createdAt: new Date()
+        };
+
+        // Save to Firestore
+        const docRef = await db.collection('assessments').add(assessmentWithFeedback);
+        console.log('Document written with ID: ', docRef.id);
+
+        // Also save AI feedback to localStorage
+        localStorage.setItem('aiFeedback', JSON.stringify(aiFeedback));
+
+        return docRef.id;
+
+    } catch (error) {
+        console.error('Error saving to Firestore:', error);
+        throw new Error('Failed to save assessment data');
     }
 }
 
