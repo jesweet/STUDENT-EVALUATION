@@ -303,13 +303,13 @@ function constructAIPrompt(data) {
     }
 
     return analysis;
-}
+}       
 
 // Call Groq API for AI feedback
 async function callGroqAPI(prompt, data) {
     try {
         // REPLACE WITH YOUR ACTUAL GROQ API KEY
-        const GROQ_API_KEY = 'PASTE_YOUR_GROQ_API_KEY_HERE';
+        const GROQ_API_KEY = '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';
 
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
